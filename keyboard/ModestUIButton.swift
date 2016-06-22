@@ -36,5 +36,10 @@ class ModestUIButton: UIButton {
         
         return super.continueTrackingWithTouch(touch, withEvent: event)
     }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.layer.borderWidth = 1.0
+    }
 
 }

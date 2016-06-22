@@ -47,6 +47,17 @@ class KeyboardViewController: UIInputViewController {
         self.nextKeyboardButton.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).active = true
         self.nextKeyboardButton.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).active = true
     }
+    
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        print("the function ran")
+        let touchPoint = touches.first!.locationInView(self.view)
+        let subviews = self.view.subviews
+        for subview in subviews {
+            if subview.pointInside(touchPoint, withEvent: event) {
+                print("we're inside")
+            }
+        }
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
