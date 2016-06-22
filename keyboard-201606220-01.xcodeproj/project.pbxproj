@@ -79,7 +79,7 @@
 		BF5CEAFB1D1B38F20078C2D1 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		BF5CEAFD1D1B38F20078C2D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BF5CEB051D1B39260078C2D1 /* KeyboardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KeyboardView.xib; sourceTree = "<group>"; };
-		BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModestUIButton.swift; sourceTree = "<group>"; };
+		BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModestUIButton.swift; path = ../keyboard/ModestUIButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +139,7 @@
 		BF5CEAC61D1B38C20078C2D1 /* keyboard-201606220-01 */ = {
 			isa = PBXGroup;
 			children = (
+				BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */,
 				BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */,
 				BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */,
 				BF5CEACB1D1B38C20078C2D1 /* Main.storyboard */,
@@ -172,7 +173,6 @@
 			children = (
 				BF5CEAFB1D1B38F20078C2D1 /* KeyboardViewController.swift */,
 				BF5CEB051D1B39260078C2D1 /* KeyboardView.xib */,
-				BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */,
 				BF5CEAFD1D1B38F20078C2D1 /* Info.plist */,
 			);
 			path = keyboard;

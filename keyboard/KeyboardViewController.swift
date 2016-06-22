@@ -10,6 +10,12 @@ import UIKit
 
 class KeyboardViewController: UIInputViewController {
 
+    @IBAction func printChar(sender: ModestUIButton) {
+        self.textDocumentProxy.insertText(sender.titleLabel!.text!)
+    }
+    @IBAction func disappearChar(sender: ModestUIButton) {
+        self.textDocumentProxy.deleteBackward()
+    }
     @IBOutlet var nextKeyboardButton: UIButton!
 
     override func updateViewConstraints() {
@@ -20,6 +26,8 @@ class KeyboardViewController: UIInputViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         let nib = UINib(nibName: "KeyboardView", bundle: nil)
         let objects = nib.instantiateWithOwner(self, options: nil)

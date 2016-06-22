@@ -11,24 +11,43 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="edW-kk-RQ3">
-                    <rect key="frame" x="26" y="34" width="240" height="128"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edW-kk-RQ3">
+                    <rect key="frame" x="0.0" y="42" width="320" height="40"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RzP-U5-43r" customClass="ModestUIButton" customModule="keyboard" customModuleProvider="target">
-                            <rect key="frame" x="105" y="49" width="30" height="30"/>
+                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RzP-U5-43r" customClass="ModestUIButton" customModule="keyboard" customModuleProvider="target">
+                            <rect key="frame" x="8" y="5" width="30" height="30"/>
                             <state key="normal" title="A"/>
+                            <connections>
+                                <action selector="disappearChar:" destination="-1" eventType="touchDragExit" id="EMd-SJ-HLD"/>
+                                <action selector="printChar:" destination="-1" eventType="touchDown" id="aU0-Om-uu4"/>
+                                <action selector="printChar:" destination="-1" eventType="touchDragEnter" id="hRo-lr-t84"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mb8-rX-SZs" customClass="ModestUIButton" customModule="keyboard" customModuleProvider="target">
+                            <rect key="frame" x="35" y="5" width="30" height="30"/>
+                            <state key="normal" title="S"/>
+                            <connections>
+                                <action selector="disappearChar:" destination="-1" eventType="touchDragExit" id="0ZT-uz-ESf"/>
+                                <action selector="printChar:" destination="-1" eventType="touchDown" id="HNM-OA-xf2"/>
+                                <action selector="printChar:" destination="-1" eventType="touchDragEnter" id="ojX-NV-gkf"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="40" id="tIn-1M-42d"/>
+                        <constraint firstItem="Mb8-rX-SZs" firstAttribute="leading" secondItem="RzP-U5-43r" secondAttribute="trailing" id="EDS-AT-T1C"/>
+                        <constraint firstItem="RzP-U5-43r" firstAttribute="leading" secondItem="edW-kk-RQ3" secondAttribute="leading" constant="5" id="VJM-lQ-sGd" userLabel="A.leading = leading + 5"/>
+                        <constraint firstItem="Mb8-rX-SZs" firstAttribute="centerY" secondItem="edW-kk-RQ3" secondAttribute="centerY" id="bYL-8G-niP"/>
+                        <constraint firstItem="RzP-U5-43r" firstAttribute="centerY" secondItem="edW-kk-RQ3" secondAttribute="centerY" id="jbs-3e-Bff"/>
+                        <constraint firstAttribute="height" constant="40" id="yl5-11-IeF"/>
                     </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="edW-kk-RQ3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="7jU-oS-zAo"/>
-                <constraint firstAttribute="trailing" secondItem="edW-kk-RQ3" secondAttribute="trailing" id="eVX-of-222"/>
+                <constraint firstAttribute="trailing" secondItem="edW-kk-RQ3" secondAttribute="trailing" id="3gN-XE-IKg"/>
+                <constraint firstItem="edW-kk-RQ3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Mh6-S8-KQk"/>
+                <constraint firstItem="edW-kk-RQ3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="42" id="zDg-hT-Wwg"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
