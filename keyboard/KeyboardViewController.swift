@@ -48,13 +48,21 @@ class KeyboardViewController: UIInputViewController {
         self.nextKeyboardButton.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).active = true
     }
     
+    //I'm trying to get this thing to like detect the button in the right place because now it is detecting it as up and to the left.
+    
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("the function ran")
-        let touchPoint = touches.first!.locationInView(self.view)
+        let touchPoint = touches.first!.locationInView(nil)
         let subviews = self.view.subviews
         for subview in subviews {
             if subview.pointInside(touchPoint, withEvent: event) {
-                print("we're inside")
+                //print("inside")
+                if var button = subview as? ModestUIButton {
+                    print(button.titleLabel!.text!)
+                } else {
+                    print("inside")
+                }
+            } else {
+                print("outside")
             }
         }
     }
