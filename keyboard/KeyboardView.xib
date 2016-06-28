@@ -14,31 +14,24 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edW-kk-RQ3">
                     <rect key="frame" x="0.0" y="42" width="320" height="40"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mb8-rX-SZs" customClass="ModestUIButton" customModule="keyboard" customModuleProvider="target">
-                            <rect key="frame" x="35" y="5" width="30" height="30"/>
-                            <state key="normal" title="S"/>
-                            <connections>
-                                <action selector="disappearChar:" destination="-1" eventType="touchDragExit" id="0ZT-uz-ESf"/>
-                                <action selector="printChar:" destination="-1" eventType="touchDown" id="HNM-OA-xf2"/>
-                                <action selector="printChar:" destination="-1" eventType="touchDragEnter" id="ojX-NV-gkf"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RzP-U5-43r" customClass="ModestUIButton" customModule="keyboard" customModuleProvider="target">
-                            <rect key="frame" x="8" y="5" width="30" height="30"/>
-                            <state key="normal" title="A"/>
-                            <connections>
-                                <action selector="disappearChar:" destination="-1" eventType="touchDragExit" id="EMd-SJ-HLD"/>
-                                <action selector="printChar:" destination="-1" eventType="touchDown" id="aU0-Om-uu4"/>
-                                <action selector="printChar:" destination="-1" eventType="touchDragEnter" id="hRo-lr-t84"/>
-                            </connections>
-                        </button>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2ee-5n-eLn">
+                            <rect key="frame" x="20" y="5" width="30" height="30"/>
+                            <subviews>
+                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="D" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="HlG-Kg-Fld">
+                                    <rect key="frame" x="0.0" y="0.0" width="22" height="30"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="layer.borderWidth" value="5"/>
+                                    </userDefinedRuntimeAttributes>
+                                </textView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="Mb8-rX-SZs" firstAttribute="leading" secondItem="RzP-U5-43r" secondAttribute="trailing" id="EDS-AT-T1C"/>
-                        <constraint firstItem="RzP-U5-43r" firstAttribute="leading" secondItem="edW-kk-RQ3" secondAttribute="leading" constant="5" id="VJM-lQ-sGd" userLabel="A.leading = leading + 5"/>
-                        <constraint firstItem="Mb8-rX-SZs" firstAttribute="centerY" secondItem="edW-kk-RQ3" secondAttribute="centerY" id="bYL-8G-niP"/>
-                        <constraint firstItem="RzP-U5-43r" firstAttribute="centerY" secondItem="edW-kk-RQ3" secondAttribute="centerY" id="jbs-3e-Bff"/>
                         <constraint firstAttribute="height" constant="40" id="yl5-11-IeF"/>
                     </constraints>
                 </view>
