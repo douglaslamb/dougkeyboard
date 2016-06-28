@@ -19,6 +19,9 @@
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="S" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lJw-7W-Jqa">
                                     <rect key="frame" x="10" y="5" width="20" height="20"/>
+                                    <accessibility key="accessibilityConfiguration">
+                                        <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
+                                    </accessibility>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -31,6 +34,9 @@
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="D" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6P5-0x-62z">
                                     <rect key="frame" x="10" y="5" width="20" height="20"/>
+                                    <accessibility key="accessibilityConfiguration">
+                                        <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
+                                    </accessibility>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -43,6 +49,9 @@
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="F" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tQP-ja-f4O">
                                     <rect key="frame" x="10" y="5" width="20" height="20"/>
+                                    <accessibility key="accessibilityConfiguration">
+                                        <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
+                                    </accessibility>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -55,6 +64,9 @@
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="A" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1zU-jC-rWA">
                                     <rect key="frame" x="10" y="5" width="20" height="20"/>
+                                    <accessibility key="accessibilityConfiguration">
+                                        <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
+                                    </accessibility>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
