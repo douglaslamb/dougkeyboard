@@ -9,6 +9,8 @@
 import UIKit
 
 class KeyboardViewController: UIInputViewController {
+    
+    var prevButton = ""
 
     @IBAction func printChar(sender: ModestUIButton) {
         self.textDocumentProxy.insertText(sender.titleLabel!.text!)
@@ -48,19 +50,42 @@ class KeyboardViewController: UIInputViewController {
         self.nextKeyboardButton.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).active = true
     }
     
-    //I'm trying to get this thing to like detect the button in the right place because now it is detecting it as up and to the left.
-    
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        print("touchesMoved" + String(arc4random_uniform(9)))
         let keyboardView = self.view.subviews[0]
         let subviews = keyboardView.subviews
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             if subview.pointInside(touchPoint, withEvent: event) {
-                print(subview.dynamicType)
-            } else {
-                print("outside")
+                handleButtonTouch(subview)
+                //var buttonLabel = subview.subviews[0] as! UILabel
+                //self.prevButton = buttonLabel.text!
+                //print(subview.dynamicType)
             }
         }
+    }
+    
+    func handleButtonTouch(view: UIView) {
+        var button = view.subviews[0] as! UILabel
+        var currButtonLabel = button.text!
+        //checking if we delete text
+        // or insert or both
+        if (self.prevButton != currButtonLabel) {
+            if (self.prevButton == "") {
+                self.textDocumentProxy.insertText(currButtonLabel)
+                self.prevButton = currButtonLabel
+            } else {
+                if (currButtonLabel == "") {
+                    self.textDocumentProxy.deleteBackward()
+                    self.prevButton = ""
+                } else {
+                    self.textDocumentProxy.deleteBackward()
+                    self.textDocumentProxy.insertText(currButtonLabel)
+                    self.prevButton = currButtonLabel
+                }
+            }
+        }
+        print(view.dynamicType)
     }
 
     override func didReceiveMemoryWarning() {
