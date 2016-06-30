@@ -29,15 +29,12 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
         let nib = UINib(nibName: "KeyboardView", bundle: nil)
         let objects = nib.instantiateWithOwner(self, options: nil)
         view = objects[0] as! UIView
     
         // Perform custom UI setup here
         self.nextKeyboardButton = UIButton(type: .System)
-    
         self.nextKeyboardButton.setTitle(NSLocalizedString("Next Keyboard", comment: "Title for 'Next Keyboard' button"), forState: .Normal)
         self.nextKeyboardButton.sizeToFit()
         self.nextKeyboardButton.translatesAutoresizingMaskIntoConstraints = false
@@ -54,40 +51,66 @@ class KeyboardViewController: UIInputViewController {
         print("touchesMoved" + String(arc4random_uniform(9)))
         let keyboardView = self.view.subviews[0]
         let subviews = keyboardView.subviews
+        var isTouchInButton = false
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             if subview.pointInside(touchPoint, withEvent: event) {
-                handleButtonTouch(subview)
-                //var buttonLabel = subview.subviews[0] as! UILabel
-                //self.prevButton = buttonLabel.text!
-                //print(subview.dynamicType)
+                handleTouchMoveInButton(subview)
+                isTouchInButton = true
+            }
+        }
+        if (!isTouchInButton) {
+            // if touch was not detected in any button
+            if (prevButton != "") {
+                // if touch was just in a button
+                self.textDocumentProxy.deleteBackward()
+                prevButton = ""
             }
         }
     }
     
-    func handleButtonTouch(view: UIView) {
-        var button = view.subviews[0] as! UILabel
-        var currButtonLabel = button.text!
+    func handleTouchMoveInButton(view: UIView) {
+        var buttonLabel = view.subviews[0] as! UILabel
+        var currButtonLabel = buttonLabel.text!
         //checking if we delete text
         // or insert or both
         if (self.prevButton != currButtonLabel) {
+            // if the current button is not the previous
             if (self.prevButton == "") {
+                // if the previous button was outside buttons
                 self.textDocumentProxy.insertText(currButtonLabel)
                 self.prevButton = currButtonLabel
             } else {
-                if (currButtonLabel == "") {
-                    self.textDocumentProxy.deleteBackward()
-                    self.prevButton = ""
-                } else {
-                    self.textDocumentProxy.deleteBackward()
-                    self.textDocumentProxy.insertText(currButtonLabel)
-                    self.prevButton = currButtonLabel
-                }
+                // in this case the previous button
+                // was a different character.
+                // i.e. slide from button to button
+                self.textDocumentProxy.deleteBackward()
+                self.textDocumentProxy.insertText(currButtonLabel)
+                self.prevButton = currButtonLabel
             }
         }
         print(view.dynamicType)
     }
-
+    
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        print("touchesBegan" + String(arc4random_uniform(9)))
+        let keyboardView = self.view.subviews[0]
+        let subviews = keyboardView.subviews
+        var isTouchInButton = false
+        for subview in subviews {
+            let touchPoint = touches.first!.locationInView(subview)
+            if subview.pointInside(touchPoint, withEvent: event) {
+                var buttonLabel = subview.subviews[0] as! UILabel
+                self.prevButton = buttonLabel.text!
+                self.textDocumentProxy.insertText(buttonLabel.text!)
+                isTouchInButton = true
+            }
+        }
+        if (!isTouchInButton) {
+            self.prevButton = ""
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated
