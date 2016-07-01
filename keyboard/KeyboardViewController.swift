@@ -11,6 +11,7 @@ import UIKit
 class KeyboardViewController: UIInputViewController {
     
     var prevButton = ""
+    var topRowView: UIView = UIView()
 
     @IBAction func printChar(sender: ModestUIButton) {
         self.textDocumentProxy.insertText(sender.titleLabel!.text!)
@@ -29,9 +30,20 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //let nib = UINib(nibName: "KeyboardView", bundle: nil)
-        //let objects = nib.instantiateWithOwner(self, options: nil)
-        //view = objects[0] as! UIView
+        let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
+        var topRowButtons = createButtons(topRowButtonTitles)
+        var topRowView = UIView(frame: CGRectMake(0, 0, 320, 40))
+        topRowView.backgroundColor = UIColor.darkGrayColor()
+        
+        for button in topRowButtons {
+            topRowView.addSubview(button)
+        }
+        print("topRowView.subviews is length " + String(topRowView.subviews.count))
+        
+        self.view.addSubview(topRowView)
+        self.topRowView = topRowView
+        
+        addConstraints(topRowButtons, containingView: topRowView)
     
         // Perform custom UI setup here
         self.nextKeyboardButton = UIButton(type: .System)
@@ -45,39 +57,66 @@ class KeyboardViewController: UIInputViewController {
     
         self.nextKeyboardButton.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).active = true
         self.nextKeyboardButton.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).active = true
-        
-        let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
-        var topRowButtons = createButtons(topRowButtonTitles)
-        var topRowView = UIView(frame: CGRectMake(0, 0, 320, 40))
-        topRowView.backgroundColor = UIColor.darkGrayColor()
-        
-        for button in topRowButtons {
-            topRowView.addSubview(button)
-            
-        }
-        
-        self.view.addSubview(topRowView)
     }
     
-    func createButtons(titles: [String]) -> [UIViewKeyboardKey] {
+    func createButtons(titles: [String]) -> [UIView] {
         
-        var buttons = [UIViewKeyboardKey]()
+        var buttons = [UIView]()
         
         for (i, title) in titles.enumerate() {
-            let button = UIViewKeyboardKey(frame: CGRectMake(5 + 25 * CGFloat(i), 5, 25, 30))
-            button.label = title
+            //let button = UIView(frame: CGRectMake(5 + 25 * CGFloat(i) + CGFloat(i) + 1, 5, 25, 30))
+            let button = UIView()
+            let label = UILabel(frame: CGRectMake(10.0, 10.0, 20, 15))
+            //let label = UILabel()
+            label.text = title
+            button.addSubview(label)
+            // button appearance config
+            button.backgroundColor = UIColor.lightGrayColor()
+            button.layer.cornerRadius = 5
+            button.translatesAutoresizingMaskIntoConstraints = false
+            // add button to return array
+           
             buttons.append(button)
         }
         
         return buttons
     }
     
+    func addConstraints(buttons: [UIView], containingView: UIView) {
+        for (index, button) in buttons.enumerate() {
+            
+            var topConstraint = NSLayoutConstraint(item: button, attribute: .Top, relatedBy: .Equal, toItem: containingView, attribute: .Top, multiplier: 1.0, constant: 1)
+            var bottomConstraint = NSLayoutConstraint(item: button, attribute: .Bottom, relatedBy: .Equal, toItem: containingView, attribute: .Bottom, multiplier: 1.0, constant: -1)
+            var leftConstraint : NSLayoutConstraint!
+            
+            if index == 0 {
+                leftConstraint = NSLayoutConstraint(item: button, attribute: .Left, relatedBy: .Equal, toItem: containingView, attribute: .Left, multiplier: 1.0, constant: 1)
+            } else {
+                leftConstraint = NSLayoutConstraint(item: button, attribute: .Left, relatedBy: .Equal, toItem: buttons[index - 1], attribute: .Right, multiplier: 1.0, constant: 1)
+                var widthConstraint = NSLayoutConstraint(item: buttons[0], attribute: .Width, relatedBy: .Equal, toItem: button, attribute: .Width, multiplier: 1.0, constant: 0)
+                containingView.addConstraint(widthConstraint)
+            }
+            
+            var rightConstraint : NSLayoutConstraint!
+            
+            if index == buttons.count - 1 {
+                rightConstraint = NSLayoutConstraint(item: button, attribute: .Right, relatedBy: .Equal, toItem: containingView, attribute: .Right, multiplier: 1.0, constant: -1)
+            } else {
+                rightConstraint = NSLayoutConstraint(item: button, attribute: .Right, relatedBy: .Equal, toItem: buttons[index + 1], attribute: .Left, multiplier: 1.0, constant: -1)
+            }
+            
+            containingView.addConstraints([topConstraint, bottomConstraint, rightConstraint, leftConstraint])
+        }
+    }
+    
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesMoved" + String(arc4random_uniform(9)))
-        let keyboardView = self.view.subviews[0]
-        let subviews = keyboardView.subviews
+        //let keyboardView = self.view.subviews[0]
+        //let subviews = keyboardView.subviews
+        let subviews = self.topRowView.subviews
         var isTouchInButton = false
+        //print(subviews.count)
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             if subview.pointInside(touchPoint, withEvent: event) {
@@ -120,12 +159,14 @@ class KeyboardViewController: UIInputViewController {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesBegan" + String(arc4random_uniform(9)))
-        let keyboardView = self.view.subviews[0]
-        let subviews = keyboardView.subviews
+        //let keyboardView = self.view.subviews[0]
+        //let subviews = keyboardView.subviews
+        let subviews = self.topRowView.subviews
         var isTouchInButton = false
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             if subview.pointInside(touchPoint, withEvent: event) {
+                print("inside button" + String(arc4random_uniform(9)))
                 var buttonLabel = subview.subviews[0] as! UILabel
                 self.prevButton = buttonLabel.text!
                 self.textDocumentProxy.insertText(buttonLabel.text!)
