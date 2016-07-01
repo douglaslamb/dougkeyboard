@@ -29,9 +29,9 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let nib = UINib(nibName: "KeyboardView", bundle: nil)
-        let objects = nib.instantiateWithOwner(self, options: nil)
-        view = objects[0] as! UIView
+        //let nib = UINib(nibName: "KeyboardView", bundle: nil)
+        //let objects = nib.instantiateWithOwner(self, options: nil)
+        //view = objects[0] as! UIView
     
         // Perform custom UI setup here
         self.nextKeyboardButton = UIButton(type: .System)
@@ -45,7 +45,33 @@ class KeyboardViewController: UIInputViewController {
     
         self.nextKeyboardButton.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).active = true
         self.nextKeyboardButton.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).active = true
+        
+        let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
+        var topRowButtons = createButtons(topRowButtonTitles)
+        var topRowView = UIView(frame: CGRectMake(0, 0, 320, 40))
+        topRowView.backgroundColor = UIColor.darkGrayColor()
+        
+        for button in topRowButtons {
+            topRowView.addSubview(button)
+            
+        }
+        
+        self.view.addSubview(topRowView)
     }
+    
+    func createButtons(titles: [String]) -> [UIViewKeyboardKey] {
+        
+        var buttons = [UIViewKeyboardKey]()
+        
+        for (i, title) in titles.enumerate() {
+            let button = UIViewKeyboardKey(frame: CGRectMake(5 + 25 * CGFloat(i), 5, 25, 30))
+            button.label = title
+            buttons.append(button)
+        }
+        
+        return buttons
+    }
+    
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesMoved" + String(arc4random_uniform(9)))
