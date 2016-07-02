@@ -12,6 +12,8 @@ class KeyboardViewController: UIInputViewController {
     
     var prevButton = ""
     var topRowView: UIView = UIView()
+    var midRowView: UIView = UIView()
+    var bottomRowView: UIView = UIView()
 
     @IBAction func printChar(sender: ModestUIButton) {
         self.textDocumentProxy.insertText(sender.titleLabel!.text!)
@@ -30,20 +32,51 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // create top row buttons
         let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
         var topRowButtons = createButtons(topRowButtonTitles)
         var topRowView = UIView(frame: CGRectMake(0, 0, 320, 40))
-        topRowView.backgroundColor = UIColor.darkGrayColor()
+        topRowView.backgroundColor = UIColor.lightGrayColor()
         
         for button in topRowButtons {
             topRowView.addSubview(button)
         }
-        print("topRowView.subviews is length " + String(topRowView.subviews.count))
         
         self.view.addSubview(topRowView)
         self.topRowView = topRowView
         
+        
+        // create mid row buttons
+        let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
+        var midRowButtons = createButtons(midRowButtonTitles)
+        var midRowView = UIView(frame: CGRectMake(0, 40, 320, 40))
+        midRowView.backgroundColor = UIColor.lightGrayColor()
+        
+        for button in midRowButtons {
+            midRowView.addSubview(button)
+        }
+        
+        self.view.addSubview(midRowView)
+        self.midRowView = midRowView
+        
+        // create bottom row buttons
+        let bottomRowButtonTitles = ["Z", "X", "C", "V", "B", "N", "M"]
+        var bottomRowButtons = createButtons(bottomRowButtonTitles)
+        var bottomRowView = UIView(frame: CGRectMake(0, 80, 320, 40))
+        bottomRowView.backgroundColor = UIColor.lightGrayColor()
+        
+        for button in bottomRowButtons {
+            bottomRowView.addSubview(button)
+        }
+        
+        self.view.addSubview(bottomRowView)
+        self.bottomRowView = bottomRowView
+        
+        // add constraints
+ 
         addConstraints(topRowButtons, containingView: topRowView)
+        addConstraints(midRowButtons, containingView: midRowView)
+        addConstraints(bottomRowButtons, containingView: bottomRowView)
     
         // Perform custom UI setup here
         self.nextKeyboardButton = UIButton(type: .System)
@@ -64,18 +97,18 @@ class KeyboardViewController: UIInputViewController {
         var buttons = [UIView]()
         
         for (i, title) in titles.enumerate() {
-            //let button = UIView(frame: CGRectMake(5 + 25 * CGFloat(i) + CGFloat(i) + 1, 5, 25, 30))
+            
             let button = UIView()
             let label = UILabel(frame: CGRectMake(10.0, 10.0, 20, 15))
-            //let label = UILabel()
             label.text = title
             button.addSubview(label)
+            
             // button appearance config
-            button.backgroundColor = UIColor.lightGrayColor()
+            button.backgroundColor = UIColor.whiteColor()
             button.layer.cornerRadius = 5
             button.translatesAutoresizingMaskIntoConstraints = false
+            
             // add button to return array
-           
             buttons.append(button)
         }
         
@@ -112,9 +145,7 @@ class KeyboardViewController: UIInputViewController {
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesMoved" + String(arc4random_uniform(9)))
-        //let keyboardView = self.view.subviews[0]
-        //let subviews = keyboardView.subviews
-        let subviews = self.topRowView.subviews
+        let subviews = self.topRowView.subviews + self.midRowView.subviews + self.bottomRowView.subviews
         var isTouchInButton = false
         //print(subviews.count)
         for subview in subviews {
@@ -159,10 +190,12 @@ class KeyboardViewController: UIInputViewController {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesBegan" + String(arc4random_uniform(9)))
-        //let keyboardView = self.view.subviews[0]
-        //let subviews = keyboardView.subviews
-        let subviews = self.topRowView.subviews
+        
+        // gather subviews
+        let subviews = self.topRowView.subviews + self.midRowView.subviews + self.bottomRowView.subviews
         var isTouchInButton = false
+        
+        // check each uiview for touch
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             if subview.pointInside(touchPoint, withEvent: event) {
