@@ -60,8 +60,37 @@ class KeyboardViewController: UIInputViewController {
         self.midRowView = midRowView
         
         // create bottom row buttons
+        
+        // empty array to eventually contain
+        // all bottom row buttons
+        
+        var bottomRowButtons = [UIView]()
+        
+        // add shift key to bottom row
+        
+        let shiftImage = UIImage(named: "shift")
+        let shiftKey = UIImageView(image: shiftImage)
+        shiftKey.translatesAutoresizingMaskIntoConstraints = false
+        shiftKey.layer.masksToBounds = true
+        shiftKey.layer.cornerRadius = 5
+        bottomRowButtons.append(shiftKey)
+        
+        // add letter buttons to bottom row
+        
         let bottomRowButtonTitles = ["Z", "X", "C", "V", "B", "N", "M"]
-        var bottomRowButtons = createButtons(bottomRowButtonTitles)
+        bottomRowButtons = bottomRowButtons + createButtons(bottomRowButtonTitles)
+        
+        // add backspace to bottom row
+        
+        let backspaceImage = UIImage(named: "backspace")
+        let backspaceKey = UIImageView(image: backspaceImage)
+        backspaceKey.translatesAutoresizingMaskIntoConstraints = false
+        backspaceKey.layer.masksToBounds = true
+        backspaceKey.layer.cornerRadius = 5
+        bottomRowButtons.append(backspaceKey)
+        
+        // create bottom row view and add all buttons to view
+        
         var bottomRowView = UIView(frame: CGRectMake(0, 80, 320, 40))
         bottomRowView.backgroundColor = UIColor.lightGrayColor()
         
@@ -71,6 +100,26 @@ class KeyboardViewController: UIInputViewController {
         
         self.view.addSubview(bottomRowView)
         self.bottomRowView = bottomRowView
+        
+        /*
+        // create util row buttons
+        let utilRowButtonTitles = ["Z", "X", "C", "V", "B", "N", "M"]
+        
+        var utilRowButtons = [UIView]()
+        
+        
+        bottomRowButtons = bottomRowButtons + createButtons(bottomRowButtonTitles)
+        var bottomRowView = UIView(frame: CGRectMake(0, 80, 320, 40))
+        bottomRowView.backgroundColor = UIColor.lightGrayColor()
+        
+        for button in bottomRowButtons {
+            bottomRowView.addSubview(button)
+        }
+        
+        self.view.addSubview(bottomRowView)
+        self.bottomRowView = bottomRowView
+         */
+
         
         // add constraints
  

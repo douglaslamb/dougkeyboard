@@ -24,6 +24,9 @@
 		BF5CEB091D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */; };
 		BF5CEB0A1D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */; };
 		BF5CEB0B1D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */; };
+		BFCACD4D1D2CA0E00013ABB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */; };
+		BFCACD4E1D2CA0E10013ABB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */; };
+		BFCACD4F1D2CA0E10013ABB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -318,6 +321,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFCACD4D1D2CA0E00013ABB4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +329,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFCACD4E1D2CA0E10013ABB4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +337,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFCACD4F1D2CA0E10013ABB4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
