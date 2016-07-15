@@ -15,14 +15,9 @@ class KeyboardViewController: UIInputViewController {
     var midRowView: UIView = UIView()
     var bottomRowView: UIView = UIView()
     var utilRowView: UIView = UIView()
-
-    @IBAction func printChar(sender: ModestUIButton) {
-        self.textDocumentProxy.insertText(sender.titleLabel!.text!)
+    enum UtilKey: Int {
+        case nextKeyboardKey = 1, returnKey, shiftKey
     }
-    @IBAction func disappearChar(sender: ModestUIButton) {
-        self.textDocumentProxy.deleteBackward()
-    }
-    @IBOutlet var nextKeyboardButton: UIButton!
 
     override func updateViewConstraints() {
         super.updateViewConstraints()
@@ -102,7 +97,6 @@ class KeyboardViewController: UIInputViewController {
         self.view.addSubview(bottomRowView)
         self.bottomRowView = bottomRowView
         
-        
         // create util row buttons
         
         var utilRowButtons = [UIView]()
@@ -129,6 +123,7 @@ class KeyboardViewController: UIInputViewController {
         nextKeyboardKey.layer.cornerRadius = 5
         nextKeyboardKey.translatesAutoresizingMaskIntoConstraints = false
         nextKeyboardKey.layer.masksToBounds = true
+        nextKeyboardKey.tag = UtilKey.nextKeyboardKey.rawValue
         
         utilRowButtons.append(nextKeyboardKey)
         
@@ -180,19 +175,6 @@ class KeyboardViewController: UIInputViewController {
         addConstraints(midRowButtons, containingView: midRowView)
         addConstraints(bottomRowButtons, containingView: bottomRowView)
         addUtilRowConstraints(utilRowButtons, containingView: utilRowView)
-     
-        // Perform custom UI setup here
-        self.nextKeyboardButton = UIButton(type: .System)
-        self.nextKeyboardButton.setTitle(NSLocalizedString("Next Keyboard", comment: "Title for 'Next Keyboard' button"), forState: .Normal)
-        self.nextKeyboardButton.sizeToFit()
-        self.nextKeyboardButton.translatesAutoresizingMaskIntoConstraints = false
-    
-        self.nextKeyboardButton.addTarget(self, action: #selector(advanceToNextInputMode), forControlEvents: .TouchUpInside)
-        
-        self.view.addSubview(self.nextKeyboardButton)
-    
-        self.nextKeyboardButton.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).active = true
-        self.nextKeyboardButton.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).active = true
     }
     
     func createButtons(titles: [String]) -> [UIView] {
@@ -296,12 +278,13 @@ class KeyboardViewController: UIInputViewController {
         print("touchesMoved" + String(arc4random_uniform(9)))
         let subviews = self.topRowView.subviews + self.midRowView.subviews + self.bottomRowView.subviews + self.utilRowView.subviews
         var isTouchInButton = false
-        //print(subviews.count)
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             if subview.pointInside(touchPoint, withEvent: event) {
                 handleTouchMoveInButton(subview)
                 isTouchInButton = true
+                // found the button so return
+                return
             }
         }
         if (!isTouchInButton) {
@@ -348,11 +331,19 @@ class KeyboardViewController: UIInputViewController {
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             if subview.pointInside(touchPoint, withEvent: event) {
-                print("inside button" + String(arc4random_uniform(9)))
-                var buttonLabel = subview.subviews[0] as! UILabel
-                self.prevButton = buttonLabel.text!
-                self.textDocumentProxy.insertText(buttonLabel.text!)
-                isTouchInButton = true
+                if (subview.tag == UtilKey.nextKeyboardKey.rawValue) {
+                    self.advanceToNextInputMode()
+                    // found the button so return
+                    return
+                } else {
+                    print("inside button" + String(arc4random_uniform(9)))
+                    var buttonLabel = subview.subviews[0] as! UILabel
+                    self.prevButton = buttonLabel.text!
+                    self.textDocumentProxy.insertText(buttonLabel.text!)
+                    isTouchInButton = true
+                    // found the button so return
+                    return
+                }
             }
         }
         if (!isTouchInButton) {
@@ -379,7 +370,7 @@ class KeyboardViewController: UIInputViewController {
         } else {
             textColor = UIColor.blackColor()
         }
-        self.nextKeyboardButton.setTitleColor(textColor, forState: .Normal)
+        //self.nextKeyboardButton.setTitleColor(textColor, forState: .Normal)
     }
 
 }
