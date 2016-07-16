@@ -162,7 +162,8 @@ class KeyboardViewController: UIInputViewController {
         self.utilRowView = utilRowView
         
         // add constraints for rows
-        let rows = [topRowView, midRowView, bottomRowView, utilRowView]
+        //let rows = [topRowView, midRowView, bottomRowView, utilRowView]
+        let rows = [self.topRowView, self.midRowView, self.bottomRowView, self.utilRowView]
         addRowConstraints(rows, containingView: self.inputView!)
         
         // add constraints for buttons
@@ -212,21 +213,22 @@ class KeyboardViewController: UIInputViewController {
                 print("index is not 0 " + String(index))
                 topConstraint = NSLayoutConstraint(item: row, attribute: .Top, relatedBy: .Equal, toItem: rows[index - 1], attribute: .Bottom, multiplier: 1.0, constant: 0)
             }
-            
+
             // bottom constraint
             if (index == 3) {
                 print("index is 3 " + String(index))
                 containingView.addConstraint(NSLayoutConstraint(item: row, attribute: .Bottom, relatedBy: .Equal, toItem: containingView, attribute: .Bottom, multiplier: 1.0, constant: 0))
-            } else {
+                
+            } /* else {
                 print("index is not 3 " + String(index))
                 containingView.addConstraint(NSLayoutConstraint(item: row, attribute: .Bottom, relatedBy: .Equal, toItem: rows[index + 1], attribute: .Top, multiplier: 1.0, constant: 0))
             }
+            */
             
             // side constraints
             let leftConstraint = NSLayoutConstraint(item: row, attribute: .Left, relatedBy: .Equal, toItem: containingView, attribute: .Left, multiplier: 1.0, constant: 0)
             let rightConstraint = NSLayoutConstraint(item: row, attribute: .Right, relatedBy: .Equal, toItem: containingView, attribute: .Right, multiplier: 1.0, constant: 0)
-            
-            containingView.addConstraints([topConstraint,leftConstraint, rightConstraint])
+            NSLayoutConstraint.activateConstraints([topConstraint,leftConstraint, rightConstraint])
         }
     }
     
