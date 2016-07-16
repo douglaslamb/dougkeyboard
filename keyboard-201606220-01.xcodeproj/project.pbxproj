@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BF5B6B3B1D2604C100EE51F5 /* UIViewKeyboardKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5B6B3A1D2604C100EE51F5 /* UIViewKeyboardKey.swift */; };
-		BF5B6B3C1D2605A300EE51F5 /* UIViewKeyboardKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5B6B3A1D2604C100EE51F5 /* UIViewKeyboardKey.swift */; };
-		BF5B6B3D1D2605A300EE51F5 /* UIViewKeyboardKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5B6B3A1D2604C100EE51F5 /* UIViewKeyboardKey.swift */; };
-		BF5B6B3E1D2605A400EE51F5 /* UIViewKeyboardKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5B6B3A1D2604C100EE51F5 /* UIViewKeyboardKey.swift */; };
 		BF5CEAC81D1B38C20078C2D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */; };
 		BF5CEACA1D1B38C20078C2D1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */; };
 		BF5CEACD1D1B38C20078C2D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACB1D1B38C20078C2D1 /* Main.storyboard */; };
@@ -20,10 +16,6 @@
 		BF5CEAE81D1B38C20078C2D1 /* keyboard_201606220_01UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAE71D1B38C20078C2D1 /* keyboard_201606220_01UITests.swift */; };
 		BF5CEAFC1D1B38F20078C2D1 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAFB1D1B38F20078C2D1 /* KeyboardViewController.swift */; };
 		BF5CEB001D1B38F20078C2D1 /* keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BF5CEAF91D1B38F20078C2D1 /* keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		BF5CEB081D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */; };
-		BF5CEB091D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */; };
-		BF5CEB0A1D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */; };
-		BF5CEB0B1D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */; };
 		BFCACD4D1D2CA0E00013ABB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */; };
 		BFCACD4E1D2CA0E10013ABB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */; };
 		BFCACD4F1D2CA0E10013ABB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */; };
@@ -68,7 +60,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		BF5B6B3A1D2604C100EE51F5 /* UIViewKeyboardKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewKeyboardKey.swift; path = ../UIViewKeyboardKey.swift; sourceTree = "<group>"; };
 		BF5CEAC41D1B38C20078C2D1 /* keyboard-201606220-01.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "keyboard-201606220-01.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -85,7 +76,6 @@
 		BF5CEAF91D1B38F20078C2D1 /* keyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = keyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5CEAFB1D1B38F20078C2D1 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		BF5CEAFD1D1B38F20078C2D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModestUIButton.swift; path = ../keyboard/ModestUIButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,8 +135,6 @@
 		BF5CEAC61D1B38C20078C2D1 /* keyboard-201606220-01 */ = {
 			isa = PBXGroup;
 			children = (
-				BF5B6B3A1D2604C100EE51F5 /* UIViewKeyboardKey.swift */,
-				BF5CEB071D1B39ED0078C2D1 /* ModestUIButton.swift */,
 				BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */,
 				BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */,
 				BF5CEACB1D1B38C20078C2D1 /* Main.storyboard */,
@@ -349,8 +337,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF5CEACA1D1B38C20078C2D1 /* ViewController.swift in Sources */,
-				BF5B6B3B1D2604C100EE51F5 /* UIViewKeyboardKey.swift in Sources */,
-				BF5CEB081D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */,
 				BF5CEAC81D1B38C20078C2D1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -359,9 +345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF5B6B3C1D2605A300EE51F5 /* UIViewKeyboardKey.swift in Sources */,
 				BF5CEADD1D1B38C20078C2D1 /* keyboard_201606220_01Tests.swift in Sources */,
-				BF5CEB091D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,9 +353,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF5B6B3D1D2605A300EE51F5 /* UIViewKeyboardKey.swift in Sources */,
 				BF5CEAE81D1B38C20078C2D1 /* keyboard_201606220_01UITests.swift in Sources */,
-				BF5CEB0A1D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,9 +361,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF5B6B3E1D2605A400EE51F5 /* UIViewKeyboardKey.swift in Sources */,
 				BF5CEAFC1D1B38F20078C2D1 /* KeyboardViewController.swift in Sources */,
-				BF5CEB0B1D1B39ED0078C2D1 /* ModestUIButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

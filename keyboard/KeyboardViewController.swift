@@ -31,28 +31,28 @@ class KeyboardViewController: UIInputViewController {
         // create top row buttons
         let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
         var topRowButtons = createButtons(topRowButtonTitles)
-        var topRowView = UIView(frame: CGRectMake(0, 0, 320, 40))
+        let topRowView = UIView()
         topRowView.backgroundColor = UIColor.lightGrayColor()
         
         for button in topRowButtons {
             topRowView.addSubview(button)
         }
         
-        self.view.addSubview(topRowView)
+        self.inputView!.addSubview(topRowView)
         self.topRowView = topRowView
         
         
         // create mid row buttons
         let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
         var midRowButtons = createButtons(midRowButtonTitles)
-        var midRowView = UIView(frame: CGRectMake(0, 40, 320, 40))
+        let midRowView = UIView()
         midRowView.backgroundColor = UIColor.lightGrayColor()
         
         for button in midRowButtons {
             midRowView.addSubview(button)
         }
         
-        self.view.addSubview(midRowView)
+        self.inputView!.addSubview(midRowView)
         self.midRowView = midRowView
         
         // create bottom row buttons
@@ -87,14 +87,14 @@ class KeyboardViewController: UIInputViewController {
         
         // create bottom row view and add all buttons to view
         
-        var bottomRowView = UIView(frame: CGRectMake(0, 80, 320, 40))
+        let bottomRowView = UIView()
         bottomRowView.backgroundColor = UIColor.lightGrayColor()
         
         for button in bottomRowButtons {
             bottomRowView.addSubview(button)
         }
         
-        self.view.addSubview(bottomRowView)
+        self.inputView!.addSubview(bottomRowView)
         self.bottomRowView = bottomRowView
         
         // create util row buttons
@@ -151,30 +151,28 @@ class KeyboardViewController: UIInputViewController {
         
         // add util buttons to util view
         
-        let utilRowView = UIView(frame: CGRectMake(0, 120, 320, 40))
+        let utilRowView = UIView()
         utilRowView.backgroundColor = UIColor.lightGrayColor()
         
         for button in utilRowButtons {
             utilRowView.addSubview(button)
         }
         
-        self.view.addSubview(utilRowView)
+        self.inputView!.addSubview(utilRowView)
         self.utilRowView = utilRowView
         
-        // add util button constraints
+        // add constraints for rows
+        let rows = [topRowView, midRowView, bottomRowView, utilRowView]
+        addRowConstraints(rows, containingView: self.inputView!)
         
-        // add numbers button constraint
-        
-        // add nextKeyboard button constraint
-        
-        // add return button constraint
-        
-        // add constraints
- 
+        // add constraints for buttons
         addConstraints(topRowButtons, containingView: topRowView)
         addConstraints(midRowButtons, containingView: midRowView)
         addConstraints(bottomRowButtons, containingView: bottomRowView)
         addUtilRowConstraints(utilRowButtons, containingView: utilRowView)
+        for (i, row) in self.inputView!.subviews.enumerate() {
+            print(String(i) + " this many subviews on self.inputView")
+        }
     }
     
     func createButtons(titles: [String]) -> [UIView] {
@@ -198,6 +196,38 @@ class KeyboardViewController: UIInputViewController {
         }
         
         return buttons
+    }
+    
+    func addRowConstraints(rows: [UIView], containingView: UIView) {
+        for (index, row) in rows.enumerate() {
+            print(index)
+            
+            row.translatesAutoresizingMaskIntoConstraints = false
+            // top constraints
+            var topConstraint: NSLayoutConstraint
+            if (index == 0) {
+                print("index is 0 " + String(index))
+                topConstraint = NSLayoutConstraint(item: row, attribute: .Top, relatedBy: .Equal, toItem: containingView, attribute: .Top, multiplier: 1.0, constant: 0)
+            } else {
+                print("index is not 0 " + String(index))
+                topConstraint = NSLayoutConstraint(item: row, attribute: .Top, relatedBy: .Equal, toItem: rows[index - 1], attribute: .Bottom, multiplier: 1.0, constant: 0)
+            }
+            
+            // bottom constraint
+            if (index == 3) {
+                print("index is 3 " + String(index))
+                containingView.addConstraint(NSLayoutConstraint(item: row, attribute: .Bottom, relatedBy: .Equal, toItem: containingView, attribute: .Bottom, multiplier: 1.0, constant: 0))
+            } else {
+                print("index is not 3 " + String(index))
+                containingView.addConstraint(NSLayoutConstraint(item: row, attribute: .Bottom, relatedBy: .Equal, toItem: rows[index + 1], attribute: .Top, multiplier: 1.0, constant: 0))
+            }
+            
+            // side constraints
+            let leftConstraint = NSLayoutConstraint(item: row, attribute: .Left, relatedBy: .Equal, toItem: containingView, attribute: .Left, multiplier: 1.0, constant: 0)
+            let rightConstraint = NSLayoutConstraint(item: row, attribute: .Right, relatedBy: .Equal, toItem: containingView, attribute: .Right, multiplier: 1.0, constant: 0)
+            
+            containingView.addConstraints([topConstraint,leftConstraint, rightConstraint])
+        }
     }
     
     func addConstraints(buttons: [UIView], containingView: UIView) {
@@ -284,7 +314,7 @@ class KeyboardViewController: UIInputViewController {
                 handleTouchMoveInButton(subview)
                 isTouchInButton = true
                 // found the button so return
-                return
+                //return
             }
         }
         if (!isTouchInButton) {
@@ -334,7 +364,7 @@ class KeyboardViewController: UIInputViewController {
                 if (subview.tag == UtilKey.nextKeyboardKey.rawValue) {
                     self.advanceToNextInputMode()
                     // found the button so return
-                    return
+                    //return
                 } else {
                     print("inside button" + String(arc4random_uniform(9)))
                     var buttonLabel = subview.subviews[0] as! UILabel
@@ -342,7 +372,7 @@ class KeyboardViewController: UIInputViewController {
                     self.textDocumentProxy.insertText(buttonLabel.text!)
                     isTouchInButton = true
                     // found the button so return
-                    return
+                    //return
                 }
             }
         }
