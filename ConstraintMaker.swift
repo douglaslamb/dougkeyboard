@@ -59,36 +59,39 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
-    static func addRowConstraintsToSuperview(rows: [UIView], sideSpace: CGFloat = 0, topSpace: CGFloat = 0, bottomSpace: CGFloat = 0, betweenSpace: CGFloat = 0, containingView: UIView) {
+    static func addRowConstraintsToSuperview(rows: [[UIView]], sideSpace: CGFloat = 0, topSpace: CGFloat = 0, bottomSpace: CGFloat = 0, betweenSpace: CGFloat = 0, containingView: UIView) {
         
         var constraints = [NSLayoutConstraint]()
         
         for (index, row) in rows.enumerate() {
             
-            // set height
-            let heightConstraint = NSLayoutConstraint(item: rows[0], attribute: .Height, relatedBy: .Equal, toItem: row, attribute: .Height, multiplier: 1.0, constant: 0)
-            constraints.append(heightConstraint)
+            for rowInstance in row {
             
-            // set side constraints
-            // side constraints are same for all rows
-            let leftConstraint = NSLayoutConstraint(item: row, attribute: .Left, relatedBy: .Equal, toItem: containingView, attribute: .Left, multiplier: 1.0, constant: sideSpace)
-            let rightConstraint = NSLayoutConstraint(item: row, attribute: .Right, relatedBy: .Equal, toItem: containingView, attribute: .Right, multiplier: 1.0, constant: -1 * sideSpace)
-            constraints.append(leftConstraint)
-            constraints.append(rightConstraint)
+                // set height
+                let heightConstraint = NSLayoutConstraint(item: rows[0][0], attribute: .Height, relatedBy: .Equal, toItem: rowInstance, attribute: .Height, multiplier: 1.0, constant: 0)
+                constraints.append(heightConstraint)
             
-            // set top constraint
-            var topConstraint: NSLayoutConstraint
-            if (index == 0) {
-                topConstraint = NSLayoutConstraint(item: row, attribute: .Top, relatedBy: .Equal, toItem: containingView, attribute: .Top, multiplier: 1.0, constant: topSpace)
-            } else {
-                topConstraint = NSLayoutConstraint(item: row, attribute: .Top, relatedBy: .Equal, toItem: rows[index - 1], attribute: .Bottom, multiplier: 1.0, constant: betweenSpace)
-            }
-            constraints.append(topConstraint)
+                // set side constraints
+                // side constraints are same for all rows
+                let leftConstraint = NSLayoutConstraint(item: rowInstance, attribute: .Left, relatedBy: .Equal, toItem: containingView, attribute: .Left, multiplier: 1.0, constant: sideSpace)
+                let rightConstraint = NSLayoutConstraint(item: rowInstance, attribute: .Right, relatedBy: .Equal, toItem: containingView, attribute: .Right, multiplier: 1.0, constant: -1 * sideSpace)
+                constraints.append(leftConstraint)
+                constraints.append(rightConstraint)
             
-            // set bottom constraint
-            if (index == rows.count - 1) {
-                let bottomConstraint = NSLayoutConstraint(item: row, attribute: .Bottom, relatedBy: .Equal, toItem: containingView, attribute: .Bottom, multiplier: 1.0, constant: -1 * bottomSpace)
-                constraints.append(bottomConstraint)
+                // set top constraint
+                var topConstraint: NSLayoutConstraint
+                if (index == 0) {
+                    topConstraint = NSLayoutConstraint(item: rowInstance, attribute: .Top, relatedBy: .Equal, toItem: containingView, attribute: .Top, multiplier: 1.0, constant: topSpace)
+                } else {
+                    topConstraint = NSLayoutConstraint(item: rowInstance, attribute: .Top, relatedBy: .Equal, toItem: rows[index - 1][0], attribute: .Bottom, multiplier: 1.0, constant: betweenSpace)
+                }
+                constraints.append(topConstraint)
+            
+                // set bottom constraint
+                if (index == rows.count - 1) {
+                    let bottomConstraint = NSLayoutConstraint(item: rowInstance, attribute: .Bottom, relatedBy: .Equal, toItem: containingView, attribute: .Bottom, multiplier: 1.0, constant: -1 * bottomSpace)
+                    constraints.append(bottomConstraint)
+                }
             }
         }
         

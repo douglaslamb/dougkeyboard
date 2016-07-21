@@ -16,6 +16,10 @@ class KeyboardViewController: UIInputViewController {
     var bottomRowView: UIView = UIView()
     var utilRowView: UIView = UIView()
     var topRowNumberView: UIView = UIView()
+    var midRowNumberView: UIView = UIView()
+    var bottomRowNumberView: UIView = UIView()
+    var topRowPuncView: UIView = UIView()
+    var midRowPuncView: UIView = UIView()
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey
     }
@@ -41,7 +45,6 @@ class KeyboardViewController: UIInputViewController {
         
         self.inputView!.addSubview(topRowView)
         self.topRowView = topRowView
-        
         
         // create mid row buttons
         let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
@@ -72,10 +75,16 @@ class KeyboardViewController: UIInputViewController {
         shiftKey.layer.cornerRadius = 5
         bottomRowButtons.append(shiftKey)
         
-        // add letter buttons to bottom row
+        // add letter buttons to bottom row subrow
         
-        let bottomRowButtonTitles = ["Z", "X", "C", "V", "B", "N", "M"]
-        bottomRowButtons = bottomRowButtons + createButtons(bottomRowButtonTitles)
+        let bottomRowLetterTitles = ["Z", "X", "C", "V", "B", "N", "M"]
+        let bottomRowLettersSubrow = UIView()
+        let bottomRowLettersSubrowButtons = createButtons(bottomRowLetterTitles)
+        for button in bottomRowLettersSubrowButtons {
+            bottomRowLettersSubrow.addSubview(button)
+        }
+        bottomRowLettersSubrow.translatesAutoresizingMaskIntoConstraints = false
+        bottomRowButtons.append(bottomRowLettersSubrow)
         
         // add backspace key to bottom row
         
@@ -162,9 +171,11 @@ class KeyboardViewController: UIInputViewController {
         self.inputView!.addSubview(utilRowView)
         self.utilRowView = utilRowView
         
+        // NUMBERS PAGE!!!
+        
         // create top row numbers
         let topRowNumberButtonTitles = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-        let topRowNumberButtons = createButtons(topRowButtonTitles)
+        let topRowNumberButtons = createButtons(topRowNumberButtonTitles)
         let topRowNumberView = UIView()
         topRowNumberView.backgroundColor = UIColor.lightGrayColor()
         
@@ -172,25 +183,111 @@ class KeyboardViewController: UIInputViewController {
             topRowNumberView.addSubview(button)
         }
         
-        // uncomment below line when ready to add this number row
-        //self.inputView!.addSubview(topRowNumberView)
+        self.inputView!.addSubview(topRowNumberView)
         self.topRowNumberView = topRowNumberView
         
+        // hide top number row to start
+        self.topRowNumberView.hidden = true
+        
+        // create mid row numbers
+        let midRowNumberButtonTitles = ["-", "/", ":", ";", "(", ")", "$", "&", "@", "\""]
+        let midRowNumberButtons = createButtons(midRowNumberButtonTitles)
+        let midRowNumberView = UIView()
+        midRowNumberView.backgroundColor = UIColor.lightGrayColor()
+        
+        for button in midRowNumberButtons {
+            midRowNumberView.addSubview(button)
+        }
+        
+        self.inputView!.addSubview(midRowNumberView)
+        self.midRowNumberView = midRowNumberView
+        
+        // hide mid number row to start
+        self.midRowNumberView.hidden = true
+        
+        // create bottom row numbers
+        // add backspace and switch to punctuation buttons later
+        let bottomRowNumberButtonTitles = [".", ",", "?", "!", "'"]
+        let bottomRowNumberButtons = createButtons(bottomRowNumberButtonTitles)
+        let bottomRowNumberView = UIView()
+        bottomRowNumberView.backgroundColor = UIColor.lightGrayColor()
+        
+        for button in bottomRowNumberButtons {
+            bottomRowNumberView.addSubview(button)
+        }
+        
+        self.inputView!.addSubview(bottomRowNumberView)
+        self.bottomRowNumberView = bottomRowNumberView
+        
+        // hide bottom number row to start
+        self.bottomRowNumberView.hidden = true
+        
+        // PUNCTUATION PAGE !!!
+        
+        // create top row punc
+        let topRowPuncButtonTitles = ["[", "]", "{", "}", "#", "%", "^", "*", "+", "="]
+        let topRowPuncButtons = createButtons(topRowPuncButtonTitles)
+        let topRowPuncView = UIView()
+        topRowPuncView.backgroundColor = UIColor.lightGrayColor()
+        
+        for button in topRowPuncButtons {
+            topRowPuncView.addSubview(button)
+        }
+        
+        self.inputView!.addSubview(topRowPuncView)
+        self.topRowPuncView = topRowPuncView
+        
+        // hide top punc row to start
+        self.topRowPuncView.hidden = true
+        
+        // create mid row punc
+        let euro = "\u{20AC}"
+        let pound = "\u{00A3}"
+        let yen = "\u{00A5}"
+        let bullet = "\u{2022}"
+        let midRowPuncButtonTitles = ["_", "\\", "|", "~", "<", ">", euro, pound, yen, bullet]
+        let midRowPuncButtons = createButtons(midRowPuncButtonTitles)
+        let midRowPuncView = UIView()
+        midRowPuncView.backgroundColor = UIColor.lightGrayColor()
+        
+        for button in midRowPuncButtons {
+            midRowPuncView.addSubview(button)
+        }
+        
+        self.inputView!.addSubview(midRowPuncView)
+        self.midRowPuncView = midRowPuncView
+        
+        // hide mid punc row to start
+        self.midRowPuncView.hidden = true
+        
         // add constraints for rows in superview
-        let rows = [self.topRowView, self.midRowView, self.bottomRowView, self.utilRowView]
+        let rows = [[self.topRowView, self.topRowNumberView, self.topRowPuncView], [self.midRowView, self.midRowNumberView, self.midRowPuncView], [self.bottomRowView, self.bottomRowNumberView], [self.utilRowView]]
+        
         for row in rows {
-            row.translatesAutoresizingMaskIntoConstraints = false
+            for view in row {
+                view.translatesAutoresizingMaskIntoConstraints = false
+            }
         }
         ConstraintMaker.addRowConstraintsToSuperview(rows, containingView: self.inputView!)
         
-        // do stuff for number rows
-        
+        // add constraints to bottomRowLettersSubrow
+        ConstraintMaker.addButtonConstraintsToRow(bottomRowLettersSubrowButtons, sideSpace: 0, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: bottomRowLettersSubrow)
         
         // add constraints for buttons in rows
+        // LETTERS SCREEN
         ConstraintMaker.addButtonConstraintsToRow(topRowButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowView)
         ConstraintMaker.addButtonConstraintsToRow(midRowButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowView)
-        ConstraintMaker.addButtonConstraintsToRow(bottomRowButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: bottomRowView)
+        ConstraintMaker.addButtonConstraintsToRow(bottomRowButtons, widths: [60, nil, 60], sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: bottomRowView)
         ConstraintMaker.addButtonConstraintsToRow(utilRowButtons, widths: [40, 40, nil, 80], sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: utilRowView)
+        
+        // NUMBERS SCREEN
+        ConstraintMaker.addButtonConstraintsToRow(topRowNumberButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowNumberView)
+        ConstraintMaker.addButtonConstraintsToRow(midRowNumberButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowNumberView)
+        ConstraintMaker.addButtonConstraintsToRow(bottomRowNumberButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: bottomRowNumberView)
+        
+        // PUNC SCREEN
+        ConstraintMaker.addButtonConstraintsToRow(topRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowPuncView)
+        ConstraintMaker.addButtonConstraintsToRow(midRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowPuncView)
     }
     
     func createButtons(titles: [String]) -> [UIView] {
