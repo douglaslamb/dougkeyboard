@@ -17,7 +17,6 @@ class KeyboardViewController: UIInputViewController {
     var utilRowView: UIView = UIView()
     var topRowNumberView: UIView = UIView()
     var midRowNumberView: UIView = UIView()
-    var bottomRowNumberView: UIView = UIView()
     var topRowPuncView: UIView = UIView()
     var midRowPuncView: UIView = UIView()
     enum UtilKey: Int {
@@ -75,16 +74,11 @@ class KeyboardViewController: UIInputViewController {
         shiftKey.layer.cornerRadius = 5
         bottomRowButtons.append(shiftKey)
         
-        // add letter buttons to bottom row subrow
+        // add letter buttons to bottom row
         
         let bottomRowLetterTitles = ["Z", "X", "C", "V", "B", "N", "M"]
-        let bottomRowLettersSubrow = UIView()
-        let bottomRowLettersSubrowButtons = createButtons(bottomRowLetterTitles)
-        for button in bottomRowLettersSubrowButtons {
-            bottomRowLettersSubrow.addSubview(button)
-        }
-        bottomRowLettersSubrow.translatesAutoresizingMaskIntoConstraints = false
-        bottomRowButtons.append(bottomRowLettersSubrow)
+        let bottomRowLettersButtons = createButtons(bottomRowLetterTitles)
+        bottomRowButtons = bottomRowButtons + bottomRowLettersButtons
         
         // add backspace key to bottom row
         
@@ -205,22 +199,19 @@ class KeyboardViewController: UIInputViewController {
         // hide mid number row to start
         self.midRowNumberView.hidden = true
         
-        // create bottom row numbers
+        /// create bottom row numbers
         // add backspace and switch to punctuation buttons later
         let bottomRowNumberButtonTitles = [".", ",", "?", "!", "'"]
         let bottomRowNumberButtons = createButtons(bottomRowNumberButtonTitles)
-        let bottomRowNumberView = UIView()
-        bottomRowNumberView.backgroundColor = UIColor.lightGrayColor()
         
         for button in bottomRowNumberButtons {
-            bottomRowNumberView.addSubview(button)
+            bottomRowView.addSubview(button)
         }
         
-        self.inputView!.addSubview(bottomRowNumberView)
-        self.bottomRowNumberView = bottomRowNumberView
-        
         // hide bottom number row to start
-        self.bottomRowNumberView.hidden = true
+        for button in bottomRowNumberButtons {
+            button.hidden = true
+        }
         
         // PUNCTUATION PAGE !!!
         
@@ -261,7 +252,7 @@ class KeyboardViewController: UIInputViewController {
         self.midRowPuncView.hidden = true
         
         // add constraints for rows in superview
-        let rows = [[self.topRowView, self.topRowNumberView, self.topRowPuncView], [self.midRowView, self.midRowNumberView, self.midRowPuncView], [self.bottomRowView, self.bottomRowNumberView], [self.utilRowView]]
+        let rows = [[self.topRowView, self.topRowNumberView, self.topRowPuncView], [self.midRowView, self.midRowNumberView, self.midRowPuncView], [self.bottomRowView], [self.utilRowView]]
         
         for row in rows {
             for view in row {
@@ -270,20 +261,47 @@ class KeyboardViewController: UIInputViewController {
         }
         ConstraintMaker.addRowConstraintsToSuperview(rows, containingView: self.inputView!)
         
-        // add constraints to bottomRowLettersSubrow
-        ConstraintMaker.addButtonConstraintsToRow(bottomRowLettersSubrowButtons, sideSpace: 0, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: bottomRowLettersSubrow)
-        
         // add constraints for buttons in rows
         // LETTERS SCREEN
         ConstraintMaker.addButtonConstraintsToRow(topRowButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowView)
         ConstraintMaker.addButtonConstraintsToRow(midRowButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowView)
-        ConstraintMaker.addButtonConstraintsToRow(bottomRowButtons, widths: [60, nil, 60], sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: bottomRowView)
+        ConstraintMaker.addButtonConstraintsToRow(bottomRowButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: bottomRowView)
         ConstraintMaker.addButtonConstraintsToRow(utilRowButtons, widths: [40, 40, nil, 80], sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: utilRowView)
         
         // NUMBERS SCREEN
         ConstraintMaker.addButtonConstraintsToRow(topRowNumberButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowNumberView)
         ConstraintMaker.addButtonConstraintsToRow(midRowNumberButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowNumberView)
-        ConstraintMaker.addButtonConstraintsToRow(bottomRowNumberButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: bottomRowNumberView)
+        
+        // SPECIAL CASE: bottom row numbers
+        // add these constraints manually
+        // because the ConstraintMaker functions cannot handle them
+        for (index, button) in bottomRowNumberButtons.enumerate() {
+            let leftButton = shiftKey
+            let rightButton = backspaceKey
+            var constraints = [NSLayoutConstraint]()
+            let container = bottomRowView
+            // set left constraint
+            if index == 0 {
+                constraints.append(NSLayoutConstraint(item: button, attribute: .Left, relatedBy: .Equal, toItem: leftButton, attribute: .Right, multiplier: 1.0, constant: 1))
+            } else {
+                constraints.append(NSLayoutConstraint(item: button, attribute: .Left, relatedBy: .Equal, toItem: bottomRowNumberButtons[index - 1] , attribute: .Right, multiplier: 1.0, constant: 1))
+            }
+        
+            // set right constraint if last button
+            if index == bottomRowNumberButtons.count - 1 {
+                constraints.append(NSLayoutConstraint(item: button, attribute: .Right, relatedBy: .Equal, toItem: rightButton, attribute: .Left, multiplier: 1.0, constant: -1))
+            }
+            
+            // set top and bottom constraints, same for all
+            constraints.append(NSLayoutConstraint(item: button, attribute: .Top, relatedBy: .Equal, toItem: container, attribute: .Top, multiplier: 1.0, constant: 1))
+            constraints.append(NSLayoutConstraint(item: button, attribute: .Bottom, relatedBy: .Equal, toItem: container, attribute: .Bottom, multiplier: 1.0, constant: -1))
+            
+            // set widths
+            constraints.append(NSLayoutConstraint(item: bottomRowNumberButtons[0], attribute: .Width, relatedBy: .Equal, toItem: button, attribute: .Width, multiplier: 1.0, constant: 0))
+            
+            // activate constraints
+            NSLayoutConstraint.activateConstraints(constraints)
+        }
         
         // PUNC SCREEN
         ConstraintMaker.addButtonConstraintsToRow(topRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowPuncView)
@@ -311,6 +329,18 @@ class KeyboardViewController: UIInputViewController {
         }
         
         return buttons
+    }
+    
+    func hideButtons(buttons: [UIView]) {
+        for button in buttons {
+            button.hidden = true
+        }
+    }
+    
+    func unhideButtons(buttons: [UIView]) {
+        for button in buttons {
+            button.hidden = false
+        }
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -409,7 +439,6 @@ class KeyboardViewController: UIInputViewController {
         } else {
             textColor = UIColor.blackColor()
         }
-        //self.nextKeyboardButton.setTitleColor(textColor, forState: .Normal)
     }
 
 }
