@@ -10,7 +10,7 @@ import UIKit
 
 class KeyboardViewController: UIInputViewController {
     
-    var prevButton = ""
+    // views
     var topRowView: UIView = UIView()
     var midRowView: UIView = UIView()
     var bottomRowView: UIView = UIView()
@@ -19,6 +19,14 @@ class KeyboardViewController: UIInputViewController {
     var midRowNumberView: UIView = UIView()
     var topRowPuncView: UIView = UIView()
     var midRowPuncView: UIView = UIView()
+    
+    // global keys
+    var shiftKey: UIImageView = UIImageView()
+    
+    // global vars
+    var isShift: Bool = false
+    var prevButton = ""
+    
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey
     }
@@ -73,6 +81,8 @@ class KeyboardViewController: UIInputViewController {
         shiftKey.layer.masksToBounds = true
         shiftKey.layer.cornerRadius = 5
         bottomRowButtons.append(shiftKey)
+        shiftKey.tag = UtilKey.shiftKey.rawValue
+        self.shiftKey = shiftKey
         
         // add letter buttons to bottom row
         
@@ -349,7 +359,7 @@ class KeyboardViewController: UIInputViewController {
         var isTouchInButton = false
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
-            if subview.pointInside(touchPoint, withEvent: event) {
+            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden {
                 handleTouchMoveInButton(subview)
                 isTouchInButton = true
                 // found the button so return
@@ -399,16 +409,20 @@ class KeyboardViewController: UIInputViewController {
         // check each uiview for touch
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
-            if subview.pointInside(touchPoint, withEvent: event) {
-                if (subview.tag == UtilKey.nextKeyboardKey.rawValue) {
-                    self.advanceToNextInputMode()
+            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden {
+                if (subview.tag != 0) {
+                    doKeyFunction(subview.tag)
                     // found the button so return
                     //return
                 } else {
                     print("inside button" + String(arc4random_uniform(9)))
-                    var buttonLabel = subview.subviews[0] as! UILabel
-                    self.prevButton = buttonLabel.text!
-                    self.textDocumentProxy.insertText(buttonLabel.text!)
+                    let buttonLabel = subview.subviews[0] as! UILabel
+                    let character = buttonLabel.text!
+                    self.prevButton = character
+                    if self.isShift {
+                       character.lowercaseString
+                    }
+                    self.textDocumentProxy.insertText(character)
                     isTouchInButton = true
                     // found the button so return
                     //return
@@ -417,6 +431,26 @@ class KeyboardViewController: UIInputViewController {
         }
         if (!isTouchInButton) {
             self.prevButton = ""
+        }
+    }
+    
+    func doKeyFunction(tag: Int) {
+        // handler function for function keys like shift
+        switch tag {
+        case UtilKey.nextKeyboardKey.rawValue:
+            self.advanceToNextInputMode()
+        case UtilKey.shiftKey.rawValue:
+            // change shift key image
+            // set global boolean
+            if self.isShift {
+                self.isShift = false
+                self.shiftKey.image = UIImage(named: "shift")
+            } else {
+                self.isShift = true
+                self.shiftKey.image = UIImage(named: "shiftDown")
+            }
+        default:
+            return
         }
     }
     
