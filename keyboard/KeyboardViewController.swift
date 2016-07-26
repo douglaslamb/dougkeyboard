@@ -26,9 +26,10 @@ class KeyboardViewController: UIInputViewController {
     // global vars
     var isShift: Bool = false
     var prevButton = ""
+    var disableTouch = false;
     
     enum UtilKey: Int {
-        case nextKeyboardKey = 1, returnKey, shiftKey
+        case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersOrLettersKey, numbersOrPuncKey
     }
 
     override func updateViewConstraints() {
@@ -97,6 +98,7 @@ class KeyboardViewController: UIInputViewController {
         backspaceKey.translatesAutoresizingMaskIntoConstraints = false
         backspaceKey.layer.masksToBounds = true
         backspaceKey.layer.cornerRadius = 5
+        backspaceKey.tag = UtilKey.backspaceKey.rawValue
         bottomRowButtons.append(backspaceKey)
         
         // create bottom row view and add all buttons to view
@@ -125,6 +127,7 @@ class KeyboardViewController: UIInputViewController {
         numbersKey.backgroundColor = UIColor.whiteColor()
         numbersKey.layer.cornerRadius = 5
         numbersKey.translatesAutoresizingMaskIntoConstraints = false
+        numbersKey.tag = UtilKey.numbersOrLettersKey.rawValue
         
         utilRowButtons.append(numbersKey)
 
@@ -145,6 +148,10 @@ class KeyboardViewController: UIInputViewController {
         
         let spacebarKey = UIView()
         
+        let spacebarKeyLabel = UILabel(frame: CGRectMake(10.0, 10.0, 60, 25))
+        spacebarKeyLabel.text = " "
+        spacebarKey.addSubview(spacebarKeyLabel)
+        
         spacebarKey.backgroundColor = UIColor.whiteColor()
         spacebarKey.layer.cornerRadius = 5
         spacebarKey.translatesAutoresizingMaskIntoConstraints = false
@@ -160,6 +167,7 @@ class KeyboardViewController: UIInputViewController {
         returnKey.layer.cornerRadius = 5
         returnKey.translatesAutoresizingMaskIntoConstraints = false
         returnKey.layer.masksToBounds = true
+        returnKey.tag = UtilKey.returnKey.rawValue
         
         utilRowButtons.append(returnKey)
         
@@ -354,12 +362,17 @@ class KeyboardViewController: UIInputViewController {
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        // if touch is disabled early return and do nothing
+        if self.disableTouch {
+            return
+        }
         print("touchesMoved" + String(arc4random_uniform(9)))
         let subviews = self.topRowView.subviews + self.midRowView.subviews + self.bottomRowView.subviews + self.utilRowView.subviews
         var isTouchInButton = false
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
-            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden {
+            // if touch is in a button, and button is not hidden then handle touch
+            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden && subview.tag == 0 {
                 handleTouchMoveInButton(subview)
                 isTouchInButton = true
                 // found the button so return
@@ -379,7 +392,7 @@ class KeyboardViewController: UIInputViewController {
     func handleTouchMoveInButton(view: UIView) {
         let buttonLabel = view.subviews[0] as! UILabel
         let currButtonLabel = buttonLabel.text!
-        let character = self.isShift ? currButtonLabel.lowercaseString : currButtonLabel
+        let character = self.isShift ? currButtonLabel : currButtonLabel.lowercaseString
         // checking if we insert text or
         // delete and insert text
         if (self.prevButton != currButtonLabel) {
@@ -411,14 +424,19 @@ class KeyboardViewController: UIInputViewController {
             let touchPoint = touches.first!.locationInView(subview)
             if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden {
                 if (subview.tag != 0) {
-                    doKeyFunction(subview.tag)
+                    // pass to utility key function handler
+                    // like for shift key
+                    doKeyFunction(subview)
+                    // disable touch so if user drags out of util
+                    // key it won't crash
+                    self.disableTouch = true;
                     // found the button so return
                     //return
                 } else {
                     print("inside button" + String(arc4random_uniform(9)))
                     let buttonLabel = subview.subviews[0] as! UILabel
                     let currButtonLabel = buttonLabel.text!
-                    let character = self.isShift ? currButtonLabel.lowercaseString : currButtonLabel
+                    let character = self.isShift ? currButtonLabel: currButtonLabel.lowercaseString
                     self.textDocumentProxy.insertText(character)
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
@@ -432,24 +450,34 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
-    func doKeyFunction(tag: Int) {
+    func doKeyFunction(key: UIView) {
         // handler function for function keys like shift
+        let tag = key.tag
         switch tag {
         case UtilKey.nextKeyboardKey.rawValue:
             self.advanceToNextInputMode()
         case UtilKey.shiftKey.rawValue:
             // change shift key image
             // set global boolean
+            shiftKey = key as! UIImageView
             if self.isShift {
                 self.isShift = false
-                self.shiftKey.image = UIImage(named: "shift")
+                shiftKey.image = UIImage(named: "shift")
             } else {
                 self.isShift = true
-                self.shiftKey.image = UIImage(named: "shiftDown")
+                shiftKey.image = UIImage(named: "shiftDown")
             }
+        case UtilKey.returnKey.rawValue:
+            self.textDocumentProxy.insertText("\n")
+        case UtilKey.backspaceKey.rawValue:
+            self.textDocumentProxy.deleteBackward()
         default:
             return
         }
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        self.disableTouch = false;
     }
     
     override func didReceiveMemoryWarning() {
