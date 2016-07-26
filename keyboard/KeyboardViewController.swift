@@ -371,7 +371,7 @@ class KeyboardViewController: UIInputViewController {
             if (prevButton != "") {
                 // if touch was just in a button
                 self.textDocumentProxy.deleteBackward()
-                prevButton = ""
+                self.prevButton = ""
             }
         }
     }
@@ -379,22 +379,22 @@ class KeyboardViewController: UIInputViewController {
     func handleTouchMoveInButton(view: UIView) {
         let buttonLabel = view.subviews[0] as! UILabel
         let currButtonLabel = buttonLabel.text!
-        //checking if we delete text
-        // or insert or both
+        let character = self.isShift ? currButtonLabel.lowercaseString : currButtonLabel
+        // checking if we insert text or
+        // delete and insert text
         if (self.prevButton != currButtonLabel) {
             // if the current button is not the previous
             if (self.prevButton == "") {
                 // if the previous button was outside buttons
-                self.textDocumentProxy.insertText(currButtonLabel)
-                self.prevButton = currButtonLabel
+                self.textDocumentProxy.insertText(character)
             } else {
                 // in this case the previous button
                 // was a different character.
                 // i.e. slide from button to button
                 self.textDocumentProxy.deleteBackward()
-                self.textDocumentProxy.insertText(currButtonLabel)
-                self.prevButton = currButtonLabel
+                self.textDocumentProxy.insertText(character)
             }
+            self.prevButton = currButtonLabel
         }
         print(view.dynamicType)
     }
@@ -417,13 +417,11 @@ class KeyboardViewController: UIInputViewController {
                 } else {
                     print("inside button" + String(arc4random_uniform(9)))
                     let buttonLabel = subview.subviews[0] as! UILabel
-                    let character = buttonLabel.text!
-                    self.prevButton = character
-                    if self.isShift {
-                       character.lowercaseString
-                    }
+                    let currButtonLabel = buttonLabel.text!
+                    let character = self.isShift ? currButtonLabel.lowercaseString : currButtonLabel
                     self.textDocumentProxy.insertText(character)
                     isTouchInButton = true
+                    self.prevButton = currButtonLabel
                     // found the button so return
                     //return
                 }
