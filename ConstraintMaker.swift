@@ -98,4 +98,8 @@ class ConstraintMaker {
         // activate all constraints
         NSLayoutConstraint.activateConstraints(constraints)
     }
+    
+    static func addConstraintSingleElement(item: UIView, leftSpace: CGFloat? = nil, rightSpace: CGFloat? = nil, topSpace: CGFloat? = nil, bottomSpace: CGFloat? = nil, width: CGFloat? = nil, height: CGFloat? = nil, leftItem: UIView? = nil, rightItem: UIView? = nil, topItem: UIView? = nil, bottomItem: UIView? = nil, containingView: UIView) {
+        return
+    }
 }

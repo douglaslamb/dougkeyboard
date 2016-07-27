@@ -10,6 +10,10 @@ import UIKit
 
 class KeyboardViewController: UIInputViewController {
     
+    // it's bottomRowNumberButtons (number singular)
+    // and bottomRowLettersButtons (letter plural)
+    // it's just the way I wrote them
+    
     // views
     var topRowView: UIView = UIView()
     var midRowView: UIView = UIView()
@@ -20,16 +24,16 @@ class KeyboardViewController: UIInputViewController {
     var topRowPuncView: UIView = UIView()
     var midRowPuncView: UIView = UIView()
     
-    // global keys
-    var shiftKey: UIImageView = UIImageView()
-    
     // global vars
     var isShift: Bool = false
+    var isNumbersPage: Bool = false
     var prevButton = ""
     var disableTouch = false;
+    var bottomRowNumberButtonsAndNumbersPunc: [UIView] = [UIView]()
+    var bottomRowLettersButtonsAndShift: [UIView] = [UIView]()
     
     enum UtilKey: Int {
-        case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersOrLettersKey, numbersOrPuncKey
+        case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
     }
 
     override func updateViewConstraints() {
@@ -83,12 +87,12 @@ class KeyboardViewController: UIInputViewController {
         shiftKey.layer.cornerRadius = 5
         bottomRowButtons.append(shiftKey)
         shiftKey.tag = UtilKey.shiftKey.rawValue
-        self.shiftKey = shiftKey
         
         // add letter buttons to bottom row
         
         let bottomRowLetterTitles = ["Z", "X", "C", "V", "B", "N", "M"]
         let bottomRowLettersButtons = createButtons(bottomRowLetterTitles)
+        self.bottomRowLettersButtonsAndShift = bottomRowLettersButtons + [shiftKey]
         bottomRowButtons = bottomRowButtons + bottomRowLettersButtons
         
         // add backspace key to bottom row
@@ -127,7 +131,7 @@ class KeyboardViewController: UIInputViewController {
         numbersKey.backgroundColor = UIColor.whiteColor()
         numbersKey.layer.cornerRadius = 5
         numbersKey.translatesAutoresizingMaskIntoConstraints = false
-        numbersKey.tag = UtilKey.numbersOrLettersKey.rawValue
+        numbersKey.tag = UtilKey.numbersLettersKey.rawValue
         
         utilRowButtons.append(numbersKey)
 
@@ -218,7 +222,8 @@ class KeyboardViewController: UIInputViewController {
         self.midRowNumberView.hidden = true
         
         /// create bottom row numbers
-        // add backspace and switch to punctuation buttons later
+        // this punctuation row does not have its own view
+        // it goes into the bottomRowView, but it will be hidden to start
         let bottomRowNumberButtonTitles = [".", ",", "?", "!", "'"]
         let bottomRowNumberButtons = createButtons(bottomRowNumberButtonTitles)
         
@@ -227,9 +232,25 @@ class KeyboardViewController: UIInputViewController {
         }
         
         // hide bottom number row to start
-        for button in bottomRowNumberButtons {
-            button.hidden = true
-        }
+        hideButtons(bottomRowNumberButtons)
+        
+        // add numbersPunc key to bottom row
+        
+        let numbersPuncKey = UIView()
+        let numbersPuncKeyLabel = UILabel(frame: CGRectMake(3.0, 10.0, 60, 25))
+        numbersPuncKeyLabel.text = "#+="
+        numbersPuncKey.addSubview(numbersPuncKeyLabel)
+        
+        numbersPuncKey.backgroundColor = UIColor.whiteColor()
+        numbersPuncKey.layer.cornerRadius = 5
+        numbersPuncKey.translatesAutoresizingMaskIntoConstraints = false
+        numbersPuncKey.tag = UtilKey.numbersPuncKey.rawValue
+        numbersPuncKey.hidden = true
+        
+        // save as global var
+        self.bottomRowNumberButtonsAndNumbersPunc = bottomRowNumberButtons + [numbersPuncKey]
+        
+        self.bottomRowView.addSubview(numbersPuncKey)
         
         // PUNCTUATION PAGE !!!
         
@@ -320,6 +341,17 @@ class KeyboardViewController: UIInputViewController {
             // activate constraints
             NSLayoutConstraint.activateConstraints(constraints)
         }
+        
+        // SPECIAL CASE: numbersPunc key
+        // this needs the same constraints as the shift key
+        // add the constraints manually
+        // The ConstraintMaker functions cannot handle this
+        // setting right constraint relative to the "Z" key
+        
+        numbersPuncKey.leftAnchor.constraintEqualToAnchor(bottomRowView.leftAnchor, constant: 1).active = true
+        numbersPuncKey.rightAnchor.constraintEqualToAnchor(bottomRowButtons[1].leftAnchor, constant: -1).active = true
+        numbersPuncKey.topAnchor.constraintEqualToAnchor(bottomRowView.topAnchor, constant: 1).active = true
+        numbersPuncKey.bottomAnchor.constraintEqualToAnchor(bottomRowView.bottomAnchor, constant: -1).active = true
         
         // PUNC SCREEN
         ConstraintMaker.addButtonConstraintsToRow(topRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowPuncView)
@@ -459,7 +491,7 @@ class KeyboardViewController: UIInputViewController {
         case UtilKey.shiftKey.rawValue:
             // change shift key image
             // set global boolean
-            shiftKey = key as! UIImageView
+            let shiftKey = key as! UIImageView
             if self.isShift {
                 self.isShift = false
                 shiftKey.image = UIImage(named: "shift")
@@ -471,6 +503,27 @@ class KeyboardViewController: UIInputViewController {
             self.textDocumentProxy.insertText("\n")
         case UtilKey.backspaceKey.rawValue:
             self.textDocumentProxy.deleteBackward()
+        case UtilKey.numbersLettersKey.rawValue:
+            if self.isNumbersPage {
+                // switch back to letters page
+                self.isNumbersPage = false
+                topRowView.hidden = false
+                midRowView.hidden = false
+                topRowNumberView.hidden = true
+                midRowNumberView.hidden = true
+                hideButtons(self.bottomRowNumberButtonsAndNumbersPunc)
+                unhideButtons(self.bottomRowLettersButtonsAndShift)
+            } else {
+                // switch to numbers page
+                self.isNumbersPage = true
+                topRowView.hidden = true
+                midRowView.hidden = true
+                topRowNumberView.hidden = false
+                midRowNumberView.hidden = false
+                unhideButtons(self.bottomRowNumberButtonsAndNumbersPunc)
+                hideButtons(self.bottomRowLettersButtonsAndShift)
+            }
+            
         default:
             return
         }
