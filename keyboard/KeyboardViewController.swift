@@ -26,6 +26,8 @@ class KeyboardViewController: UIInputViewController {
     var isPuncsPage: Bool = false
     var prevButton = ""
     var disableTouch = false;
+    
+    // global arrays of buttons
     var lettersAndShift: [UIView] = [UIView]()
     var numbersAndPuncs: [UIView] = [UIView]()
     var puncs: [UIView] = [UIView]()
