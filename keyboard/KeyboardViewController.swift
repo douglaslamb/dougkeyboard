@@ -33,6 +33,8 @@ class KeyboardViewController: UIInputViewController {
     
     // keys
     var shiftKey: UIImageView = UIImageView()
+    var numbersKey: UIView = UIView()
+    var numbersPuncKey: UIView = UIView()
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
@@ -141,6 +143,9 @@ class KeyboardViewController: UIInputViewController {
         numbersKey.tag = UtilKey.numbersLettersKey.rawValue
         
         utilRowButtons.append(numbersKey)
+        
+        /// save later for label changing
+        self.numbersKey = numbersKey
 
         // next keyboard key
         
@@ -239,6 +244,9 @@ class KeyboardViewController: UIInputViewController {
         numbersPuncKey.layer.cornerRadius = 5
         numbersPuncKey.translatesAutoresizingMaskIntoConstraints = false
         numbersPuncKey.tag = UtilKey.numbersPuncKey.rawValue
+        
+        /// save global for label changing later
+        self.numbersPuncKey = numbersPuncKey
         
         // put ". < ? ..." in one array for hiding later
         self.lowerPuncsAndNumbersPuncsKey = bottomRowNumberButtons + [numbersPuncKey]
@@ -347,6 +355,9 @@ class KeyboardViewController: UIInputViewController {
     func goToNumbersPage() {
         // hide what needs to be hidden and set state
         // and other stuff
+        // set correct label on numbersPuncKey
+        let label = self.numbersPuncKey.subviews[0] as! UILabel
+        label.text = "#+="
         unhide(numbersAndPuncs)
         if self.isPuncsPage {
             hide(puncs)
@@ -354,6 +365,9 @@ class KeyboardViewController: UIInputViewController {
         } else {
             unhide(lowerPuncsAndNumbersPuncsKey)
             hide(lettersAndShift)
+            let label = self.numbersKey.subviews[0] as! UILabel
+            // put correct label on numbersKey
+            label.text = "ABC"
             self.isNumbersPage = true
         }
     }
@@ -363,12 +377,17 @@ class KeyboardViewController: UIInputViewController {
         // and other stuff
         hide(numbersAndPuncs)
         unhide(puncs)
+        // set correct label on numbersPuncKey
+        let label = self.numbersPuncKey.subviews[0] as! UILabel
+        label.text = "123"
+        // modify global state
         self.isPuncsPage = true
     }
     
     func goToLettersPage() {
         // hide what needs to be hidden and set state
         // and other stuff
+        shiftOff()
         unhide(lettersAndShift)
         hide(lowerPuncsAndNumbersPuncsKey)
         if self.isPuncsPage {
@@ -377,6 +396,10 @@ class KeyboardViewController: UIInputViewController {
         } else {
             hide(numbersAndPuncs)
         }
+        // put correct label on numbersKey
+        let label = self.numbersKey.subviews[0] as! UILabel
+        label.text = "123"
+        // modify global state
         self.isNumbersPage = false
     }
     
@@ -540,7 +563,12 @@ class KeyboardViewController: UIInputViewController {
                 // switch to numbers page
                 goToNumbersPage()
             }
-            
+        case UtilKey.numbersPuncKey.rawValue:
+            if self.isPuncsPage {
+                goToNumbersPage()
+            } else {
+                goToPuncsPage()
+            }
         default:
             return
         }
