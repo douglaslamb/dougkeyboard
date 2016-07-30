@@ -23,10 +23,10 @@
 		BFCACD4D1D2CA0E00013ABB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */; };
 		BFCACD4E1D2CA0E10013ABB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */; };
 		BFCACD4F1D2CA0E10013ABB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */; };
-		BFCDD7FE1D4B246E00809A7B /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDD7FD1D4B246E00809A7B /* KeyManager.swift */; };
-		BFCDD7FF1D4B246E00809A7B /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDD7FD1D4B246E00809A7B /* KeyManager.swift */; };
-		BFCDD8001D4B246E00809A7B /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDD7FD1D4B246E00809A7B /* KeyManager.swift */; };
-		BFCDD8011D4B246E00809A7B /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDD7FD1D4B246E00809A7B /* KeyManager.swift */; };
+		BFCDD7FE1D4B246E00809A7B /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDD7FD1D4B246E00809A7B /* KeyboardManager.swift */; };
+		BFCDD7FF1D4B246E00809A7B /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDD7FD1D4B246E00809A7B /* KeyboardManager.swift */; };
+		BFCDD8001D4B246E00809A7B /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDD7FD1D4B246E00809A7B /* KeyboardManager.swift */; };
+		BFCDD8011D4B246E00809A7B /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDD7FD1D4B246E00809A7B /* KeyboardManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +85,7 @@
 		BF5CEAFB1D1B38F20078C2D1 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		BF5CEAFD1D1B38F20078C2D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BF74C13A1D3D892D0088E585 /* ConstraintMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConstraintMaker.swift; path = ../ConstraintMaker.swift; sourceTree = "<group>"; };
-		BFCDD7FD1D4B246E00809A7B /* KeyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyManager.swift; sourceTree = "<group>"; };
+		BFCDD7FD1D4B246E00809A7B /* KeyboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,7 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				BF74C13A1D3D892D0088E585 /* ConstraintMaker.swift */,
-				BFCDD7FD1D4B246E00809A7B /* KeyManager.swift */,
+				BFCDD7FD1D4B246E00809A7B /* KeyboardManager.swift */,
 				BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */,
 				BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */,
 				BF5CEACB1D1B38C20078C2D1 /* Main.storyboard */,
@@ -351,7 +351,7 @@
 				BF5CEACA1D1B38C20078C2D1 /* ViewController.swift in Sources */,
 				BF5CEAC81D1B38C20078C2D1 /* AppDelegate.swift in Sources */,
 				BF74C13B1D3D892D0088E585 /* ConstraintMaker.swift in Sources */,
-				BFCDD7FE1D4B246E00809A7B /* KeyManager.swift in Sources */,
+				BFCDD7FE1D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,7 +361,7 @@
 			files = (
 				BF5CEADD1D1B38C20078C2D1 /* keyboard_201606220_01Tests.swift in Sources */,
 				BF74C13C1D3D892D0088E585 /* ConstraintMaker.swift in Sources */,
-				BFCDD7FF1D4B246E00809A7B /* KeyManager.swift in Sources */,
+				BFCDD7FF1D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,7 +371,7 @@
 			files = (
 				BF5CEAE81D1B38C20078C2D1 /* keyboard_201606220_01UITests.swift in Sources */,
 				BF74C13D1D3D892D0088E585 /* ConstraintMaker.swift in Sources */,
-				BFCDD8001D4B246E00809A7B /* KeyManager.swift in Sources */,
+				BFCDD8001D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,7 +381,7 @@
 			files = (
 				BF5CEAFC1D1B38F20078C2D1 /* KeyboardViewController.swift in Sources */,
 				BF74C13E1D3D892D0088E585 /* ConstraintMaker.swift in Sources */,
-				BFCDD8011D4B246E00809A7B /* KeyManager.swift in Sources */,
+				BFCDD8011D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

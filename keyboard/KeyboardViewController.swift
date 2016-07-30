@@ -21,22 +21,9 @@ class KeyboardViewController: UIInputViewController {
     var utilRowView: UIView = UIView()
     
     // global vars
-    var isShift: Bool = false
-    var isNumbersPage: Bool = false
-    var isPuncsPage: Bool = false
     var prevButton = ""
     var disableTouch = false;
-    
-    // global arrays of buttons
-    var lettersAndShift: [UIView] = [UIView]()
-    var numbersAndPuncs: [UIView] = [UIView]()
-    var puncs: [UIView] = [UIView]()
-    var lowerPuncsAndNumbersPuncsKey: [UIView] = [UIView]()
-    
-    // keys
-    var shiftKey: UIImageView = UIImageView()
-    var numbersKey: UIView = UIView()
-    var numbersPuncKey: UIView = UIView()
+    var manager: KeyboardManager = KeyboardManager()
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
@@ -95,7 +82,7 @@ class KeyboardViewController: UIInputViewController {
         shiftKey.tag = UtilKey.shiftKey.rawValue
         
         // save shift key as global to change image later
-        self.shiftKey = shiftKey
+        manager.shiftKey = shiftKey
         
         // add letter buttons to bottom row
         
@@ -104,7 +91,7 @@ class KeyboardViewController: UIInputViewController {
         bottomRowButtons = bottomRowButtons + bottomRowLettersButtons
         
         // put letters and shiftkey in one array to control hiding
-        self.lettersAndShift = topRowButtons + midRowButtons + bottomRowButtons
+        manager.lettersAndShift = topRowButtons + midRowButtons + bottomRowButtons
         
         // add backspace key to bottom row
         
@@ -147,7 +134,7 @@ class KeyboardViewController: UIInputViewController {
         utilRowButtons.append(numbersKey)
         
         /// save later for label changing
-        self.numbersKey = numbersKey
+        manager.numbersKey = numbersKey
 
         // next keyboard key
         
@@ -220,7 +207,8 @@ class KeyboardViewController: UIInputViewController {
         }
         
         // put top and mid number rows in one array for hiding later
-        self.numbersAndPuncs = topRowNumberButtons + midRowNumberButtons
+        manager
+            .numbersAndPuncs = topRowNumberButtons + midRowNumberButtons
         
         /// create bottom row numbers
         // this punctuation row does not have its own view
@@ -231,9 +219,6 @@ class KeyboardViewController: UIInputViewController {
         for button in bottomRowNumberButtons {
             bottomRowView.addSubview(button)
         }
-        
-        // hide bottom number row to start
-        hide(bottomRowNumberButtons)
         
         // add numbersPunc key to bottom row
         
@@ -248,10 +233,12 @@ class KeyboardViewController: UIInputViewController {
         numbersPuncKey.tag = UtilKey.numbersPuncKey.rawValue
         
         /// save global for label changing later
-        self.numbersPuncKey = numbersPuncKey
+        manager
+            .numbersPuncKey = numbersPuncKey
         
         // put ". < ? ..." in one array for hiding later
-        self.lowerPuncsAndNumbersPuncsKey = bottomRowNumberButtons + [numbersPuncKey]
+        manager
+            .lowerPuncsAndNumbersPuncsKey = bottomRowNumberButtons + [numbersPuncKey]
         
         self.bottomRowView.addSubview(numbersPuncKey)
         
@@ -278,7 +265,8 @@ class KeyboardViewController: UIInputViewController {
         }
         
         // put punc page in one array for hiding later
-        self.puncs = topRowPuncButtons + midRowPuncButtons
+        manager
+            .puncs = topRowPuncButtons + midRowPuncButtons
         
         // add constraints for rows in superview
         let rows = [[self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
@@ -348,71 +336,7 @@ class KeyboardViewController: UIInputViewController {
         ConstraintMaker.addButtonConstraintsToRow(midRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowView)
         
         // do startup hiding
-        hide(numbersAndPuncs)
-        hide(puncs)
-        hide(lowerPuncsAndNumbersPuncsKey)
-        goToLettersPage()
-    }
-    
-    func goToNumbersPage() {
-        // hide what needs to be hidden and set state
-        // and other stuff
-        // set correct label on numbersPuncKey
-        let label = self.numbersPuncKey.subviews[0] as! UILabel
-        label.text = "#+="
-        unhide(numbersAndPuncs)
-        if self.isPuncsPage {
-            hide(puncs)
-            self.isPuncsPage = false
-        } else {
-            unhide(lowerPuncsAndNumbersPuncsKey)
-            hide(lettersAndShift)
-            let label = self.numbersKey.subviews[0] as! UILabel
-            // put correct label on numbersKey
-            label.text = "ABC"
-            self.isNumbersPage = true
-        }
-    }
-    
-    func goToPuncsPage() {
-        // hide what needs to be hidden and set state
-        // and other stuff
-        hide(numbersAndPuncs)
-        unhide(puncs)
-        // set correct label on numbersPuncKey
-        let label = self.numbersPuncKey.subviews[0] as! UILabel
-        label.text = "123"
-        // modify global state
-        self.isPuncsPage = true
-    }
-    
-    func goToLettersPage() {
-        // hide what needs to be hidden and set state
-        // and other stuff
-        shiftOff()
-        unhide(lettersAndShift)
-        hide(lowerPuncsAndNumbersPuncsKey)
-        if self.isPuncsPage {
-            hide(puncs)
-            self.isPuncsPage = false
-        } else {
-            hide(numbersAndPuncs)
-        }
-        // put correct label on numbersKey
-        let label = self.numbersKey.subviews[0] as! UILabel
-        label.text = "123"
-        // modify global state
-        self.isNumbersPage = false
-    }
-    
-    func shiftOn() {
-        self.isShift = true
-        self.shiftKey.image = UIImage(named: "shiftOn")
-    }
-    
-    func shiftOff() {
-        self.isShift = false
-        self.shiftKey.image = UIImage(named: "shiftOff")
+        manager.loadStart()
     }
     
     func createButtons(titles: [String]) -> [UIView] {
@@ -436,18 +360,6 @@ class KeyboardViewController: UIInputViewController {
         }
         
         return buttons
-    }
-    
-    func hide(buttons: [UIView]) {
-        for button in buttons {
-            button.hidden = true
-        }
-    }
-    
-    func unhide(buttons: [UIView]) {
-        for button in buttons {
-            button.hidden = false
-        }
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -481,7 +393,7 @@ class KeyboardViewController: UIInputViewController {
     func handleTouchMoveInButton(view: UIView) {
         let buttonLabel = view.subviews[0] as! UILabel
         let currButtonLabel = buttonLabel.text!
-        let character = self.isShift ? currButtonLabel : currButtonLabel.lowercaseString
+        let character = manager.isShift ? currButtonLabel : currButtonLabel.lowercaseString
         // checking if we insert text or
         // delete and insert text
         if (self.prevButton != currButtonLabel) {
@@ -525,7 +437,7 @@ class KeyboardViewController: UIInputViewController {
                     print("inside button" + String(arc4random_uniform(9)))
                     let buttonLabel = subview.subviews[0] as! UILabel
                     let currButtonLabel = buttonLabel.text!
-                    let character = self.isShift ? currButtonLabel: currButtonLabel.lowercaseString
+                    let character = manager.isShift ? currButtonLabel: currButtonLabel.lowercaseString
                     self.textDocumentProxy.insertText(character)
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
@@ -548,28 +460,28 @@ class KeyboardViewController: UIInputViewController {
         case UtilKey.shiftKey.rawValue:
             // change shift key image
             // set global boolean
-            if self.isShift {
-                shiftOff()
+            if manager.isShift {
+                manager.shiftOff()
             } else {
-                shiftOn()
+                manager.shiftOn()
             }
         case UtilKey.returnKey.rawValue:
             self.textDocumentProxy.insertText("\n")
         case UtilKey.backspaceKey.rawValue:
             self.textDocumentProxy.deleteBackward()
         case UtilKey.numbersLettersKey.rawValue:
-            if self.isNumbersPage {
+            if manager.isNumbersPage {
                 // switch back to letters page
-                goToLettersPage()
+                manager.goToLettersPage()
             } else {
                 // switch to numbers page
-                goToNumbersPage()
+                manager.goToNumbersPage()
             }
         case UtilKey.numbersPuncKey.rawValue:
-            if self.isPuncsPage {
-                goToNumbersPage()
+            if manager.isPuncsPage {
+                manager.goToNumbersPage()
             } else {
-                goToPuncsPage()
+                manager.goToPuncsPage()
             }
         default:
             return
