@@ -38,26 +38,31 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // create top row buttons
-        let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
-        let topRowButtons = createButtons(topRowButtonTitles)
+        // create top row view
         let topRowView = UIView()
         topRowView.backgroundColor = UIColor.lightGrayColor()
-        
-        for button in topRowButtons {
+        // create buttons
+        let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
+        let topRowButtons = createButtons(topRowButtonTitles)
+        // create touch buttons
+        var topRowTouchButtons: [UIView] = wrapButtons(topRowButtons)
+        // put each button in a touchview and add touchview to view
+        for button in topRowTouchButtons {
             topRowView.addSubview(button)
         }
         
         self.inputView!.addSubview(topRowView)
         self.topRowView = topRowView
         
-        // create mid row buttons
-        let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
-        let midRowButtons = createButtons(midRowButtonTitles)
+        // create mid row view
         let midRowView = UIView()
         midRowView.backgroundColor = UIColor.lightGrayColor()
-        
-        for button in midRowButtons {
+        // create buttons
+        let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
+        let midRowButtons = createButtons(midRowButtonTitles)
+        // create touch buttons
+        var midRowTouchButtons: [UIView] = wrapButtons(midRowButton)
+        for button in midRowTouchButtons {
             midRowView.addSubview(button)
         }
         
@@ -108,7 +113,10 @@ class KeyboardViewController: UIInputViewController {
         let bottomRowView = UIView()
         bottomRowView.backgroundColor = UIColor.lightGrayColor()
         
-        for button in bottomRowButtons {
+        // create touch buttons
+        var bottomRowTouchButtons: [UIView] = wrapButtons(bottomRowButtons)
+        // put each button in a touchview and add touchview to view
+        for button in bottomRowTouchButtons {
             bottomRowView.addSubview(button)
         }
         
@@ -181,7 +189,9 @@ class KeyboardViewController: UIInputViewController {
         let utilRowView = UIView()
         utilRowView.backgroundColor = UIColor.lightGrayColor()
         
-        for button in utilRowButtons {
+        let utilRowTouchButtons = wrapButtons(utilRowButtons)
+        
+        for button in utilRowTouchButtons {
             utilRowView.addSubview(button)
         }
         
@@ -193,16 +203,18 @@ class KeyboardViewController: UIInputViewController {
         // create top row numbers
         let topRowNumberButtonTitles = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
         let topRowNumberButtons = createButtons(topRowNumberButtonTitles)
+        let topRowNumberTouchButtons = wrapButtons(topRowNumberButtons)
         
-        for button in topRowNumberButtons {
+        for button in topRowNumberTouchButtons {
             topRowView.addSubview(button)
         }
         
         // create mid row numbers
         let midRowNumberButtonTitles = ["-", "/", ":", ";", "(", ")", "$", "&", "@", "\""]
         let midRowNumberButtons = createButtons(midRowNumberButtonTitles)
+        let midRowNumberTouchButtons = wrapButtons(midRowNumberButtons)
         
-        for button in midRowNumberButtons {
+        for button in midRowNumberTouchButtons {
             midRowView.addSubview(button)
         }
         
@@ -215,8 +227,9 @@ class KeyboardViewController: UIInputViewController {
         // it goes into the bottomRowView, but it will be hidden to start
         let bottomRowNumberButtonTitles = [".", ",", "?", "!", "'"]
         let bottomRowNumberButtons = createButtons(bottomRowNumberButtonTitles)
+        let bottomRowNumberTouchButtons = wrapButtons(bottomRowNumberButtons)
         
-        for button in bottomRowNumberButtons {
+        for button in bottomRowTouchButtons {
             bottomRowView.addSubview(button)
         }
         
@@ -337,6 +350,16 @@ class KeyboardViewController: UIInputViewController {
         
         // do startup hiding
         manager.loadStart()
+    }
+    
+    func wrapButtons (buttons: [UIView]) -> [UIView] {
+        var touchViews: [UIView] = [UIView]()
+        for button in buttons {
+                let touchView = UIView()
+                touchView.addSubview(button)
+                touchViews.append(touchView)
+        }
+        return touchViews
     }
     
     func createButtons(titles: [String]) -> [UIView] {
