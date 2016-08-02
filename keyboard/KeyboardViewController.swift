@@ -61,7 +61,7 @@ class KeyboardViewController: UIInputViewController {
         let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
         let midRowButtons = createButtons(midRowButtonTitles)
         // create touch buttons
-        var midRowTouchButtons: [UIView] = wrapButtons(midRowButton)
+        var midRowTouchButtons: [UIView] = wrapButtons(midRowButtons)
         for button in midRowTouchButtons {
             midRowView.addSubview(button)
         }
@@ -229,13 +229,17 @@ class KeyboardViewController: UIInputViewController {
         let bottomRowNumberButtons = createButtons(bottomRowNumberButtonTitles)
         let bottomRowNumberTouchButtons = wrapButtons(bottomRowNumberButtons)
         
-        for button in bottomRowTouchButtons {
+        for button in bottomRowNumberTouchButtons {
             bottomRowView.addSubview(button)
         }
         
         // add numbersPunc key to bottom row
-        
+        // and create its touch button
+        // do not put it in bottomRowNumberTouch buttons
+        // because it needs its constraints set special
         let numbersPuncKey = UIView()
+        let numbersPuncTouchKey = UIView()
+        numbersPuncTouchKey.addSubview(numbersPuncKey)
         let numbersPuncKeyLabel = UILabel(frame: CGRectMake(3.0, 10.0, 60, 25))
         numbersPuncKeyLabel.text = "#+="
         numbersPuncKey.addSubview(numbersPuncKeyLabel)
@@ -253,15 +257,16 @@ class KeyboardViewController: UIInputViewController {
         manager
             .lowerPuncsAndNumbersPuncsKey = bottomRowNumberButtons + [numbersPuncKey]
         
-        self.bottomRowView.addSubview(numbersPuncKey)
+        self.bottomRowView.addSubview(numbersPuncTouchKey)
         
         // PUNCTUATION PAGE !!!
         
         // create top row punc
         let topRowPuncButtonTitles = ["[", "]", "{", "}", "#", "%", "^", "*", "+", "="]
         let topRowPuncButtons = createButtons(topRowPuncButtonTitles)
+        let topRowPuncTouchButtons = wrapButtons(topRowPuncButtons)
         
-        for button in topRowPuncButtons {
+        for button in topRowPuncTouchButtons {
             topRowView.addSubview(button)
         }
         
@@ -272,8 +277,9 @@ class KeyboardViewController: UIInputViewController {
         let bullet = "\u{2022}"
         let midRowPuncButtonTitles = ["_", "\\", "|", "~", "<", ">", euro, pound, yen, bullet]
         let midRowPuncButtons = createButtons(midRowPuncButtonTitles)
+        let midRowPuncTouchButtons = wrapButtons(midRowPuncButtons)
         
-        for button in midRowPuncButtons {
+        for button in midRowPuncTouchButtons {
             midRowView.addSubview(button)
         }
         

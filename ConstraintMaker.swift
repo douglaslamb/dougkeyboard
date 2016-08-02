@@ -99,7 +99,46 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
-    static func addConstraintSingleElement(item: UIView, leftSpace: CGFloat? = nil, rightSpace: CGFloat? = nil, topSpace: CGFloat? = nil, bottomSpace: CGFloat? = nil, width: CGFloat? = nil, height: CGFloat? = nil, leftItem: UIView? = nil, rightItem: UIView? = nil, topItem: UIView? = nil, bottomItem: UIView? = nil, containingView: UIView) {
-        return
+    static func addTouchButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topLetters: [UIView], midLetters: [UIView], bottomLettersShiftBackspace: [UIView], utilKeys: [UIView], topNumbers: [UIView], midNumbers: [UIView], bottomPuncAndNumbersPuncKey: [UIView], topPuncs: [UIView], midPuncs: [UIView]) {
+        
+        // ok
+        // add top row constraints on all buttons
+        // add mid row constraints on all buttons
+        // add bottom row constraints on all buttons
+        // add util row constraints
+        // ok
+        
+        //topRow
+        
+        addButtonConstraintsToRow(topLetters, containingView: topRowView)
+        addButtonConstraintsToRow(topNumbers, containingView: topRowView)
+        addButtonConstraintsToRow(topPuncs, containingView: topRowView)
+        
+        // midRow
+        
+        for (i, button) in midLetters.enumerate() {
+            if i == 0 {
+                button.leftAnchor.constraintEqualToAnchor(midRowView.leftAnchor).active = true
+                button.rightAnchor.constraintEqualToAnchor(midLetters[i + 1].leftAnchor).active = true
+            } else {
+                if i == midLetters.count - 1 {
+                button.rightAnchor.constraintEqualToAnchor(midRowView.rightAnchor).active = true
+                button.leftAnchor.constraintEqualToAnchor(midLetters[i - 1].rightAnchor).active = true
+                }
+                // default case
+                button.rightAnchor.constraintEqualToAnchor(midLetters[i + 1].leftAnchor).active = true
+                // this line sets the width of these keys in the middle to the same width
+                // as the letters in the top row
+                button.widthAnchor.constraintEqualToAnchor(topLetters[0].widthAnchor).active = true
+            }
+            // all buttons in row get this
+            button.topAnchor.constraintEqualToAnchor(midRowView.topAnchor).active = true
+            button.bottomAnchor.constraintEqualToAnchor(midRowView.bottomAnchor).active = true
+        }
+        // add the rest of the midRow constraints here when I come back 20160802
+        // using the addButtonConstraintsToRow method
+        
+    //static func addButtonConstraintsToRow(buttons: [UIView], widths: [CGFloat?] = [], sideSpace: CGFloat = 0, topSpace: CGFloat = 0, bottomSpace: CGFloat = 0, betweenSpace: CGFloat = 0, containingView: UIView) {
+        
     }
 }
