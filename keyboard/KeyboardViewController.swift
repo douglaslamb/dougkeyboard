@@ -227,7 +227,7 @@ class KeyboardViewController: UIInputViewController {
         // it goes into the bottomRowView, but it will be hidden to start
         let bottomRowNumberButtonTitles = [".", ",", "?", "!", "'"]
         let bottomRowNumberButtons = createButtons(bottomRowNumberButtonTitles)
-        let bottomRowNumberTouchButtons = wrapButtons(bottomRowNumberButtons)
+        var bottomRowNumberTouchButtons = wrapButtons(bottomRowNumberButtons)
         
         for button in bottomRowNumberTouchButtons {
             bottomRowView.addSubview(button)
@@ -248,6 +248,11 @@ class KeyboardViewController: UIInputViewController {
         numbersPuncKey.layer.cornerRadius = 5
         numbersPuncKey.translatesAutoresizingMaskIntoConstraints = false
         numbersPuncKey.tag = UtilKey.numbersPuncKey.rawValue
+        
+        // prepend the numbersPuncTouchKey to the bottomRowNumberTouchButtons
+        // because they need to be in one array
+        // for the constraint-setting function later
+        bottomRowNumberTouchButtons = [numbersPuncTouchKey] + bottomRowNumberTouchButtons
         
         /// save global for label changing later
         manager
@@ -354,6 +359,19 @@ class KeyboardViewController: UIInputViewController {
         ConstraintMaker.addButtonConstraintsToRow(topRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowView)
         ConstraintMaker.addButtonConstraintsToRow(midRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowView)
         
+        // TOUCH BUTTONS
+        // turn off autoresizingIntoConstraints then add constraints
+        autoresizeIntoConstraintsOff(topRowTouchButtons)
+        autoresizeIntoConstraintsOff(midRowTouchButtons)
+        autoresizeIntoConstraintsOff(bottomRowTouchButtons)
+        autoresizeIntoConstraintsOff(utilRowTouchButtons)
+        autoresizeIntoConstraintsOff(topRowNumberTouchButtons)
+        autoresizeIntoConstraintsOff(midRowNumberTouchButtons)
+        autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
+        autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
+        autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
+        ConstraintMaker.addTouchButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowTouchButtons, midLetters: midRowTouchButtons, bottomLettersShiftBackspace: bottomRowTouchButtons, utilKeys: utilRowTouchButtons, topNumbers: topRowNumberTouchButtons, midNumbers: midRowNumberTouchButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topPuncs: topRowPuncTouchButtons, midPuncs: midRowPuncTouchButtons)
+        
         // do startup hiding
         manager.loadStart()
     }
@@ -364,6 +382,7 @@ class KeyboardViewController: UIInputViewController {
                 let touchView = UIView()
                 touchView.addSubview(button)
                 touchViews.append(touchView)
+                button.translatesAutoresizingMaskIntoConstraints = false
         }
         return touchViews
     }
@@ -514,6 +533,12 @@ class KeyboardViewController: UIInputViewController {
             }
         default:
             return
+        }
+    }
+    
+    func autoresizeIntoConstraintsOff (views: [UIView]) {
+        for view in views {
+            view.translatesAutoresizingMaskIntoConstraints = false
         }
     }
     

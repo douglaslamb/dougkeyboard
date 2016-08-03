@@ -101,13 +101,6 @@ class ConstraintMaker {
     
     static func addTouchButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topLetters: [UIView], midLetters: [UIView], bottomLettersShiftBackspace: [UIView], utilKeys: [UIView], topNumbers: [UIView], midNumbers: [UIView], bottomPuncAndNumbersPuncKey: [UIView], topPuncs: [UIView], midPuncs: [UIView]) {
         
-        // ok
-        // add top row constraints on all buttons
-        // add mid row constraints on all buttons
-        // add bottom row constraints on all buttons
-        // add util row constraints
-        // ok
-        
         //topRow
         
         addButtonConstraintsToRow(topLetters, containingView: topRowView)
@@ -122,11 +115,12 @@ class ConstraintMaker {
                 button.rightAnchor.constraintEqualToAnchor(midLetters[i + 1].leftAnchor).active = true
             } else {
                 if i == midLetters.count - 1 {
-                button.rightAnchor.constraintEqualToAnchor(midRowView.rightAnchor).active = true
-                button.leftAnchor.constraintEqualToAnchor(midLetters[i - 1].rightAnchor).active = true
+                    button.rightAnchor.constraintEqualToAnchor(midRowView.rightAnchor).active = true
+                    button.leftAnchor.constraintEqualToAnchor(midLetters[i - 1].rightAnchor).active = true
+                } else {
+                    button.rightAnchor.constraintEqualToAnchor(midLetters[i + 1].leftAnchor).active = true
                 }
                 // default case
-                button.rightAnchor.constraintEqualToAnchor(midLetters[i + 1].leftAnchor).active = true
                 // this line sets the width of these keys in the middle to the same width
                 // as the letters in the top row
                 button.widthAnchor.constraintEqualToAnchor(topLetters[0].widthAnchor).active = true
@@ -135,10 +129,65 @@ class ConstraintMaker {
             button.topAnchor.constraintEqualToAnchor(midRowView.topAnchor).active = true
             button.bottomAnchor.constraintEqualToAnchor(midRowView.bottomAnchor).active = true
         }
-        // add the rest of the midRow constraints here when I come back 20160802
-        // using the addButtonConstraintsToRow method
         
-    //static func addButtonConstraintsToRow(buttons: [UIView], widths: [CGFloat?] = [], sideSpace: CGFloat = 0, topSpace: CGFloat = 0, bottomSpace: CGFloat = 0, betweenSpace: CGFloat = 0, containingView: UIView) {
+        addButtonConstraintsToRow(midNumbers, containingView: midRowView)
+        addButtonConstraintsToRow(midPuncs, containingView: midRowView)
         
+        // bottomRow
+        
+        for (i, button) in bottomLettersShiftBackspace.enumerate() {
+            if i == 0 {
+                button.leftAnchor.constraintEqualToAnchor(bottomRowView.leftAnchor).active = true
+            } else {
+                if i == bottomLettersShiftBackspace.count - 1 {
+                    button.rightAnchor.constraintEqualToAnchor(bottomRowView.rightAnchor).active = true
+                    button.widthAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[0].widthAnchor).active = true
+                } else {
+                    button.widthAnchor.constraintEqualToAnchor(topLetters[0].widthAnchor).active = true
+                }
+                button.leftAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[i - 1].rightAnchor).active = true
+            }
+            // all buttons in row get this
+            button.topAnchor.constraintEqualToAnchor(bottomRowView.topAnchor).active = true
+            button.bottomAnchor.constraintEqualToAnchor(bottomRowView.bottomAnchor).active = true
+        }
+        
+        for (i, button) in bottomPuncAndNumbersPuncKey.enumerate() {
+            if i == 0 {
+                button.leftAnchor.constraintEqualToAnchor(bottomRowView.leftAnchor).active = true
+                button.widthAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[0].widthAnchor).active = true
+            } else {
+                if i == bottomPuncAndNumbersPuncKey.count - 1 {
+                    button.rightAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[bottomLettersShiftBackspace.count - 1].leftAnchor).active = true
+                } else {
+                    button.widthAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[1].widthAnchor).active = true
+                }
+                button.leftAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[i - 1].rightAnchor).active = true
+            }
+            // all buttons in row get this
+            button.topAnchor.constraintEqualToAnchor(bottomRowView.topAnchor).active = true
+            button.bottomAnchor.constraintEqualToAnchor(bottomRowView.bottomAnchor).active = true
+        }
+        
+        // utilRow
+        // SPECIFY THE SIZE OF THE UTIL ROW KEYS HERE
+        for (i, button) in utilKeys.enumerate() {
+            if i == 0 {
+                button.leftAnchor.constraintEqualToAnchor(utilRowView.leftAnchor).active = true
+                button.widthAnchor.constraintEqualToConstant(40).active = true
+            } else {
+                if i == 1 {
+                    button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor).active = true
+                } else {
+                    if i == 3 {
+                        button.widthAnchor.constraintEqualToConstant(80).active = true
+                        button.rightAnchor.constraintEqualToAnchor(utilRowView.rightAnchor).active = true
+                    }
+                }
+                button.leftAnchor.constraintEqualToAnchor(utilKeys[i - 1].rightAnchor).active = true
+            }
+            button.topAnchor.constraintEqualToAnchor(utilRowView.topAnchor).active = true
+            button.bottomAnchor.constraintEqualToAnchor(utilRowView.bottomAnchor).active = true
+        }
     }
 }
