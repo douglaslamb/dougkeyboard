@@ -99,6 +99,37 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
+    static func addAllButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topLetters: [UIView], midLetters: [UIView], bottomLettersShiftBackspace: [UIView], utilKeys: [UIView], topNumbers: [UIView], midNumbers: [UIView], bottomPuncAndNumbersPuncKey: [UIView], topPuncs: [UIView], midPuncs: [UIView], topTouchLetters: [UIView], midTouchLetters: [UIView], bottomTouchLettersShiftBackspace: [UIView], utilTouchKeys: [UIView], topTouchNumbers: [UIView], midTouchNumbers: [UIView], bottomTouchPuncAndNumbersPuncKey: [UIView], topTouchPuncs: [UIView], midTouchPuncs: [UIView], betweenSpace: CGFloat = 0) {
+        
+        // touch buttons
+        
+        addTouchButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topTouchLetters, midLetters: midTouchLetters, bottomLettersShiftBackspace: bottomTouchLettersShiftBackspace, utilKeys: utilTouchKeys, topNumbers: topTouchNumbers, midNumbers: midTouchNumbers, bottomPuncAndNumbersPuncKey: bottomTouchPuncAndNumbersPuncKey, topPuncs: topTouchPuncs, midPuncs: midTouchPuncs)
+        
+        // display buttons
+        
+        // topRow
+        
+        addButtonConstraintsToRow(topLetters, betweenSpace: 2, containingView: topRowView)
+        addButtonConstraintsToRow(topNumbers, betweenSpace: 2, containingView: topRowView)
+        addButtonConstraintsToRow(topPuncs, betweenSpace: 2, containingView: topRowView)
+        
+        // midRow
+        
+        midLetters[4].centerXAnchor.constraintEqualToAnchor(midRowView.centerXAnchor).active = true
+        for (i, button) in midLetters.enumerate() {
+            if i != 0 {
+                button.leftAnchor.constraintEqualToAnchor(midLetters[i - 1].rightAnchor, constant: betweenSpace).active = true
+            }
+            // all buttons in row get this
+            button.widthAnchor.constraintEqualToAnchor(topLetters[0].widthAnchor).active = true
+            button.topAnchor.constraintEqualToAnchor(midRowView.topAnchor).active = true
+            button.bottomAnchor.constraintEqualToAnchor(midRowView.bottomAnchor).active = true
+        }
+        // starting here next time 20160803 22:33
+        // I'm writing constraint for the display buttons
+        // I think the block above should have successfully set the constraints on the midletters
+    }
+    
     static func addTouchButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topLetters: [UIView], midLetters: [UIView], bottomLettersShiftBackspace: [UIView], utilKeys: [UIView], topNumbers: [UIView], midNumbers: [UIView], bottomPuncAndNumbersPuncKey: [UIView], topPuncs: [UIView], midPuncs: [UIView]) {
         
         //topRow
@@ -159,9 +190,8 @@ class ConstraintMaker {
             } else {
                 if i == bottomPuncAndNumbersPuncKey.count - 1 {
                     button.rightAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[bottomLettersShiftBackspace.count - 1].leftAnchor).active = true
-                } else {
-                    button.widthAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[1].widthAnchor).active = true
                 }
+                button.widthAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[1].widthAnchor).active = true
                 button.leftAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[i - 1].rightAnchor).active = true
             }
             // all buttons in row get this

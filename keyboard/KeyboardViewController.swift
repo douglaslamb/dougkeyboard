@@ -94,19 +94,28 @@ class KeyboardViewController: UIInputViewController {
         let bottomRowLetterTitles = ["Z", "X", "C", "V", "B", "N", "M"]
         let bottomRowLettersButtons = createButtons(bottomRowLetterTitles)
         bottomRowButtons = bottomRowButtons + bottomRowLettersButtons
+        // wrap these now so I can put them into the manager
+        // without including the backspace key, which the manager
+        // does not want because backspace is never hidden
+        var bottomRowTouchButtons = wrapButtons(bottomRowButtons)
         
         // put letters and shiftkey in one array to control hiding
-        manager.lettersAndShift = topRowButtons + midRowButtons + bottomRowButtons
+        manager.lettersAndShift = topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons
         
         // add backspace key to bottom row
         
         let backspaceImage = UIImage(named: "backspace")
         let backspaceKey = UIImageView(image: backspaceImage)
+        let backspaceTouchKey = UIView()
+        backspaceTouchKey.addSubview(backspaceKey)
         backspaceKey.translatesAutoresizingMaskIntoConstraints = false
         backspaceKey.layer.masksToBounds = true
         backspaceKey.layer.cornerRadius = 5
         backspaceKey.tag = UtilKey.backspaceKey.rawValue
         bottomRowButtons.append(backspaceKey)
+        // put the backspace key in bottomRowTouchButtons now
+        // because it still needs its constraints set later
+        bottomRowTouchButtons.append(backspaceTouchKey)
         
         // create bottom row view and add all buttons to view
         
@@ -114,7 +123,6 @@ class KeyboardViewController: UIInputViewController {
         bottomRowView.backgroundColor = UIColor.lightGrayColor()
         
         // create touch buttons
-        var bottomRowTouchButtons: [UIView] = wrapButtons(bottomRowButtons)
         // put each button in a touchview and add touchview to view
         for button in bottomRowTouchButtons {
             bottomRowView.addSubview(button)
@@ -220,7 +228,7 @@ class KeyboardViewController: UIInputViewController {
         
         // put top and mid number rows in one array for hiding later
         manager
-            .numbersAndPuncs = topRowNumberButtons + midRowNumberButtons
+            .numbersAndPuncs = topRowNumberTouchButtons + midRowNumberTouchButtons
         
         /// create bottom row numbers
         // this punctuation row does not have its own view
@@ -260,7 +268,7 @@ class KeyboardViewController: UIInputViewController {
         
         // put ". < ? ..." in one array for hiding later
         manager
-            .lowerPuncsAndNumbersPuncsKey = bottomRowNumberButtons + [numbersPuncKey]
+            .lowerPuncsAndNumbersPuncsKey = bottomRowNumberTouchButtons
         
         self.bottomRowView.addSubview(numbersPuncTouchKey)
         
@@ -290,7 +298,7 @@ class KeyboardViewController: UIInputViewController {
         
         // put punc page in one array for hiding later
         manager
-            .puncs = topRowPuncButtons + midRowPuncButtons
+            .puncs = topRowPuncTouchButtons + midRowPuncTouchButtons
         
         // add constraints for rows in superview
         let rows = [[self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
@@ -421,7 +429,7 @@ class KeyboardViewController: UIInputViewController {
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             // if touch is in a button, and button is not hidden then handle touch
-            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden && subview.tag == 0 {
+            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden && subview.subviews[0].tag == 0 {
                 handleTouchMoveInButton(subview)
                 isTouchInButton = true
                 // found the button so return
@@ -439,7 +447,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func handleTouchMoveInButton(view: UIView) {
-        let buttonLabel = view.subviews[0] as! UILabel
+        let buttonLabel = view.subviews[0].subviews[0] as! UILabel
         let currButtonLabel = buttonLabel.text!
         let character = manager.isShift ? currButtonLabel : currButtonLabel.lowercaseString
         // checking if we insert text or
@@ -472,7 +480,7 @@ class KeyboardViewController: UIInputViewController {
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden {
-                if (subview.tag != 0) {
+                if (subview.subviews[0].tag != 0) {
                     // pass to utility key function handler
                     // like for shift key
                     doKeyFunction(subview)
@@ -483,7 +491,7 @@ class KeyboardViewController: UIInputViewController {
                     //return
                 } else {
                     print("inside button" + String(arc4random_uniform(9)))
-                    let buttonLabel = subview.subviews[0] as! UILabel
+                    let buttonLabel = subview.subviews[0].subviews[0] as! UILabel
                     let currButtonLabel = buttonLabel.text!
                     let character = manager.isShift ? currButtonLabel: currButtonLabel.lowercaseString
                     self.textDocumentProxy.insertText(character)
@@ -501,7 +509,8 @@ class KeyboardViewController: UIInputViewController {
     
     func doKeyFunction(key: UIView) {
         // handler function for function keys like shift
-        let tag = key.tag
+        let tag = key.subviews[0].tag
+        print(tag)
         switch tag {
         case UtilKey.nextKeyboardKey.rawValue:
             self.advanceToNextInputMode()
