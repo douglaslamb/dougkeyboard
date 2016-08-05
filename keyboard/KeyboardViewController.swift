@@ -234,7 +234,7 @@ class KeyboardViewController: UIInputViewController {
         // this punctuation row does not have its own view
         // it goes into the bottomRowView, but it will be hidden to start
         let bottomRowNumberButtonTitles = [".", ",", "?", "!", "'"]
-        let bottomRowNumberButtons = createButtons(bottomRowNumberButtonTitles)
+        var bottomRowNumberButtons = createButtons(bottomRowNumberButtonTitles)
         var bottomRowNumberTouchButtons = wrapButtons(bottomRowNumberButtons)
         
         for button in bottomRowNumberTouchButtons {
@@ -243,11 +243,10 @@ class KeyboardViewController: UIInputViewController {
         
         // add numbersPunc key to bottom row
         // and create its touch button
-        // do not put it in bottomRowNumberTouch buttons
-        // because it needs its constraints set special
         let numbersPuncKey = UIView()
         let numbersPuncTouchKey = UIView()
         numbersPuncTouchKey.addSubview(numbersPuncKey)
+        bottomRowNumberButtons = [numbersPuncKey] + bottomRowNumberButtons
         let numbersPuncKeyLabel = UILabel(frame: CGRectMake(3.0, 10.0, 60, 25))
         numbersPuncKeyLabel.text = "#+="
         numbersPuncKey.addSubview(numbersPuncKeyLabel)
@@ -309,6 +308,7 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         ConstraintMaker.addRowConstraintsToSuperview(rows, containingView: self.inputView!)
+        /*
         
         // add constraints for buttons in rows
         // LETTERS SCREEN
@@ -366,6 +366,7 @@ class KeyboardViewController: UIInputViewController {
         // PUNC SCREEN
         ConstraintMaker.addButtonConstraintsToRow(topRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowView)
         ConstraintMaker.addButtonConstraintsToRow(midRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowView)
+         */
         
         // TOUCH BUTTONS
         // turn off autoresizingIntoConstraints then add constraints
@@ -378,7 +379,8 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
         autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
-        ConstraintMaker.addTouchButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowTouchButtons, midLetters: midRowTouchButtons, bottomLettersShiftBackspace: bottomRowTouchButtons, utilKeys: utilRowTouchButtons, topNumbers: topRowNumberTouchButtons, midNumbers: midRowNumberTouchButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topPuncs: topRowPuncTouchButtons, midPuncs: midRowPuncTouchButtons)
+        //ConstraintMaker.addTouchButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowTouchButtons, midLetters: midRowTouchButtons, bottomLettersShiftBackspace: bottomRowTouchButtons, utilKeys: utilRowTouchButtons, topNumbers: topRowNumberTouchButtons, midNumbers: midRowNumberTouchButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topPuncs: topRowPuncTouchButtons, midPuncs: midRowPuncTouchButtons)
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncButtons, betweenSpace: 2, shiftWidth: 40, nextKeyboardWidth: 40, spaceKeyWidth: 200)
         
         // do startup hiding
         manager.loadStart()
