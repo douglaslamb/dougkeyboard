@@ -308,65 +308,6 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         ConstraintMaker.addRowConstraintsToSuperview(rows, containingView: self.inputView!)
-        /*
-        
-        // add constraints for buttons in rows
-        // LETTERS SCREEN
-        ConstraintMaker.addButtonConstraintsToRow(topRowButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowView)
-        ConstraintMaker.addButtonConstraintsToRow(midRowButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowView)
-        ConstraintMaker.addButtonConstraintsToRow(bottomRowButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: bottomRowView)
-        ConstraintMaker.addButtonConstraintsToRow(utilRowButtons, widths: [40, 40, nil, 80], sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: utilRowView)
-        
-        // NUMBERS SCREEN
-        ConstraintMaker.addButtonConstraintsToRow(topRowNumberButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowView)
-        ConstraintMaker.addButtonConstraintsToRow(midRowNumberButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowView)
-        
-        // SPECIAL CASE: bottom row numbers
-        // add these constraints manually
-        // because the ConstraintMaker functions cannot handle them
-        for (index, button) in bottomRowNumberButtons.enumerate() {
-            let leftButton = shiftKey
-            let rightButton = backspaceKey
-            var constraints = [NSLayoutConstraint]()
-            let container = bottomRowView
-            // set left constraint
-            if index == 0 {
-                constraints.append(NSLayoutConstraint(item: button, attribute: .Left, relatedBy: .Equal, toItem: leftButton, attribute: .Right, multiplier: 1.0, constant: 1))
-            } else {
-                constraints.append(NSLayoutConstraint(item: button, attribute: .Left, relatedBy: .Equal, toItem: bottomRowNumberButtons[index - 1] , attribute: .Right, multiplier: 1.0, constant: 1))
-            }
-        
-            // set right constraint if last button
-            if index == bottomRowNumberButtons.count - 1 {
-                constraints.append(NSLayoutConstraint(item: button, attribute: .Right, relatedBy: .Equal, toItem: rightButton, attribute: .Left, multiplier: 1.0, constant: -1))
-            }
-            
-            // set top and bottom constraints, same for all
-            constraints.append(NSLayoutConstraint(item: button, attribute: .Top, relatedBy: .Equal, toItem: container, attribute: .Top, multiplier: 1.0, constant: 1))
-            constraints.append(NSLayoutConstraint(item: button, attribute: .Bottom, relatedBy: .Equal, toItem: container, attribute: .Bottom, multiplier: 1.0, constant: -1))
-            
-            // set widths
-            constraints.append(NSLayoutConstraint(item: bottomRowNumberButtons[0], attribute: .Width, relatedBy: .Equal, toItem: button, attribute: .Width, multiplier: 1.0, constant: 0))
-            
-            // activate constraints
-            NSLayoutConstraint.activateConstraints(constraints)
-        }
-        
-        // SPECIAL CASE: numbersPunc key
-        // this needs the same constraints as the shift key
-        // add the constraints manually
-        // The ConstraintMaker functions cannot handle this
-        // setting right constraint relative to the "Z" key
-        
-        numbersPuncKey.leftAnchor.constraintEqualToAnchor(bottomRowView.leftAnchor, constant: 1).active = true
-        numbersPuncKey.rightAnchor.constraintEqualToAnchor(bottomRowButtons[1].leftAnchor, constant: -1).active = true
-        numbersPuncKey.topAnchor.constraintEqualToAnchor(bottomRowView.topAnchor, constant: 1).active = true
-        numbersPuncKey.bottomAnchor.constraintEqualToAnchor(bottomRowView.bottomAnchor, constant: -1).active = true
-        
-        // PUNC SCREEN
-        ConstraintMaker.addButtonConstraintsToRow(topRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: topRowView)
-        ConstraintMaker.addButtonConstraintsToRow(midRowPuncButtons, sideSpace: 1, topSpace: 1, bottomSpace: 1, betweenSpace: 1, containingView: midRowView)
-         */
         
         // TOUCH BUTTONS
         // turn off autoresizingIntoConstraints then add constraints
@@ -379,8 +320,7 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
         autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
-        //ConstraintMaker.addTouchButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowTouchButtons, midLetters: midRowTouchButtons, bottomLettersShiftBackspace: bottomRowTouchButtons, utilKeys: utilRowTouchButtons, topNumbers: topRowNumberTouchButtons, midNumbers: midRowNumberTouchButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topPuncs: topRowPuncTouchButtons, midPuncs: midRowPuncTouchButtons)
-        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncButtons, betweenSpace: 2, shiftWidth: 40, nextKeyboardWidth: 40, spaceKeyWidth: 200)
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 2, shiftWidth: 40, nextKeyboardWidth: 40, spaceKeyWidth: 150)
         
         // do startup hiding
         manager.loadStart()
