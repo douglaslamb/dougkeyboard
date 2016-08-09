@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "shift-key-20160705.png",
+      "filename" : "shift-key-off-1x-20160808.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "shift-key-20160706.png",
+      "filename" : "shift-key-off-2x-20160808.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "shift-key-20160707.png",
+      "filename" : "shift-key-off-3x-20160808.png",
       "scale" : "3x"
     }
   ],

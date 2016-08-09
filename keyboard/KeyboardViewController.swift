@@ -80,9 +80,7 @@ class KeyboardViewController: UIInputViewController {
         
         let shiftImage = UIImage(named: "shiftOff")
         let shiftKey = UIImageView(image: shiftImage)
-        shiftKey.translatesAutoresizingMaskIntoConstraints = false
-        shiftKey.layer.masksToBounds = true
-        shiftKey.layer.cornerRadius = 5
+        setupImageView(shiftKey)
         bottomRowButtons.append(shiftKey)
         shiftKey.tag = UtilKey.shiftKey.rawValue
         
@@ -106,11 +104,9 @@ class KeyboardViewController: UIInputViewController {
         
         let backspaceImage = UIImage(named: "backspace")
         let backspaceKey = UIImageView(image: backspaceImage)
+        setupImageView(backspaceKey)
         let backspaceTouchKey = UIView()
         backspaceTouchKey.addSubview(backspaceKey)
-        backspaceKey.translatesAutoresizingMaskIntoConstraints = false
-        backspaceKey.layer.masksToBounds = true
-        backspaceKey.layer.cornerRadius = 5
         backspaceKey.tag = UtilKey.backspaceKey.rawValue
         bottomRowButtons.append(backspaceKey)
         // put the backspace key in bottomRowTouchButtons now
@@ -156,11 +152,8 @@ class KeyboardViewController: UIInputViewController {
         
         let nextKeyboardImage = UIImage(named: "nextKeyboard")
         let nextKeyboardKey = UIImageView(image: nextKeyboardImage)
+        setupImageView(nextKeyboardKey)
         
-        nextKeyboardKey.backgroundColor = UIColor.whiteColor()
-        nextKeyboardKey.layer.cornerRadius = 5
-        nextKeyboardKey.translatesAutoresizingMaskIntoConstraints = false
-        nextKeyboardKey.layer.masksToBounds = true
         nextKeyboardKey.tag = UtilKey.nextKeyboardKey.rawValue
         
         utilRowButtons.append(nextKeyboardKey)
@@ -183,11 +176,7 @@ class KeyboardViewController: UIInputViewController {
         
         let returnImage = UIImage(named: "return")
         let returnKey = UIImageView(image: returnImage)
-        
-        returnKey.backgroundColor = UIColor.whiteColor()
-        returnKey.layer.cornerRadius = 5
-        returnKey.translatesAutoresizingMaskIntoConstraints = false
-        returnKey.layer.masksToBounds = true
+        setupImageView(returnKey)
         returnKey.tag = UtilKey.returnKey.rawValue
         
         utilRowButtons.append(returnKey)
@@ -309,7 +298,7 @@ class KeyboardViewController: UIInputViewController {
         }
         ConstraintMaker.addRowConstraintsToSuperview(rows, containingView: self.inputView!)
         
-        // TOUCH BUTTONS
+        // SET CONSTRAINTS ON TOUCH AND DISPLAY BUTTONS
         // turn off autoresizingIntoConstraints then add constraints
         autoresizeIntoConstraintsOff(topRowTouchButtons)
         autoresizeIntoConstraintsOff(midRowTouchButtons)
@@ -320,10 +309,18 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
         autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
-        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 2, shiftWidth: 40, nextKeyboardWidth: 40, spaceKeyWidth: 150)
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 2, shiftWidth: 0.12, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.48)
         
         // do startup hiding
         manager.loadStart()
+    }
+    
+    func setupImageView(view: UIImageView) {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 5
+        view.contentMode = UIViewContentMode.Center
+        view.backgroundColor = UIColor.grayColor()
     }
     
     func wrapButtons (buttons: [UIView]) -> [UIView] {
