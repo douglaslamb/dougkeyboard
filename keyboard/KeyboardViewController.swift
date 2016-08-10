@@ -102,7 +102,7 @@ class KeyboardViewController: UIInputViewController {
         
         // add backspace key to bottom row
         
-        let backspaceImage = UIImage(named: "backspace")
+        let backspaceImage = UIImage(named: "backspaceOff")
         let backspaceKey = UIImageView(image: backspaceImage)
         setupImageView(backspaceKey)
         let backspaceTouchKey = UIView()
@@ -174,7 +174,7 @@ class KeyboardViewController: UIInputViewController {
         
         // return key
         
-        let returnImage = UIImage(named: "return")
+        let returnImage = UIImage(named: "returnOff")
         let returnKey = UIImageView(image: returnImage)
         setupImageView(returnKey)
         returnKey.tag = UtilKey.returnKey.rawValue

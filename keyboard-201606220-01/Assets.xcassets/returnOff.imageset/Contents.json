@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "backspace-key-20160705.png",
+      "filename" : "returnkey-off-1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "returnkey-off-2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "returnkey-off-3x.png",
       "scale" : "3x"
     }
   ],
