@@ -99,7 +99,7 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
-    static func addAllButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topLetters: [UIView], midLetters: [UIView], bottomLettersShiftBackspace: [UIView], utilKeys: [UIView], topNumbers: [UIView], midNumbers: [UIView], bottomPuncAndNumbersPuncKey: [UIView], topPuncs: [UIView], midPuncs: [UIView], topTouchLetters: [UIView], midTouchLetters: [UIView], bottomTouchLettersShiftBackspace: [UIView], utilTouchKeys: [UIView], topTouchNumbers: [UIView], midTouchNumbers: [UIView], bottomTouchPuncAndNumbersPuncKey: [UIView], topTouchPuncs: [UIView], midTouchPuncs: [UIView], betweenSpace: CGFloat = 0, shiftWidth: CGFloat = 0.03, nextKeyboardWidth: CGFloat = 0.8, spaceKeyWidth: CGFloat = 0.3) {
+    static func addAllButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topLetters: [UIView], midLetters: [UIView], bottomLettersShiftBackspace: [UIView], utilKeys: [UIView], topNumbers: [UIView], midNumbers: [UIView], bottomPuncAndNumbersPuncKey: [UIView], topPuncs: [UIView], midPuncs: [UIView], topTouchLetters: [UIView], midTouchLetters: [UIView], bottomTouchLettersShiftBackspace: [UIView], utilTouchKeys: [UIView], topTouchNumbers: [UIView], midTouchNumbers: [UIView], bottomTouchPuncAndNumbersPuncKey: [UIView], topTouchPuncs: [UIView], midTouchPuncs: [UIView], betweenSpace: CGFloat = 0, shiftWidth: CGFloat = 0.03, nextKeyboardWidth: CGFloat = 0.8, spaceKeyWidth: CGFloat = 0.3, charVerticalConstant: CGFloat = 0) {
         
         // touch buttons
         addTouchButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topTouchLetters, midLetters: midTouchLetters, bottomLettersShiftBackspace: bottomTouchLettersShiftBackspace, utilKeys: utilTouchKeys, topNumbers: topTouchNumbers, midNumbers: midTouchNumbers, bottomPuncAndNumbersPuncKey: bottomTouchPuncAndNumbersPuncKey, topPuncs: topTouchPuncs, midPuncs: midTouchPuncs, betweenSpace: betweenSpace, nextKeyboardWidth: nextKeyboardWidth, spaceKeyWidth: spaceKeyWidth)
@@ -111,11 +111,13 @@ class ConstraintMaker {
         addButtonConstraintsToRow(topLetters, betweenSpace: betweenSpace, containingView: topRowView)
         addButtonConstraintsToRow(topNumbers, betweenSpace: betweenSpace, containingView: topRowView)
         addButtonConstraintsToRow(topPuncs, betweenSpace: betweenSpace, containingView: topRowView)
+        centerLabels(topLetters, verticalConstant: charVerticalConstant)
+        centerLabels(topNumbers, verticalConstant: charVerticalConstant)
+        centerLabels(topPuncs, verticalConstant: charVerticalConstant)
         
         // midRow
         
         midLetters[0].rightAnchor.constraintEqualToAnchor(midTouchLetters[0].rightAnchor, constant: betweenSpace * -0.5).active = true
-        //midLetters[4].centerXAnchor.constraintEqualToAnchor(midRowView.centerXAnchor).active = true
         for (i, button) in midLetters.enumerate() {
             if i != 0 {
                 button.leftAnchor.constraintEqualToAnchor(midLetters[i - 1].rightAnchor, constant: betweenSpace).active = true
@@ -128,6 +130,9 @@ class ConstraintMaker {
         
         addButtonConstraintsToRow(midNumbers, betweenSpace: betweenSpace, containingView: midRowView)
         addButtonConstraintsToRow(midPuncs, betweenSpace: betweenSpace, containingView: midRowView)
+        centerLabels(midLetters, verticalConstant: charVerticalConstant)
+        centerLabels(midNumbers, verticalConstant: charVerticalConstant)
+        centerLabels(midPuncs, verticalConstant: charVerticalConstant)
         
         // bottomRow
         for (i, button) in bottomLettersShiftBackspace.enumerate() {
@@ -145,6 +150,7 @@ class ConstraintMaker {
                         button.leftAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[i - 1].rightAnchor, constant: betweenSpace).active = true
                     }
                     button.widthAnchor.constraintEqualToAnchor(topLetters[0].widthAnchor).active = true
+                    centerLabel(button, verticalConstant: charVerticalConstant)
                 }
             }
             // all buttons in row get this
@@ -156,6 +162,7 @@ class ConstraintMaker {
             if i == 0 {
                 button.leftAnchor.constraintEqualToAnchor(bottomRowView.leftAnchor, constant: betweenSpace * 0.5).active = true
                 button.widthAnchor.constraintEqualToAnchor(bottomRowView.widthAnchor, multiplier: shiftWidth).active = true
+            centerLabel(button)
             } else {
                 if i == 1 {
                     button.leftAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[1].leftAnchor).active = true
@@ -166,6 +173,7 @@ class ConstraintMaker {
                     button.leftAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[i - 1].rightAnchor, constant: betweenSpace).active = true
                 }
                 button.widthAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[1].widthAnchor).active = true
+                centerLabel(button, verticalConstant: charVerticalConstant)
             }
             // all buttons in row get this
             button.topAnchor.constraintEqualToAnchor(bottomRowView.topAnchor).active = true
@@ -177,6 +185,7 @@ class ConstraintMaker {
             if i == 0 {
                 button.leftAnchor.constraintEqualToAnchor(utilRowView.leftAnchor, constant: betweenSpace * 0.5).active = true
                 button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: nextKeyboardWidth).active = true
+                centerLabel(button)
             } else {
                 if i == 1 {
                     button.widthAnchor.constraintEqualToAnchor(utilKeys[i - 1].widthAnchor).active = true
@@ -284,5 +293,16 @@ class ConstraintMaker {
             button.topAnchor.constraintEqualToAnchor(utilRowView.topAnchor).active = true
             button.bottomAnchor.constraintEqualToAnchor(utilRowView.bottomAnchor).active = true
         }
+    }
+    
+    static func centerLabels(buttons: [UIView], verticalConstant: CGFloat = 0) {
+        for button in buttons {
+            centerLabel(button, verticalConstant: verticalConstant)
+        }
+    }
+    
+    static func centerLabel(button:UIView, verticalConstant: CGFloat = 0) {
+        button.subviews[0].centerXAnchor.constraintEqualToAnchor(button.centerXAnchor).active = true
+        button.subviews[0].centerYAnchor.constraintEqualToAnchor(button.centerYAnchor, constant: verticalConstant).active = true
     }
 }

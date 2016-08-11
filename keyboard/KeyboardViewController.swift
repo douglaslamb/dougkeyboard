@@ -134,11 +134,12 @@ class KeyboardViewController: UIInputViewController {
         // numbers key
         
         let numbersKey = UIView()
-        let numbersKeyLabel = UILabel(frame: CGRectMake(10.0, 10.0, 60, 25))
+        let numbersKeyLabel = UILabel(frame: CGRectMake(0, 0, 60, 25))
+        numbersKeyLabel.translatesAutoresizingMaskIntoConstraints = false
         numbersKeyLabel.text = "123"
         numbersKey.addSubview(numbersKeyLabel)
         
-        numbersKey.backgroundColor = UIColor.whiteColor()
+        numbersKey.backgroundColor = UIColor.grayColor()
         numbersKey.layer.cornerRadius = 5
         numbersKey.translatesAutoresizingMaskIntoConstraints = false
         numbersKey.tag = UtilKey.numbersLettersKey.rawValue
@@ -236,11 +237,12 @@ class KeyboardViewController: UIInputViewController {
         let numbersPuncTouchKey = UIView()
         numbersPuncTouchKey.addSubview(numbersPuncKey)
         bottomRowNumberButtons = [numbersPuncKey] + bottomRowNumberButtons
-        let numbersPuncKeyLabel = UILabel(frame: CGRectMake(3.0, 10.0, 60, 25))
+        let numbersPuncKeyLabel = UILabel(frame: CGRectMake(0, 0, 60, 25))
+        numbersPuncKeyLabel.translatesAutoresizingMaskIntoConstraints = false
         numbersPuncKeyLabel.text = "#+="
         numbersPuncKey.addSubview(numbersPuncKeyLabel)
         
-        numbersPuncKey.backgroundColor = UIColor.whiteColor()
+        numbersPuncKey.backgroundColor = UIColor.grayColor()
         numbersPuncKey.layer.cornerRadius = 5
         numbersPuncKey.translatesAutoresizingMaskIntoConstraints = false
         numbersPuncKey.tag = UtilKey.numbersPuncKey.rawValue
@@ -309,7 +311,7 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
         autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
-        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 2, shiftWidth: 0.12, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.48)
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 2, shiftWidth: 0.12, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.48, charVerticalConstant: -5)
         
         // do startup hiding
         manager.loadStart()
@@ -341,8 +343,10 @@ class KeyboardViewController: UIInputViewController {
         for title in titles {
             
             let button = UIView()
-            let label = UILabel(frame: CGRectMake(10.0, 10.0, 20, 15))
+            let label = UILabel(frame: CGRectMake(0, 0, 20, 20))
+            label.translatesAutoresizingMaskIntoConstraints = false
             label.text = title
+            label.font = label.font.fontWithSize(21)
             button.addSubview(label)
             
             // button appearance config
