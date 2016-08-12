@@ -42,7 +42,7 @@ class KeyboardViewController: UIInputViewController {
         let topRowView = UIView()
         topRowView.backgroundColor = UIColor.lightGrayColor()
         // create buttons
-        let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
+        let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O"]
         let topRowButtons = createButtons(topRowButtonTitles)
         // create touch buttons
         var topRowTouchButtons: [UIView] = wrapButtons(topRowButtons)
@@ -58,7 +58,7 @@ class KeyboardViewController: UIInputViewController {
         let midRowView = UIView()
         midRowView.backgroundColor = UIColor.lightGrayColor()
         // create buttons
-        let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
+        let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "P"]
         let midRowButtons = createButtons(midRowButtonTitles)
         // create touch buttons
         var midRowTouchButtons: [UIView] = wrapButtons(midRowButtons)
@@ -81,7 +81,7 @@ class KeyboardViewController: UIInputViewController {
         let shiftImage = UIImage(named: "shiftOff")
         let shiftKey = UIImageView(image: shiftImage)
         setupImageView(shiftKey)
-        bottomRowButtons.append(shiftKey)
+        //bottomRowButtons.append(shiftKey)
         shiftKey.tag = UtilKey.shiftKey.rawValue
         
         // save shift key as global to change image later
@@ -89,7 +89,7 @@ class KeyboardViewController: UIInputViewController {
         
         // add letter buttons to bottom row
         
-        let bottomRowLetterTitles = ["Z", "X", "C", "V", "B", "N", "M"]
+        let bottomRowLetterTitles = ["Z", "X", "C", "V", "B", "N", "M", "L"]
         let bottomRowLettersButtons = createButtons(bottomRowLetterTitles)
         bottomRowButtons = bottomRowButtons + bottomRowLettersButtons
         // wrap these now so I can put them into the manager
@@ -131,6 +131,9 @@ class KeyboardViewController: UIInputViewController {
         
         var utilRowButtons = [UIView]()
         
+        // testing the shift key in util row 20160812
+        utilRowButtons.append(shiftKey)
+        
         // numbers key
         
         let numbersKey = UIView()
@@ -148,6 +151,7 @@ class KeyboardViewController: UIInputViewController {
         
         /// save later for label changing
         manager.numbersKey = numbersKey
+        
 
         // next keyboard key
         
@@ -311,7 +315,7 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
         autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
-        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 2, shiftWidth: 0.12, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.48, charVerticalConstant: -5)
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 2, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.48, charVerticalConstant: -5)
         
         // do startup hiding
         manager.loadStart()
@@ -347,6 +351,7 @@ class KeyboardViewController: UIInputViewController {
             label.translatesAutoresizingMaskIntoConstraints = false
             label.text = title
             label.font = label.font.fontWithSize(21)
+            button.userInteractionEnabled = false
             button.addSubview(label)
             
             // button appearance config
