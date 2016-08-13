@@ -24,6 +24,7 @@ class KeyboardViewController: UIInputViewController {
     var prevButton = ""
     var disableTouch = false;
     var manager: KeyboardManager = KeyboardManager()
+    var longDeleteTimer: NSTimer! = nil
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
@@ -76,16 +77,7 @@ class KeyboardViewController: UIInputViewController {
         
         var bottomRowButtons = [UIView]()
         
-        // add shift key to bottom row
         
-        let shiftImage = UIImage(named: "shiftOff")
-        let shiftKey = UIImageView(image: shiftImage)
-        setupImageView(shiftKey)
-        //bottomRowButtons.append(shiftKey)
-        shiftKey.tag = UtilKey.shiftKey.rawValue
-        
-        // save shift key as global to change image later
-        manager.shiftKey = shiftKey
         
         // add letter buttons to bottom row
         
@@ -109,6 +101,11 @@ class KeyboardViewController: UIInputViewController {
         backspaceTouchKey.addSubview(backspaceKey)
         backspaceKey.tag = UtilKey.backspaceKey.rawValue
         bottomRowButtons.append(backspaceKey)
+        
+        // add and configure long press recognizer
+        let backspaceLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleBackspaceLongPress:"))
+        backspaceTouchKey.addGestureRecognizer(backspaceLongPressRecognizer)
+        
         // put the backspace key in bottomRowTouchButtons now
         // because it still needs its constraints set later
         bottomRowTouchButtons.append(backspaceTouchKey)
@@ -131,8 +128,36 @@ class KeyboardViewController: UIInputViewController {
         
         var utilRowButtons = [UIView]()
         
-        // testing the shift key in util row 20160812
+        // add shift key to util row
+        
+        let shiftImage = UIImage(named: "shiftOff")
+        let shiftKey = UIImageView(image: shiftImage)
+        setupImageView(shiftKey)
+        shiftKey.tag = UtilKey.shiftKey.rawValue
+        
         utilRowButtons.append(shiftKey)
+        
+        // save shift key as global to change image later
+        manager.shiftKey = shiftKey
+        
+        // create numbersPunc key
+        // add it to util row
+        let numbersPuncKey = UIView()
+        let numbersPuncKeyLabel = UILabel(frame: CGRectMake(0, 0, 60, 25))
+        numbersPuncKeyLabel.translatesAutoresizingMaskIntoConstraints = false
+        numbersPuncKeyLabel.text = "#+="
+        numbersPuncKey.addSubview(numbersPuncKeyLabel)
+        
+        numbersPuncKey.backgroundColor = UIColor.grayColor()
+        numbersPuncKey.layer.cornerRadius = 5
+        numbersPuncKey.translatesAutoresizingMaskIntoConstraints = false
+        numbersPuncKey.tag = UtilKey.numbersPuncKey.rawValue
+        
+        utilRowButtons.append(numbersPuncKey)
+        
+        /// save global for label changing later
+        manager
+            .numbersPuncKey = numbersPuncKey
         
         // numbers key
         
@@ -151,7 +176,6 @@ class KeyboardViewController: UIInputViewController {
         
         /// save later for label changing
         manager.numbersKey = numbersKey
-        
 
         // next keyboard key
         
@@ -170,6 +194,11 @@ class KeyboardViewController: UIInputViewController {
         let spacebarKeyLabel = UILabel(frame: CGRectMake(10.0, 10.0, 60, 25))
         spacebarKeyLabel.text = " "
         spacebarKey.addSubview(spacebarKeyLabel)
+        
+        // add spacebar logo
+        let spacebarLogo = UIImageView(image: UIImage(named: "spaceKeyLogo"))
+        spacebarKey.addSubview(spacebarLogo)
+        spacebarLogo.tag = 20 // to get it later when adding constraints
         
         spacebarKey.backgroundColor = UIColor.whiteColor()
         spacebarKey.layer.cornerRadius = 5
@@ -199,6 +228,9 @@ class KeyboardViewController: UIInputViewController {
         
         self.inputView!.addSubview(utilRowView)
         self.utilRowView = utilRowView
+        
+        // put shift into manager for hiding later
+        manager.lettersAndShift.append(utilRowTouchButtons[0])
         
         // NUMBERS PAGE!!!
         
@@ -235,36 +267,10 @@ class KeyboardViewController: UIInputViewController {
             bottomRowView.addSubview(button)
         }
         
-        // add numbersPunc key to bottom row
-        // and create its touch button
-        let numbersPuncKey = UIView()
-        let numbersPuncTouchKey = UIView()
-        numbersPuncTouchKey.addSubview(numbersPuncKey)
-        bottomRowNumberButtons = [numbersPuncKey] + bottomRowNumberButtons
-        let numbersPuncKeyLabel = UILabel(frame: CGRectMake(0, 0, 60, 25))
-        numbersPuncKeyLabel.translatesAutoresizingMaskIntoConstraints = false
-        numbersPuncKeyLabel.text = "#+="
-        numbersPuncKey.addSubview(numbersPuncKeyLabel)
         
-        numbersPuncKey.backgroundColor = UIColor.grayColor()
-        numbersPuncKey.layer.cornerRadius = 5
-        numbersPuncKey.translatesAutoresizingMaskIntoConstraints = false
-        numbersPuncKey.tag = UtilKey.numbersPuncKey.rawValue
-        
-        // prepend the numbersPuncTouchKey to the bottomRowNumberTouchButtons
-        // because they need to be in one array
-        // for the constraint-setting function later
-        bottomRowNumberTouchButtons = [numbersPuncTouchKey] + bottomRowNumberTouchButtons
-        
-        /// save global for label changing later
+        // put ". < ? ..." and numbersPuncKey in one array for hiding later
         manager
-            .numbersPuncKey = numbersPuncKey
-        
-        // put ". < ? ..." in one array for hiding later
-        manager
-            .lowerPuncsAndNumbersPuncsKey = bottomRowNumberTouchButtons
-        
-        self.bottomRowView.addSubview(numbersPuncTouchKey)
+            .lowerPuncsAndNumbersPuncKey = bottomRowNumberTouchButtons + [utilRowTouchButtons[1]]
         
         // PUNCTUATION PAGE !!!
         
@@ -493,6 +499,24 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
+    func startLongDelete() {
+        longDeleteTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self.textDocumentProxy, selector: Selector("deleteBackward"), userInfo: nil, repeats: true)
+    }
+    
+    func stopLongDelete() {
+        print("stoplongdelete fired")
+        longDeleteTimer.invalidate()
+        longDeleteTimer = nil
+    }
+    
+    func handleBackspaceLongPress(sender: UILongPressGestureRecognizer) {
+        if sender.state == UIGestureRecognizerState.Began {
+            startLongDelete()
+        } else if sender.state == UIGestureRecognizerState.Ended {
+            stopLongDelete()
+        }
+    }
+    
     func autoresizeIntoConstraintsOff (views: [UIView]) {
         for view in views {
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -523,5 +547,4 @@ class KeyboardViewController: UIInputViewController {
             textColor = UIColor.blackColor()
         }
     }
-
 }

@@ -145,9 +145,9 @@
 		BF5CEAC61D1B38C20078C2D1 /* keyboard-201606220-01 */ = {
 			isa = PBXGroup;
 			children = (
+				BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */,
 				BF74C13A1D3D892D0088E585 /* ConstraintMaker.swift */,
 				BFCDD7FD1D4B246E00809A7B /* KeyboardManager.swift */,
-				BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */,
 				BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */,
 				BF5CEACB1D1B38C20078C2D1 /* Main.storyboard */,
 				BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */,

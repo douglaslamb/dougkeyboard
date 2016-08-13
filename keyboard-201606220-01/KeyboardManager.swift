@@ -12,7 +12,7 @@ class KeyboardManager {
     
     var lettersAndShift: [UIView]!
     var numbersAndPuncs: [UIView]!
-    var lowerPuncsAndNumbersPuncsKey: [UIView]!
+    var lowerPuncsAndNumbersPuncKey: [UIView]!
     var puncs: [UIView]!
     
     var isShift: Bool = false
@@ -32,7 +32,7 @@ class KeyboardManager {
             hide(self.puncs)
             self.isPuncsPage = false
         } else {
-            unhide(self.lowerPuncsAndNumbersPuncsKey)
+            unhide(self.lowerPuncsAndNumbersPuncKey)
             hide(self.lettersAndShift)
             let label = self.numbersKey.subviews[0] as! UILabel
             // put correct label on numbersKey
@@ -58,7 +58,7 @@ class KeyboardManager {
     
     func loadStart() {
         unhide(self.lettersAndShift)
-        hide(self.lowerPuncsAndNumbersPuncsKey)
+        hide(self.lowerPuncsAndNumbersPuncKey)
         hide(self.puncs)
         if self.isPuncsPage {
             hide(self.puncs)

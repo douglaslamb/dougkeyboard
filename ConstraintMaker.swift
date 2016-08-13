@@ -134,31 +134,6 @@ class ConstraintMaker {
         centerLabels(midNumbers, verticalConstant: charVerticalConstant)
         centerLabels(midPuncs, verticalConstant: charVerticalConstant)
         
-        // bottomRow
-        /*preshiftexp
-        for (i, button) in bottomLettersShiftBackspace.enumerate() {
-            if i == 0 {
-                button.leftAnchor.constraintEqualToAnchor(bottomRowView.leftAnchor, constant: betweenSpace * 0.5).active = true
-                button.widthAnchor.constraintEqualToAnchor(bottomRowView.widthAnchor, multiplier: shiftWidth).active = true
-            } else {
-                if i == bottomLettersShiftBackspace.count - 1 {
-                    button.rightAnchor.constraintEqualToAnchor(bottomRowView.rightAnchor, constant: betweenSpace * 0.5).active = true
-                    button.widthAnchor.constraintEqualToAnchor(bottomRowView.widthAnchor, multiplier: shiftWidth).active = true
-                } else {
-                    if i == 1 {
-                        button.centerXAnchor.constraintEqualToAnchor(midLetters[0].rightAnchor, constant: betweenSpace * 0.5).active = true
-                    } else {
-                        button.leftAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[i - 1].rightAnchor, constant: betweenSpace).active = true
-                    }
-                    button.widthAnchor.constraintEqualToAnchor(topLetters[0].widthAnchor).active = true
-                    centerLabel(button, verticalConstant: charVerticalConstant)
-                }
-            }
-            // all buttons in row get this
-            button.topAnchor.constraintEqualToAnchor(bottomRowView.topAnchor).active = true
-            button.bottomAnchor.constraintEqualToAnchor(bottomRowView.bottomAnchor).active = true
-        }
-        */
         for (i, button) in bottomLettersShiftBackspace.enumerate() {
             if i == 0 {
                 button.leftAnchor.constraintEqualToAnchor(bottomRowView.leftAnchor, constant: betweenSpace * 0.5).active = true
@@ -180,42 +155,41 @@ class ConstraintMaker {
         for (i, button) in bottomPuncAndNumbersPuncKey.enumerate() {
             if i == 0 {
                 button.leftAnchor.constraintEqualToAnchor(bottomRowView.leftAnchor, constant: betweenSpace * 0.5).active = true
-                button.widthAnchor.constraintEqualToAnchor(bottomRowView.widthAnchor, multiplier: shiftWidth).active = true
-            centerLabel(button)
             } else {
-                if i == 1 {
-                    button.leftAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[1].leftAnchor).active = true
-                } else {
-                    if i == bottomPuncAndNumbersPuncKey.count - 1 {
-                        button.rightAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[bottomLettersShiftBackspace.count - 2].rightAnchor).active = true
-                    }
-                    button.leftAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[i - 1].rightAnchor, constant: betweenSpace).active = true
+                if i == bottomPuncAndNumbersPuncKey.count - 1 {
+                    button.rightAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[bottomLettersShiftBackspace.count - 1].leftAnchor, constant: -1 * betweenSpace).active = true
                 }
-                button.widthAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[1].widthAnchor).active = true
-                centerLabel(button, verticalConstant: charVerticalConstant)
+                button.leftAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[i - 1].rightAnchor, constant: betweenSpace).active = true
+                button.widthAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[0].widthAnchor).active = true
             }
             // all buttons in row get this
             button.topAnchor.constraintEqualToAnchor(bottomRowView.topAnchor).active = true
             button.bottomAnchor.constraintEqualToAnchor(bottomRowView.bottomAnchor).active = true
+            centerLabel(button, verticalConstant: charVerticalConstant)
         }
         
         // utilRow
         for (i, button) in utilKeys.enumerate() {
-            if i == 0 {
+            if i == 0 || i == 1 {
                 button.leftAnchor.constraintEqualToAnchor(utilRowView.leftAnchor, constant: betweenSpace * 0.5).active = true
                 button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: nextKeyboardWidth).active = true
-            } else {
                 if i == 1 {
+                    centerLabel(button)
+                }
+            } else {
+                if i == 2 {
                     button.widthAnchor.constraintEqualToAnchor(utilKeys[i - 1].widthAnchor).active = true
                     centerLabel(button)
                 } else {
-                    if i == 2 {
+                    if i == 3 {
                         button.widthAnchor.constraintEqualToAnchor(utilKeys[i - 1].widthAnchor).active = true
                     } else {
-                        if i == 3 {
+                        if i == 4 {
                             button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: spaceKeyWidth).active = true
+                            button.viewWithTag(20)!.rightAnchor.constraintEqualToAnchor(button.rightAnchor, constant: -100)
+                            button.viewWithTag(20)!.topAnchor.constraintEqualToAnchor(button.topAnchor, constant: 10)
                         } else {
-                            if i == 4 {
+                            if i == 5 {
                                 button.rightAnchor.constraintEqualToAnchor(utilRowView.rightAnchor, constant: betweenSpace * 0.5).active = true
                             }
                         }
@@ -282,12 +256,11 @@ class ConstraintMaker {
         for (i, button) in bottomPuncAndNumbersPuncKey.enumerate() {
             if i == 0 {
                 button.leftAnchor.constraintEqualToAnchor(bottomRowView.leftAnchor).active = true
-                button.widthAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[0].widthAnchor).active = true
             } else {
                 if i == bottomPuncAndNumbersPuncKey.count - 1 {
                     button.rightAnchor.constraintEqualToAnchor(bottomLettersShiftBackspace[bottomLettersShiftBackspace.count - 1].leftAnchor).active = true
                 }
-                button.widthAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[1].widthAnchor).active = true
+                button.widthAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[0].widthAnchor).active = true
                 button.leftAnchor.constraintEqualToAnchor(bottomPuncAndNumbersPuncKey[i - 1].rightAnchor).active = true
             }
             // all buttons in row get this
@@ -298,17 +271,17 @@ class ConstraintMaker {
         // utilRow
         // SPECIFY THE SIZE OF THE UTIL ROW KEYS HERE
         for (i, button) in utilKeys.enumerate() {
-            if i == 0 {
+            if i == 0 || i == 1 {
                 button.leftAnchor.constraintEqualToAnchor(utilRowView.leftAnchor).active = true
                 button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: nextKeyboardWidth, constant: betweenSpace).active = true
             } else {
-                if i == 1 {
+                if i == 2 {
                     button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor, constant: betweenSpace).active = true
                 } else {
-                    if i == 2 {
+                    if i == 3 {
                         button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor, constant: betweenSpace).active = true
                     } else {
-                        if i == 3 {
+                        if i == 4 {
                             button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: spaceKeyWidth, constant: betweenSpace).active = true
                         } else {
                             button.rightAnchor.constraintEqualToAnchor(utilRowView.rightAnchor).active = true
