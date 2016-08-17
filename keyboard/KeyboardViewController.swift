@@ -149,7 +149,7 @@ class KeyboardViewController: UIInputViewController {
         numbersPuncKey.addSubview(numbersPuncKeyLabel)
         
         numbersPuncKey.backgroundColor = UIColor.grayColor()
-        numbersPuncKey.layer.cornerRadius = 5
+        Appearance.setCornerRadius(numbersPuncKey)
         numbersPuncKey.translatesAutoresizingMaskIntoConstraints = false
         numbersPuncKey.tag = UtilKey.numbersPuncKey.rawValue
         
@@ -168,7 +168,7 @@ class KeyboardViewController: UIInputViewController {
         numbersKey.addSubview(numbersKeyLabel)
         
         numbersKey.backgroundColor = UIColor.grayColor()
-        numbersKey.layer.cornerRadius = 5
+        Appearance.setCornerRadius(numbersKey)
         numbersKey.translatesAutoresizingMaskIntoConstraints = false
         numbersKey.tag = UtilKey.numbersLettersKey.rawValue
         
@@ -197,11 +197,12 @@ class KeyboardViewController: UIInputViewController {
         
         // add spacebar logo
         let spacebarLogo = UIImageView(image: UIImage(named: "spaceKeyLogo"))
+        spacebarLogo.translatesAutoresizingMaskIntoConstraints = false
         spacebarKey.addSubview(spacebarLogo)
         spacebarLogo.tag = 20 // to get it later when adding constraints
         
         spacebarKey.backgroundColor = UIColor.whiteColor()
-        spacebarKey.layer.cornerRadius = 5
+        Appearance.setCornerRadius(spacebarKey)
         spacebarKey.translatesAutoresizingMaskIntoConstraints = false
         
         utilRowButtons.append(spacebarKey)
@@ -321,7 +322,7 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
         autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
-        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 2, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.48, charVerticalConstant: -5)
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 3, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: -5)
         
         // do startup hiding
         manager.loadStart()
@@ -330,7 +331,7 @@ class KeyboardViewController: UIInputViewController {
     func setupImageView(view: UIImageView) {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.masksToBounds = true
-        view.layer.cornerRadius = 5
+        Appearance.setCornerRadius(view)
         view.contentMode = UIViewContentMode.Center
         view.backgroundColor = UIColor.grayColor()
     }
@@ -362,7 +363,7 @@ class KeyboardViewController: UIInputViewController {
             
             // button appearance config
             button.backgroundColor = UIColor.whiteColor()
-            button.layer.cornerRadius = 5
+            Appearance.setCornerRadius(button)
             button.translatesAutoresizingMaskIntoConstraints = false
             
             // add button to return array
