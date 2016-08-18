@@ -431,6 +431,12 @@ class KeyboardViewController: UIInputViewController {
         let subviews = self.topRowView.subviews + self.midRowView.subviews + self.bottomRowView.subviews + self.utilRowView.subviews
         var isTouchInButton = false
         
+        // !!!!!!!!!!!!!!!!!!!
+        // Clean this code up down here. Pull out subviews[0] into
+        // a variable so I don't have to keep pulling it out
+        // 20160817
+        // !!!!!!!!!!!!!!!!!!!
+        
         // check each uiview for touch
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
@@ -452,6 +458,8 @@ class KeyboardViewController: UIInputViewController {
                     self.textDocumentProxy.insertText(character)
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
+                    subview.subviews[0].backgroundColor = UIColor.blackColor()
+                    buttonLabel.textColor = UIColor.whiteColor()
                     // found the button so return
                     //return
                 }

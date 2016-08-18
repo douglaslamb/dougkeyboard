@@ -188,20 +188,20 @@ class ConstraintMaker {
         for (i, button) in utilKeys.enumerate() {
             if i == 0 || i == 1 {
                 button.leftAnchor.constraintEqualToAnchor(utilRowView.leftAnchor, constant: betweenSpace * 0.5).active = true
-                button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: nextKeyboardWidth).active = true
+                button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: nextKeyboardWidth, constant: betweenSpace * -1).active = true
                 if i == 1 {
                     centerLabel(button)
                 }
             } else {
                 if i == 2 {
-                    button.widthAnchor.constraintEqualToAnchor(utilKeys[i - 1].widthAnchor).active = true
+                    button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor).active = true
                     centerLabel(button)
                 } else {
                     if i == 3 {
-                        button.widthAnchor.constraintEqualToAnchor(utilKeys[i - 1].widthAnchor).active = true
+                        button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor).active = true
                     } else {
                         if i == 4 {
-                            button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: spaceKeyWidth).active = true
+                            button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: spaceKeyWidth, constant: betweenSpace * -1).active = true
                             button.viewWithTag(20)!.centerXAnchor.constraintEqualToAnchor(button.centerXAnchor, constant: -2).active = true
                             button.viewWithTag(20)!.topAnchor.constraintEqualToAnchor(button.topAnchor, constant: -3).active = true
                         } else {
@@ -289,16 +289,16 @@ class ConstraintMaker {
         for (i, button) in utilKeys.enumerate() {
             if i == 0 || i == 1 {
                 button.leftAnchor.constraintEqualToAnchor(utilRowView.leftAnchor).active = true
-                button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: nextKeyboardWidth, constant: betweenSpace).active = true
+                button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: nextKeyboardWidth).active = true
             } else {
                 if i == 2 {
-                    button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor, constant: betweenSpace).active = true
+                    button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor).active = true
                 } else {
                     if i == 3 {
-                        button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor, constant: betweenSpace).active = true
+                        button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor).active = true
                     } else {
                         if i == 4 {
-                            button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: spaceKeyWidth, constant: betweenSpace).active = true
+                            button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: spaceKeyWidth).active = true
                         } else {
                             button.rightAnchor.constraintEqualToAnchor(utilRowView.rightAnchor).active = true
                         }
