@@ -22,9 +22,16 @@ class KeyboardViewController: UIInputViewController {
     
     // global vars
     var prevButton = ""
+    var prevDisplayButton: UIView?
     var disableTouch = false;
     var manager: KeyboardManager = KeyboardManager()
     var longDeleteTimer: NSTimer! = nil
+    
+    // global constants
+    let pressedBackgroundColor = UIColor.blackColor()
+    let pressedTextColor = UIColor.whiteColor()
+    let unpressedBackgroundColor = UIColor.whiteColor()
+    let unpressedTextColor = UIColor.blackColor()
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
@@ -397,12 +404,14 @@ class KeyboardViewController: UIInputViewController {
                 // if touch was just in a button
                 self.textDocumentProxy.deleteBackward()
                 self.prevButton = ""
+                makePrevKeyUnpressed(false)
             }
         }
     }
     
     func handleTouchMoveInButton(view: UIView) {
-        let buttonLabel = view.subviews[0].subviews[0] as! UILabel
+        let displayButton = view.subviews[0]
+        let buttonLabel = displayButton.subviews[0] as! UILabel
         let currButtonLabel = buttonLabel.text!
         let character = manager.isShift ? currButtonLabel : currButtonLabel.lowercaseString
         // checking if we insert text or
@@ -418,7 +427,9 @@ class KeyboardViewController: UIInputViewController {
                 // i.e. slide from button to button
                 self.textDocumentProxy.deleteBackward()
                 self.textDocumentProxy.insertText(character)
+                makePrevKeyUnpressed(false)
             }
+            makeKeyPressed(displayButton)
             self.prevButton = currButtonLabel
         }
         print(view.dynamicType)
@@ -437,6 +448,10 @@ class KeyboardViewController: UIInputViewController {
         // 20160817
         // !!!!!!!!!!!!!!!!!!!
         
+        if prevDisplayButton != nil {
+            makePrevKeyUnpressed(false)
+        }
+        
         // check each uiview for touch
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
@@ -449,24 +464,51 @@ class KeyboardViewController: UIInputViewController {
                     // key it won't crash
                     self.disableTouch = true;
                     // found the button so return
-                    //return
+                    // return
                 } else {
+                    let displayButton = subview.subviews[0]
                     print("inside button" + String(arc4random_uniform(9)))
-                    let buttonLabel = subview.subviews[0].subviews[0] as! UILabel
+                    let buttonLabel = displayButton.subviews[0] as! UILabel
                     let currButtonLabel = buttonLabel.text!
                     let character = manager.isShift ? currButtonLabel: currButtonLabel.lowercaseString
                     self.textDocumentProxy.insertText(character)
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
-                    subview.subviews[0].backgroundColor = UIColor.blackColor()
-                    buttonLabel.textColor = UIColor.whiteColor()
+                    makeKeyPressed(displayButton)
                     // found the button so return
-                    //return
+                    // return
                 }
             }
         }
         if (!isTouchInButton) {
             self.prevButton = ""
+        }
+    }
+    
+    func makeKeyPressed(displayButton: UIView) {
+        // change button to pressed color
+        displayButton.backgroundColor = pressedBackgroundColor
+        let buttonLabel = displayButton.subviews[0] as! UILabel
+        buttonLabel.textColor = pressedTextColor
+        // save new button as prevDisplayButton
+        prevDisplayButton = displayButton
+    }
+    
+    func makePrevKeyUnpressed(lag: Bool) {
+        let button = prevDisplayButton
+        let changeAppearance: () -> Void = {
+            () -> Void in
+            button?.backgroundColor = self.unpressedBackgroundColor
+            let buttonLabel = button?.subviews[0] as! UILabel
+            buttonLabel.textColor = self.unpressedTextColor
+        }
+        // nil prev button
+        prevDisplayButton = nil
+        // change button to unpressed color
+        if lag {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.05 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), changeAppearance)
+        } else {
+            changeAppearance()
         }
     }
     
@@ -534,6 +576,9 @@ class KeyboardViewController: UIInputViewController {
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.disableTouch = false;
+        if prevDisplayButton != nil && event?.allTouches()?.count < 2 {
+            makePrevKeyUnpressed(true)
+        }
     }
     
     override func didReceiveMemoryWarning() {
