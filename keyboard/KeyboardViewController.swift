@@ -23,15 +23,18 @@ class KeyboardViewController: UIInputViewController {
     // global vars
     var prevButton = ""
     var prevDisplayButton: UIView?
-    var disableTouch = false;
+    var disableTouch = false
     var manager: KeyboardManager = KeyboardManager()
     var longDeleteTimer: NSTimer! = nil
+    var isSpaceShift = false
     
     // global constants
-    let pressedBackgroundColor = UIColor.blackColor()
-    let pressedTextColor = UIColor.whiteColor()
+    let pressedBackgroundColor = UIColor.init(white: 0.8, alpha: 1)
+    let pressedTextColor = UIColor.init(white: 0.9, alpha: 1)
     let unpressedBackgroundColor = UIColor.whiteColor()
     let unpressedTextColor = UIColor.blackColor()
+    let unpressedFontSize = CGFloat(21.0)
+    let pressedFontSize = CGFloat(25.0)
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
@@ -364,7 +367,7 @@ class KeyboardViewController: UIInputViewController {
             let label = UILabel(frame: CGRectMake(0, 0, 20, 20))
             label.translatesAutoresizingMaskIntoConstraints = false
             label.text = title
-            label.font = label.font.fontWithSize(21)
+            label.font = label.font.fontWithSize(unpressedFontSize)
             button.userInteractionEnabled = false
             button.addSubview(label)
             
@@ -470,11 +473,17 @@ class KeyboardViewController: UIInputViewController {
                     print("inside button" + String(arc4random_uniform(9)))
                     let buttonLabel = displayButton.subviews[0] as! UILabel
                     let currButtonLabel = buttonLabel.text!
-                    let character = manager.isShift ? currButtonLabel: currButtonLabel.lowercaseString
+                    let character = manager.isShift || isSpaceShift ? currButtonLabel: currButtonLabel.lowercaseString
+                    if isSpaceShift {
+                        self.textDocumentProxy.deleteBackward()
+                    }
                     self.textDocumentProxy.insertText(character)
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
                     makeKeyPressed(displayButton)
+                    if currButtonLabel == " " {
+                        isSpaceShift = true
+                    }
                     // found the button so return
                     // return
                 }
@@ -485,31 +494,39 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
-    func makeKeyPressed(displayButton: UIView) {
+    func makeKeyPressed(button: UIView) {
         // change button to pressed color
-        displayButton.backgroundColor = pressedBackgroundColor
-        let buttonLabel = displayButton.subviews[0] as! UILabel
-        buttonLabel.textColor = pressedTextColor
-        // save new button as prevDisplayButton
-        prevDisplayButton = displayButton
+        let buttonLabel = button.subviews[0] as! UILabel
+        // ignore the spacebar
+        if buttonLabel.text != " " {
+            button.backgroundColor = pressedBackgroundColor
+            buttonLabel.textColor = pressedTextColor
+            button.bounds = CGRectMake(-1.5, -3, button.frame.width + 3, button.frame.height + 6)
+            // save new button as prevDisplayButton
+        }
+        prevDisplayButton = button
     }
     
     func makePrevKeyUnpressed(lag: Bool) {
         let button = prevDisplayButton
-        let changeAppearance: () -> Void = {
-            () -> Void in
-            button?.backgroundColor = self.unpressedBackgroundColor
-            let buttonLabel = button?.subviews[0] as! UILabel
-            buttonLabel.textColor = self.unpressedTextColor
+        let buttonLabel = button?.subviews[0] as! UILabel
+        // ignore the spacebar
+        if buttonLabel.text != " " {
+            let changeAppearance: () -> Void = {
+                () -> Void in
+                button?.backgroundColor = self.unpressedBackgroundColor
+                buttonLabel.textColor = self.unpressedTextColor
+                button?.bounds = CGRectMake(0, 0, (button?.frame.width)! - 3, (button?.frame.height)! - 6)
+            }
+            // change button to unpressed color
+            if lag {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.05 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), changeAppearance)
+            } else {
+                changeAppearance()
+            }
         }
         // nil prev button
         prevDisplayButton = nil
-        // change button to unpressed color
-        if lag {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.05 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), changeAppearance)
-        } else {
-            changeAppearance()
-        }
     }
     
     func doKeyFunction(key: UIView) {
@@ -578,6 +595,15 @@ class KeyboardViewController: UIInputViewController {
         self.disableTouch = false;
         if prevDisplayButton != nil && event?.allTouches()?.count < 2 {
             makePrevKeyUnpressed(true)
+            if manager.isShift {
+                manager.shiftOff()
+            }
+        }
+        if prevButton == " " && manager.isNumbersPage {
+            manager.goToLettersPage()
+        }
+        if isSpaceShift {
+            isSpaceShift = false
         }
     }
     
