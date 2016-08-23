@@ -29,12 +29,15 @@ class KeyboardViewController: UIInputViewController {
     var isSpaceShift = false
     
     // global constants
-    let pressedBackgroundColor = UIColor.init(white: 0.8, alpha: 1)
-    let pressedTextColor = UIColor.init(white: 0.9, alpha: 1)
-    let unpressedBackgroundColor = UIColor.whiteColor()
-    let unpressedTextColor = UIColor.blackColor()
     let unpressedFontSize = CGFloat(21.0)
     let pressedFontSize = CGFloat(25.0)
+    
+    // colors
+    let pressedBackgroundColor = UIColor.init(white: 1, alpha: 1)
+    let pressedTextColor = UIColor.init(white: 0, alpha: 1)
+    let unpressedBackgroundColor = UIColor.whiteColor()
+    let unpressedTextColor = UIColor.blackColor()
+    let backgroundColor = UIColor.init(white: 0.8, alpha: 1)
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
@@ -51,7 +54,7 @@ class KeyboardViewController: UIInputViewController {
         
         // create top row view
         let topRowView = UIView()
-        topRowView.backgroundColor = UIColor.lightGrayColor()
+        topRowView.backgroundColor = backgroundColor
         // create buttons
         let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O"]
         let topRowButtons = createButtons(topRowButtonTitles)
@@ -67,7 +70,7 @@ class KeyboardViewController: UIInputViewController {
         
         // create mid row view
         let midRowView = UIView()
-        midRowView.backgroundColor = UIColor.lightGrayColor()
+        midRowView.backgroundColor = backgroundColor
         // create buttons
         let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "P"]
         let midRowButtons = createButtons(midRowButtonTitles)
@@ -86,8 +89,6 @@ class KeyboardViewController: UIInputViewController {
         // all bottom row buttons
         
         var bottomRowButtons = [UIView]()
-        
-        
         
         // add letter buttons to bottom row
         
@@ -123,7 +124,7 @@ class KeyboardViewController: UIInputViewController {
         // create bottom row view and add all buttons to view
         
         let bottomRowView = UIView()
-        bottomRowView.backgroundColor = UIColor.lightGrayColor()
+        bottomRowView.backgroundColor = backgroundColor
         
         // create touch buttons
         // put each button in a touchview and add touchview to view
@@ -229,7 +230,7 @@ class KeyboardViewController: UIInputViewController {
         // add util buttons to util view
         
         let utilRowView = UIView()
-        utilRowView.backgroundColor = UIColor.lightGrayColor()
+        utilRowView.backgroundColor = backgroundColor
         
         let utilRowTouchButtons = wrapButtons(utilRowButtons)
         
@@ -332,7 +333,7 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
         autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
-        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 3, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: -5)
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 9, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
         
         // do startup hiding
         manager.loadStart()
@@ -408,6 +409,7 @@ class KeyboardViewController: UIInputViewController {
                 self.textDocumentProxy.deleteBackward()
                 self.prevButton = ""
                 makePrevKeyUnpressed(false)
+                print("I am gay")
             }
         }
     }
@@ -416,6 +418,11 @@ class KeyboardViewController: UIInputViewController {
         let displayButton = view.subviews[0]
         let buttonLabel = displayButton.subviews[0] as! UILabel
         let currButtonLabel = buttonLabel.text!
+        // if touch is in spacebar return early
+        if currButtonLabel == " " {
+            print("i returned early")
+            return
+        }
         let character = manager.isShift ? currButtonLabel : currButtonLabel.lowercaseString
         // checking if we insert text or
         // delete and insert text
@@ -501,7 +508,7 @@ class KeyboardViewController: UIInputViewController {
         if buttonLabel.text != " " {
             button.backgroundColor = pressedBackgroundColor
             buttonLabel.textColor = pressedTextColor
-            button.bounds = CGRectMake(-1.5, -3, button.frame.width + 3, button.frame.height + 6)
+            button.bounds = CGRectMake(-4.5, -8, button.frame.width + 9, button.frame.height + 16)
             // save new button as prevDisplayButton
         }
         prevDisplayButton = button
@@ -516,11 +523,11 @@ class KeyboardViewController: UIInputViewController {
                 () -> Void in
                 button?.backgroundColor = self.unpressedBackgroundColor
                 buttonLabel.textColor = self.unpressedTextColor
-                button?.bounds = CGRectMake(0, 0, (button?.frame.width)! - 3, (button?.frame.height)! - 6)
+                button?.bounds = CGRectMake(0, 0, (button?.frame.width)! - 9, (button?.frame.height)! - 16)
             }
             // change button to unpressed color
             if lag {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.05 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), changeAppearance)
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.06 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), changeAppearance)
             } else {
                 changeAppearance()
             }

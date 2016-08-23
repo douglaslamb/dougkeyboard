@@ -106,14 +106,14 @@ class ConstraintMaker {
         //
         //==============================
         
-        let topRowTopSpace: CGFloat = 3
-        let topRowBottomSpace: CGFloat = 3
-        let midRowTopSpace: CGFloat = 3
-        let midRowBottomSpace: CGFloat = 3
-        let bottomRowTopSpace: CGFloat = 3
-        let bottomRowBottomSpace: CGFloat = 3
-        let utilRowTopSpace: CGFloat = 3
-        let utilRowBottomSpace: CGFloat = 3
+        let topRowTopSpace: CGFloat = 8
+        let topRowBottomSpace: CGFloat = 8
+        let midRowTopSpace: CGFloat = 8
+        let midRowBottomSpace: CGFloat = 8
+        let bottomRowTopSpace: CGFloat = 8
+        let bottomRowBottomSpace: CGFloat = 8
+        let utilRowTopSpace: CGFloat = 8
+        let utilRowBottomSpace: CGFloat = 8
         
         // touch buttons
         addTouchButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topTouchLetters, midLetters: midTouchLetters, bottomLettersShiftBackspace: bottomTouchLettersShiftBackspace, utilKeys: utilTouchKeys, topNumbers: topTouchNumbers, midNumbers: midTouchNumbers, bottomPuncAndNumbersPuncKey: bottomTouchPuncAndNumbersPuncKey, topPuncs: topTouchPuncs, midPuncs: midTouchPuncs, betweenSpace: betweenSpace, nextKeyboardWidth: nextKeyboardWidth, spaceKeyWidth: spaceKeyWidth)
