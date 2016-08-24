@@ -370,6 +370,9 @@ class KeyboardViewController: UIInputViewController {
                 let touchView = UIView()
                 touchView.addSubview(button)
                 touchViews.append(touchView)
+                // DEBUG: add a border for debugging
+                touchView.layer.borderWidth = 1
+                touchView.layer.borderColor = UIColor.blackColor().CGColor
                 button.translatesAutoresizingMaskIntoConstraints = false
         }
         return touchViews
@@ -457,6 +460,7 @@ class KeyboardViewController: UIInputViewController {
                 makePrevKeyUnpressed(false)
             }
             makeKeyPressed(displayButton)
+            makeTouchKeyExpand(view)
             self.prevButton = currButtonLabel
         }
         print(view.dynamicType)
@@ -505,6 +509,7 @@ class KeyboardViewController: UIInputViewController {
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
                     makeKeyPressed(displayButton)
+                    makeTouchKeyExpand(subview)
                     if currButtonLabel == " " {
                         isSpaceShift = true
                     }
@@ -516,6 +521,10 @@ class KeyboardViewController: UIInputViewController {
         if (!isTouchInButton) {
             self.prevButton = ""
         }
+    }
+    
+    func makeTouchKeyExpand(touchButton: UIView) {
+        touchButton.bounds = CGRectMake(0, 0, 10, 10)
     }
     
     func makeKeyPressed(button: UIView) {
