@@ -37,7 +37,9 @@ class KeyboardViewController: UIInputViewController {
     let pressedTextColor = UIColor.init(white: 0, alpha: 1)
     let unpressedBackgroundColor = UIColor.whiteColor()
     let unpressedTextColor = UIColor.blackColor()
-    let backgroundColor = UIColor.init(white: 0.8, alpha: 1)
+    let defaultBackgroundColor = UIColor.init(white: 0.8, alpha: 1)
+    let horizontalGuideColor = UIColor.init(white: 0.0, alpha: 0)
+    let verticalGuideColor = UIColor.init(white: 0.4, alpha: 1)
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
@@ -52,9 +54,25 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // initial setup
+        inputView?.backgroundColor = defaultBackgroundColor
+        
+        // create guides
+        
+        var verticalGuideViews = [UIView]()
+        
+        for i in 0..<4 {
+            let view = UIView()
+            view.backgroundColor = verticalGuideColor
+            verticalGuideViews.append(view)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.userInteractionEnabled = false
+            self.inputView!.addSubview(view)
+        }
+    
         // create top row view
         let topRowView = UIView()
-        topRowView.backgroundColor = backgroundColor
+        topRowView.opaque = false
         // create buttons
         let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O"]
         let topRowButtons = createButtons(topRowButtonTitles)
@@ -70,7 +88,7 @@ class KeyboardViewController: UIInputViewController {
         
         // create mid row view
         let midRowView = UIView()
-        midRowView.backgroundColor = backgroundColor
+        midRowView.backgroundColor = horizontalGuideColor
         // create buttons
         let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "P"]
         let midRowButtons = createButtons(midRowButtonTitles)
@@ -124,7 +142,7 @@ class KeyboardViewController: UIInputViewController {
         // create bottom row view and add all buttons to view
         
         let bottomRowView = UIView()
-        bottomRowView.backgroundColor = backgroundColor
+        bottomRowView.opaque = false
         
         // create touch buttons
         // put each button in a touchview and add touchview to view
@@ -230,7 +248,7 @@ class KeyboardViewController: UIInputViewController {
         // add util buttons to util view
         
         let utilRowView = UIView()
-        utilRowView.backgroundColor = backgroundColor
+        utilRowView.opaque = false
         
         let utilRowTouchButtons = wrapButtons(utilRowButtons)
         
@@ -278,7 +296,6 @@ class KeyboardViewController: UIInputViewController {
         for button in bottomRowNumberTouchButtons {
             bottomRowView.addSubview(button)
         }
-        
         
         // put ". < ? ..." and numbersPuncKey in one array for hiding later
         manager
@@ -333,7 +350,7 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
         autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
-        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 9, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, verticalGuideViews: verticalGuideViews, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 9, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
         
         // do startup hiding
         manager.loadStart()
