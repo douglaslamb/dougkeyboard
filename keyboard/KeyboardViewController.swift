@@ -27,10 +27,12 @@ class KeyboardViewController: UIInputViewController {
     var manager: KeyboardManager = KeyboardManager()
     var longDeleteTimer: NSTimer! = nil
     var isSpaceShift = false
+    var firstTouchPoint: CGPoint? = nil
     
     // global constants
     let unpressedFontSize = CGFloat(21.0)
     let pressedFontSize = CGFloat(25.0)
+    let minFirstTouchDistance = CGFloat(324)
     
     // colors
     let pressedBackgroundColor = UIColor.init(white: 1, alpha: 1)
@@ -370,9 +372,6 @@ class KeyboardViewController: UIInputViewController {
                 let touchView = UIView()
                 touchView.addSubview(button)
                 touchViews.append(touchView)
-                // DEBUG: add a border for debugging
-                touchView.layer.borderWidth = 1
-                touchView.layer.borderColor = UIColor.blackColor().CGColor
                 button.translatesAutoresizingMaskIntoConstraints = false
         }
         return touchViews
@@ -400,7 +399,6 @@ class KeyboardViewController: UIInputViewController {
             // add button to return array
             buttons.append(button)
         }
-        
         return buttons
     }
     
@@ -409,7 +407,18 @@ class KeyboardViewController: UIInputViewController {
         if self.disableTouch {
             return
         }
-        print("touchesMoved" + String(arc4random_uniform(9)))
+        // if touch point is not some distance away
+        // firstTouchPoint return and do nothing
+        if firstTouchPoint != nil {
+            let touchPoint = touches.first!.locationInView(inputView)
+            let firstTouchDistance = pow(touchPoint.x - firstTouchPoint!.x, 2) + pow(touchPoint.y - firstTouchPoint!.y, 2)
+            print(sqrt(firstTouchDistance))
+            if firstTouchDistance < minFirstTouchDistance {
+                return
+            } else {
+                firstTouchPoint = nil
+            }
+        }
         let subviews = self.topRowView.subviews + self.midRowView.subviews + self.bottomRowView.subviews + self.utilRowView.subviews
         var isTouchInButton = false
         for subview in subviews {
@@ -429,7 +438,6 @@ class KeyboardViewController: UIInputViewController {
                 self.textDocumentProxy.deleteBackward()
                 self.prevButton = ""
                 makePrevKeyUnpressed(false)
-                print("I am gay")
             }
         }
     }
@@ -440,7 +448,6 @@ class KeyboardViewController: UIInputViewController {
         let currButtonLabel = buttonLabel.text!
         // if touch is in spacebar return early
         if currButtonLabel == " " {
-            print("i returned early")
             return
         }
         let character = manager.isShift ? currButtonLabel : currButtonLabel.lowercaseString
@@ -460,15 +467,14 @@ class KeyboardViewController: UIInputViewController {
                 makePrevKeyUnpressed(false)
             }
             makeKeyPressed(displayButton)
-            makeTouchKeyExpand(view)
             self.prevButton = currButtonLabel
         }
-        print(view.dynamicType)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("touchesBegan" + String(arc4random_uniform(9)))
-        
+        // get location of touch
+            firstTouchPoint = touches.first!.locationInView(inputView)
+            print(firstTouchPoint)
         // gather subviews
         let subviews = self.topRowView.subviews + self.midRowView.subviews + self.bottomRowView.subviews + self.utilRowView.subviews
         var isTouchInButton = false
@@ -498,7 +504,6 @@ class KeyboardViewController: UIInputViewController {
                     // return
                 } else {
                     let displayButton = subview.subviews[0]
-                    print("inside button" + String(arc4random_uniform(9)))
                     let buttonLabel = displayButton.subviews[0] as! UILabel
                     let currButtonLabel = buttonLabel.text!
                     let character = manager.isShift || isSpaceShift ? currButtonLabel: currButtonLabel.lowercaseString
@@ -509,7 +514,6 @@ class KeyboardViewController: UIInputViewController {
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
                     makeKeyPressed(displayButton)
-                    makeTouchKeyExpand(subview)
                     if currButtonLabel == " " {
                         isSpaceShift = true
                     }
@@ -521,10 +525,6 @@ class KeyboardViewController: UIInputViewController {
         if (!isTouchInButton) {
             self.prevButton = ""
         }
-    }
-    
-    func makeTouchKeyExpand(touchButton: UIView) {
-        touchButton.bounds = CGRectMake(0, 0, 10, 10)
     }
     
     func makeKeyPressed(button: UIView) {
@@ -565,7 +565,6 @@ class KeyboardViewController: UIInputViewController {
     func doKeyFunction(key: UIView) {
         // handler function for function keys like shift
         let tag = key.subviews[0].tag
-        print(tag)
         switch tag {
         case UtilKey.nextKeyboardKey.rawValue:
             self.advanceToNextInputMode()
@@ -605,7 +604,6 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func stopLongDelete() {
-        print("stoplongdelete fired")
         longDeleteTimer.invalidate()
         longDeleteTimer = nil
     }
