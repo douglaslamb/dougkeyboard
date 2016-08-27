@@ -35,16 +35,26 @@ class KeyboardViewController: UIInputViewController {
     let minFirstTouchDistance = CGFloat(324)
     
     // colors
-    let pressedBackgroundColor = UIColor.init(white: 1, alpha: 1)
-    let pressedTextColor = UIColor.init(white: 0, alpha: 1)
-    let unpressedBackgroundColor = UIColor.whiteColor()
-    let unpressedTextColor = UIColor.blackColor()
-    let defaultBackgroundColor = UIColor.init(white: 0.8, alpha: 1)
+    // make sure to get rid of these uiviews
+    // that are invisible once I know I don't need them
+    let pressedBackgroundColor = UIColor.init(white: 1, alpha: 0.0)
+    let pressedTextColor = UIColor.init(white: 0.2, alpha: 1)
+    let unpressedBackgroundColor = UIColor.init(white: 1, alpha: 0.0)
+    let unpressedTextColor = UIColor.init(white: 0, alpha: 1)
+    let defaultBackgroundColor = UIColor.init(white: 1.0, alpha: 1)
     let horizontalGuideColor = UIColor.init(white: 0.0, alpha: 0)
-    let verticalGuideColor = UIColor.init(white: 0.4, alpha: 1)
+    let verticalGuideColor = UIColor.init(white: 0.0, alpha: 1)
+    let whiteColumnUnpressedTextColor = UIColor.init(white: 0.8, alpha: 1)
+    let whiteColumnPressedTextColor = UIColor.init(white: 0.7, alpha: 1)
+    let blackColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
+    let blackColumnPressedTextColor = UIColor.init(white: 0.3, alpha: 1)
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
+    }
+    
+    enum LetterIdentifier: Int {
+        case whiteRowKey = 1, blackRowKey
     }
 
     override func updateViewConstraints() {
@@ -71,6 +81,7 @@ class KeyboardViewController: UIInputViewController {
             view.userInteractionEnabled = false
             self.inputView!.addSubview(view)
         }
+        manager.verticalGuides = verticalGuideViews
     
         // create top row view
         let topRowView = UIView()
@@ -78,6 +89,7 @@ class KeyboardViewController: UIInputViewController {
         // create buttons
         let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O"]
         let topRowButtons = createButtons(topRowButtonTitles)
+        makeLetterButtonsAlternateColors(topRowButtons)
         // create touch buttons
         var topRowTouchButtons: [UIView] = wrapButtons(topRowButtons)
         // put each button in a touchview and add touchview to view
@@ -94,6 +106,7 @@ class KeyboardViewController: UIInputViewController {
         // create buttons
         let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "P"]
         let midRowButtons = createButtons(midRowButtonTitles)
+        makeLetterButtonsAlternateColors(midRowButtons)
         // create touch buttons
         var midRowTouchButtons: [UIView] = wrapButtons(midRowButtons)
         for button in midRowTouchButtons {
@@ -114,6 +127,7 @@ class KeyboardViewController: UIInputViewController {
         
         let bottomRowLetterTitles = ["Z", "X", "C", "V", "B", "N", "M", "L"]
         let bottomRowLettersButtons = createButtons(bottomRowLetterTitles)
+        makeLetterButtonsAlternateColors(bottomRowLettersButtons)
         bottomRowButtons = bottomRowButtons + bottomRowLettersButtons
         // wrap these now so I can put them into the manager
         // without including the backspace key, which the manager
@@ -392,7 +406,7 @@ class KeyboardViewController: UIInputViewController {
             button.addSubview(label)
             
             // button appearance config
-            button.backgroundColor = UIColor.whiteColor()
+            button.backgroundColor = unpressedBackgroundColor
             Appearance.setCornerRadius(button)
             button.translatesAutoresizingMaskIntoConstraints = false
             
@@ -527,13 +541,36 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
+    func makeLetterButtonsAlternateColors (buttons: [UIView]) {
+        // change letters in columns to correct color
+        // and put a tag on UILabel so correct colors
+        // can be used on and after keypress
+        for (i, button) in buttons.enumerate() {
+            let buttonLabel = button.subviews[0] as! UILabel
+            if i % 2 == 0 {
+                buttonLabel.textColor = whiteColumnUnpressedTextColor
+                buttonLabel.tag = LetterIdentifier.whiteRowKey.rawValue
+            } else {
+                buttonLabel.textColor = blackColumnUnpressedTextColor
+                buttonLabel.tag = LetterIdentifier.blackRowKey.rawValue
+            }
+        }
+        
+    }
+    
     func makeKeyPressed(button: UIView) {
         // change button to pressed color
         let buttonLabel = button.subviews[0] as! UILabel
         // ignore the spacebar
         if buttonLabel.text != " " {
             button.backgroundColor = pressedBackgroundColor
-            buttonLabel.textColor = pressedTextColor
+            if buttonLabel.tag == LetterIdentifier.whiteRowKey.rawValue {
+                buttonLabel.textColor = whiteColumnPressedTextColor
+            } else if buttonLabel.tag == LetterIdentifier.blackRowKey.rawValue {
+                buttonLabel.textColor = blackColumnPressedTextColor
+            } else {
+                buttonLabel.textColor = pressedTextColor
+            }
             button.bounds = CGRectMake(-4.5, -8, button.frame.width + 9, button.frame.height + 16)
             // save new button as prevDisplayButton
         }
@@ -548,7 +585,13 @@ class KeyboardViewController: UIInputViewController {
             let changeAppearance: () -> Void = {
                 () -> Void in
                 button?.backgroundColor = self.unpressedBackgroundColor
-                buttonLabel.textColor = self.unpressedTextColor
+                if buttonLabel.tag == LetterIdentifier.whiteRowKey.rawValue {
+                    buttonLabel.textColor = self.whiteColumnUnpressedTextColor
+                } else if buttonLabel.tag == LetterIdentifier.blackRowKey.rawValue {
+                    buttonLabel.textColor = self.blackColumnUnpressedTextColor
+                } else {
+                    buttonLabel.textColor = self.unpressedTextColor
+                }
                 button?.bounds = CGRectMake(0, 0, (button?.frame.width)! - 9, (button?.frame.height)! - 16)
             }
             // change button to unpressed color

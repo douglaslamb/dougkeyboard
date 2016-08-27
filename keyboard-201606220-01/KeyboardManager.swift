@@ -23,6 +23,8 @@ class KeyboardManager {
     var numbersPuncKey: UIView!
     var shiftKey: UIImageView!
     
+    var verticalGuides: [UIView]!
+    
     func goToNumbersPage() {
         // set correct label on numbersPuncKey
         let label = self.numbersPuncKey.subviews[0] as! UILabel
@@ -34,6 +36,7 @@ class KeyboardManager {
         } else {
             unhide(self.lowerPuncsAndNumbersPuncKey)
             hide(self.lettersAndShift)
+            hide(verticalGuides)
             let label = self.numbersKey.subviews[0] as! UILabel
             // put correct label on numbersKey
             label.text = "ABC"
@@ -58,6 +61,7 @@ class KeyboardManager {
     
     func loadStart() {
         unhide(self.lettersAndShift)
+        unhide(verticalGuides)
         hide(self.lowerPuncsAndNumbersPuncKey)
         hide(self.puncs)
         if self.isPuncsPage {
