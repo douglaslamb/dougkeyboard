@@ -122,8 +122,8 @@ class ConstraintMaker {
         for (i, view) in verticalGuideViews.enumerate() {
             view.topAnchor.constraintEqualToAnchor(topRowView.topAnchor).active = true
             view.bottomAnchor.constraintEqualToAnchor(bottomRowView.bottomAnchor).active = true
-            verticalGuideViews[i].leftAnchor.constraintEqualToAnchor(topTouchLetters[i * 2 + 1].leftAnchor).active = true
-            verticalGuideViews[i].rightAnchor.constraintEqualToAnchor(topTouchLetters[i * 2 + 1].rightAnchor).active = true
+            view.leftAnchor.constraintEqualToAnchor(topTouchLetters[i].leftAnchor).active = true
+            view.rightAnchor.constraintEqualToAnchor(topTouchLetters[i].rightAnchor).active = true
         }
  
         // display buttons

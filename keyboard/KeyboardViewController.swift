@@ -48,6 +48,8 @@ class KeyboardViewController: UIInputViewController {
     let whiteColumnPressedTextColor = UIColor.init(white: 0.7, alpha: 1)
     let blackColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
     let blackColumnPressedTextColor = UIColor.init(white: 0.3, alpha: 1)
+    let guideColors: [UIColor?] = [UIColor.whiteColor(), UIColor.blackColor(), UIColor.whiteColor(), UIColor.blackColor(), UIColor.whiteColor(), UIColor.blackColor(), UIColor.whiteColor(), UIColor.blackColor(), UIColor.whiteColor()]
+    
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
@@ -73,13 +75,17 @@ class KeyboardViewController: UIInputViewController {
         
         var verticalGuideViews = [UIView]()
         
-        for i in 0..<4 {
+        for i in 0..<9 {
             let view = UIView()
-            view.backgroundColor = verticalGuideColor
+            let thisGuideColor = guideColors[i] == nil ? verticalGuideColor : guideColors[i]
+            view.backgroundColor = thisGuideColor
             verticalGuideViews.append(view)
             view.translatesAutoresizingMaskIntoConstraints = false
             view.userInteractionEnabled = false
             self.inputView!.addSubview(view)
+            // DEBUG
+            //let dotView = DotView(frame: CGRectMake(0, 0, 10, 10))
+            //view.addSubview(dotView)
         }
         manager.verticalGuides = verticalGuideViews
     
