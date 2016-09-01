@@ -30,7 +30,7 @@ class KeyboardViewController: UIInputViewController {
     var firstTouchPoint: CGPoint? = nil
     
     // global constants
-    let unpressedFontSize = CGFloat(21.0)
+    let unpressedFontSize = CGFloat(18.0)
     let pressedFontSize = CGFloat(25.0)
     let minFirstTouchDistance = CGFloat(324)
     
@@ -44,11 +44,14 @@ class KeyboardViewController: UIInputViewController {
     let defaultBackgroundColor = UIColor.init(white: 1.0, alpha: 1)
     let horizontalGuideColor = UIColor.init(white: 0.0, alpha: 0)
     let verticalGuideColor = UIColor.init(white: 0.0, alpha: 1)
-    let whiteColumnUnpressedTextColor = UIColor.init(white: 0.8, alpha: 1)
-    let whiteColumnPressedTextColor = UIColor.init(white: 0.7, alpha: 1)
-    let blackColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
-    let blackColumnPressedTextColor = UIColor.init(white: 0.3, alpha: 1)
-    let guideColors: [UIColor?] = [UIColor.whiteColor(), UIColor.blackColor(), UIColor.whiteColor(), UIColor.blackColor(), UIColor.whiteColor(), UIColor.blackColor(), UIColor.whiteColor(), UIColor.blackColor(), UIColor.whiteColor()]
+    let whiteColumnUnpressedTextColor = UIColor.init(white: 0.75, alpha: 1)
+    let whiteColumnPressedTextColor = UIColor.init(white: 0.5, alpha: 1)
+    let blackColumnUnpressedTextColor = UIColor.init(white: 0.25, alpha: 1)
+    let blackColumnPressedTextColor = UIColor.init(white: 0.5, alpha: 1)
+    let evenGuideColor = UIColor.whiteColor()
+    let evenGuideAnimationColor = UIColor.init(white: 0.9, alpha: 1)
+    let oddGuideColor = UIColor.blackColor()
+    let oddGuideAnimationColor = UIColor.init(white: 0.1, alpha: 1)
     
     
     enum UtilKey: Int {
@@ -77,15 +80,27 @@ class KeyboardViewController: UIInputViewController {
         
         for i in 0..<9 {
             let view = UIView()
-            let thisGuideColor = guideColors[i] == nil ? verticalGuideColor : guideColors[i]
+            var thisGuideColor: UIColor
+            var thisGuideAnimationColor: UIColor
+            if i % 2 == 0 {
+                thisGuideColor = evenGuideColor
+                thisGuideAnimationColor = evenGuideAnimationColor
+            } else {
+                thisGuideColor = oddGuideColor
+                thisGuideAnimationColor = oddGuideAnimationColor
+            }
             view.backgroundColor = thisGuideColor
             verticalGuideViews.append(view)
             view.translatesAutoresizingMaskIntoConstraints = false
             view.userInteractionEnabled = false
             self.inputView!.addSubview(view)
-            // DEBUG
-            //let dotView = DotView(frame: CGRectMake(0, 0, 10, 10))
-            //view.addSubview(dotView)
+            if  i % 2 != 0 {
+                UIView.animateWithDuration(0.5 * drand48() + 1, delay: drand48(), options: [UIViewAnimationOptions.Repeat, UIViewAnimationOptions.Autoreverse], animations: {
+                    view.backgroundColor = thisGuideAnimationColor
+                    view.backgroundColor = thisGuideColor
+                }, completion: nil)
+            }
+            
         }
         manager.verticalGuides = verticalGuideViews
     
