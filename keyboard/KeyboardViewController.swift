@@ -15,10 +15,11 @@ class KeyboardViewController: UIInputViewController {
     // it's just the way I wrote them
     
     // views
-    var topRowView: UIView = UIView()
-    var midRowView: UIView = UIView()
-    var bottomRowView: UIView = UIView()
-    var utilRowView: UIView = UIView()
+    var topRowView: UIView!
+    var midRowView: UIView!
+    var bottomRowView: UIView!
+    var utilRowView: UIView!
+    var textRowView: UIView!
     
     // global vars
     var prevButton = ""
@@ -42,17 +43,15 @@ class KeyboardViewController: UIInputViewController {
     let unpressedBackgroundColor = UIColor.init(white: 1, alpha: 0.0)
     let unpressedTextColor = UIColor.init(white: 0, alpha: 1)
     let defaultBackgroundColor = UIColor.init(white: 1.0, alpha: 1)
-    let horizontalGuideColor = UIColor.init(white: 0.0, alpha: 0)
     let verticalGuideColor = UIColor.init(white: 0.0, alpha: 1)
     let whiteColumnUnpressedTextColor = UIColor.init(white: 0.75, alpha: 1)
-    let whiteColumnPressedTextColor = UIColor.init(white: 0.5, alpha: 1)
-    let blackColumnUnpressedTextColor = UIColor.init(white: 0.25, alpha: 1)
-    let blackColumnPressedTextColor = UIColor.init(white: 0.5, alpha: 1)
+    let whiteColumnPressedTextColor = UIColor.init(white: 0.65, alpha: 1)
+    let blackColumnUnpressedTextColor = UIColor.init(white: 0.28, alpha: 1)
+    let blackColumnPressedTextColor = UIColor.init(white: 0.4, alpha: 1)
     let evenGuideColor = UIColor.whiteColor()
     let evenGuideAnimationColor = UIColor.init(white: 0.9, alpha: 1)
     let oddGuideColor = UIColor.blackColor()
     let oddGuideAnimationColor = UIColor.init(white: 0.1, alpha: 1)
-    
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey
@@ -74,8 +73,7 @@ class KeyboardViewController: UIInputViewController {
         // initial setup
         inputView?.backgroundColor = defaultBackgroundColor
         
-        // create guides
-        
+        // create vertical guides
         var verticalGuideViews = [UIView]()
         
         for i in 0..<9 {
@@ -94,16 +92,20 @@ class KeyboardViewController: UIInputViewController {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.userInteractionEnabled = false
             self.inputView!.addSubview(view)
-            if  i % 2 != 0 {
-                UIView.animateWithDuration(0.5 * drand48() + 1, delay: drand48(), options: [UIViewAnimationOptions.Repeat, UIViewAnimationOptions.Autoreverse], animations: {
-                    view.backgroundColor = thisGuideAnimationColor
-                    view.backgroundColor = thisGuideColor
-                }, completion: nil)
-            }
-            
         }
-        manager.verticalGuides = verticalGuideViews
     
+        manager.guides = verticalGuideViews
+        
+        // create text row view
+        
+        let textRowView = UIView()
+        textRowView.userInteractionEnabled = false
+        self.inputView!.addSubview(textRowView)
+        
+        let textAid = UILabel()
+        textAid.text = "farts"
+        textRowView.addSubview(textAid)
+        
         // create top row view
         let topRowView = UIView()
         topRowView.opaque = false
@@ -123,7 +125,7 @@ class KeyboardViewController: UIInputViewController {
         
         // create mid row view
         let midRowView = UIView()
-        midRowView.backgroundColor = horizontalGuideColor
+        midRowView.opaque = false
         // create buttons
         let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "P"]
         let midRowButtons = createButtons(midRowButtonTitles)
@@ -367,7 +369,7 @@ class KeyboardViewController: UIInputViewController {
             .puncs = topRowPuncTouchButtons + midRowPuncTouchButtons
         
         // add constraints for rows in superview
-        let rows = [[self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
+        let rows = [[textRowView], [self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
         
         for row in rows {
             for view in row {
@@ -375,6 +377,7 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         ConstraintMaker.addRowConstraintsToSuperview(rows, containingView: self.inputView!)
+        
         
         // SET CONSTRAINTS ON TOUCH AND DISPLAY BUTTONS
         // turn off autoresizingIntoConstraints then add constraints
@@ -721,5 +724,9 @@ class KeyboardViewController: UIInputViewController {
         } else {
             textColor = UIColor.blackColor()
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        ConstraintMaker.setWindowHeight(inputView!)
     }
 }

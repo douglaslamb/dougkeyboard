@@ -102,7 +102,7 @@ class ConstraintMaker {
     static func addAllButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, verticalGuideViews: [UIView], topLetters: [UIView], midLetters: [UIView], bottomLettersShiftBackspace: [UIView], utilKeys: [UIView], topNumbers: [UIView], midNumbers: [UIView], bottomPuncAndNumbersPuncKey: [UIView], topPuncs: [UIView], midPuncs: [UIView], topTouchLetters: [UIView], midTouchLetters: [UIView], bottomTouchLettersShiftBackspace: [UIView], utilTouchKeys: [UIView], topTouchNumbers: [UIView], midTouchNumbers: [UIView], bottomTouchPuncAndNumbersPuncKey: [UIView], topTouchPuncs: [UIView], midTouchPuncs: [UIView], betweenSpace: CGFloat = 0, shiftWidth: CGFloat = 0.03, nextKeyboardWidth: CGFloat = 0.8, spaceKeyWidth: CGFloat = 0.3, charVerticalConstant: CGFloat = 0) {
         
         //==============================
-        // Constants for Space Values
+        // Constants for Dimensions
         //
         //==============================
         
@@ -125,7 +125,7 @@ class ConstraintMaker {
             view.leftAnchor.constraintEqualToAnchor(topTouchLetters[i].leftAnchor).active = true
             view.rightAnchor.constraintEqualToAnchor(topTouchLetters[i].rightAnchor).active = true
         }
- 
+        
         // display buttons
         // topRow
         
@@ -327,5 +327,9 @@ class ConstraintMaker {
     static func centerLabel(button:UIView, verticalConstant: CGFloat = 0) {
         button.subviews[0].centerXAnchor.constraintEqualToAnchor(button.centerXAnchor).active = true
         button.subviews[0].centerYAnchor.constraintEqualToAnchor(button.centerYAnchor, constant: verticalConstant).active = true
+    }
+    
+    static func setWindowHeight(view: UIView) {
+        view.heightAnchor.constraintEqualToConstant(260).active = true
     }
 }
