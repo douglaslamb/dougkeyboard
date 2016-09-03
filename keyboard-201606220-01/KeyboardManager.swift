@@ -86,7 +86,8 @@ class KeyboardManager {
     func shiftOff() {
         self.isShift = false
         self.shiftKey.image = UIImage(named: "shiftOff")
-        self.shiftKey.backgroundColor = UIColor.grayColor()
+        //!!!!! change back maybe 20160903
+        //self.shiftKey.backgroundColor = UIColor.grayColor()
     }
     
     func hide(buttons: [UIView]) {

@@ -29,6 +29,7 @@ class KeyboardViewController: UIInputViewController {
     var longDeleteTimer: NSTimer! = nil
     var isSpaceShift = false
     var firstTouchPoint: CGPoint? = nil
+    var textAidProxy: TextAidProxy!
     
     // global constants
     let unpressedFontSize = CGFloat(18.0)
@@ -103,8 +104,11 @@ class KeyboardViewController: UIInputViewController {
         self.inputView!.addSubview(textRowView)
         
         let textAid = UILabel()
-        textAid.text = "farts"
+        textAid.translatesAutoresizingMaskIntoConstraints = false
+        textAid.userInteractionEnabled = false
         textRowView.addSubview(textAid)
+        // textAidProxy wrapper for textaid uilabel
+        textAidProxy = TextAidProxy(inLabel: textAid)
         
         // create top row view
         let topRowView = UIView()
@@ -216,7 +220,9 @@ class KeyboardViewController: UIInputViewController {
         numbersPuncKeyLabel.text = "#+="
         numbersPuncKey.addSubview(numbersPuncKeyLabel)
         
-        numbersPuncKey.backgroundColor = UIColor.grayColor()
+        /// !!!!! maybe change this back!!!! 20160903
+        //numbersPuncKey.backgroundColor = UIColor.grayColor()
+        numbersPuncKey.opaque = false
         Appearance.setCornerRadius(numbersPuncKey)
         numbersPuncKey.translatesAutoresizingMaskIntoConstraints = false
         numbersPuncKey.tag = UtilKey.numbersPuncKey.rawValue
@@ -235,7 +241,9 @@ class KeyboardViewController: UIInputViewController {
         numbersKeyLabel.text = "123"
         numbersKey.addSubview(numbersKeyLabel)
         
-        numbersKey.backgroundColor = UIColor.grayColor()
+        /// !!!!! maybe change this back!!!! 20160903
+        //numbersKey.backgroundColor = UIColor.grayColor()
+        numbersKey.opaque = false
         Appearance.setCornerRadius(numbersKey)
         numbersKey.translatesAutoresizingMaskIntoConstraints = false
         numbersKey.tag = UtilKey.numbersLettersKey.rawValue
@@ -391,6 +399,7 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
         ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, verticalGuideViews: verticalGuideViews, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, betweenSpace: 9, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
+        ConstraintMaker.addTexRowViewConstraints(textRowView)
         
         // do startup hiding
         manager.loadStart()
@@ -401,7 +410,9 @@ class KeyboardViewController: UIInputViewController {
         view.layer.masksToBounds = true
         Appearance.setCornerRadius(view)
         view.contentMode = UIViewContentMode.Center
-        view.backgroundColor = UIColor.grayColor()
+        // !!!!!!!!! MADE THIS OPAQUE SLOPPILY. remove the background color setting if need be
+        view.opaque = false
+        //view.backgroundColor = UIColor.grayColor()
     }
     
     func wrapButtons (buttons: [UIView]) -> [UIView] {
@@ -474,6 +485,7 @@ class KeyboardViewController: UIInputViewController {
             if (prevButton != "") {
                 // if touch was just in a button
                 self.textDocumentProxy.deleteBackward()
+                textAidProxy.deleteBackward()
                 self.prevButton = ""
                 makePrevKeyUnpressed(false)
             }
@@ -496,12 +508,15 @@ class KeyboardViewController: UIInputViewController {
             if (self.prevButton == "") {
                 // if the previous button was outside buttons
                 self.textDocumentProxy.insertText(character)
+                textAidProxy.insertText(character)
             } else {
                 // in this case the previous button
                 // was a different character.
                 // i.e. slide from button to button
                 self.textDocumentProxy.deleteBackward()
+                textAidProxy.deleteBackward()
                 self.textDocumentProxy.insertText(character)
+                textAidProxy.insertText(character)
                 makePrevKeyUnpressed(false)
             }
             makeKeyPressed(displayButton)
@@ -547,8 +562,10 @@ class KeyboardViewController: UIInputViewController {
                     let character = manager.isShift || isSpaceShift ? currButtonLabel: currButtonLabel.lowercaseString
                     if isSpaceShift {
                         self.textDocumentProxy.deleteBackward()
+                        textAidProxy.deleteBackward()
                     }
                     self.textDocumentProxy.insertText(character)
+                    textAidProxy.insertText(character)
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
                     makeKeyPressed(displayButton)
@@ -645,8 +662,10 @@ class KeyboardViewController: UIInputViewController {
             }
         case UtilKey.returnKey.rawValue:
             self.textDocumentProxy.insertText("\n")
+            textAidProxy.clear()
         case UtilKey.backspaceKey.rawValue:
             self.textDocumentProxy.deleteBackward()
+            textAidProxy.deleteBackward()
         case UtilKey.numbersLettersKey.rawValue:
             if manager.isNumbersPage {
                 // switch back to letters page
@@ -667,7 +686,15 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func startLongDelete() {
-        longDeleteTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self.textDocumentProxy, selector: Selector("deleteBackward"), userInfo: nil, repeats: true)
+        longDeleteTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: Selector("sendDeleteMessages"), userInfo: nil, repeats: true)
+    }
+    
+    func sendDeleteMessages() {
+        // FUNCTION WAS CREATED ONLY FOR startLongDelete
+        // BECAUSE startLongDelete NEEDS IT
+        // bc NSTimers cannot call more than one method
+        self.textDocumentProxy.deleteBackward()
+        textAidProxy.deleteBackward()
     }
     
     func stopLongDelete() {
