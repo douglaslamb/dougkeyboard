@@ -32,7 +32,8 @@ class KeyboardViewController: UIInputViewController {
     var textAidProxy: TextAidProxy!
     
     // global constants
-    let unpressedFontSize = CGFloat(18.0)
+    let evenUnpressedFontSize = CGFloat(18.0)
+    let oddUnpressedFontSize = CGFloat(18.0)
     let pressedFontSize = CGFloat(25.0)
     let minFirstTouchDistance = CGFloat(324)
     
@@ -41,17 +42,17 @@ class KeyboardViewController: UIInputViewController {
     // that are invisible once I know I don't need them
     let pressedBackgroundColor = UIColor.init(white: 1, alpha: 0.0)
     let pressedTextColor = UIColor.init(white: 0.2, alpha: 1)
-    let unpressedBackgroundColor = UIColor.init(white: 1, alpha: 0.0)
+    let unpressedBackgroundColor = UIColor.init(white: 0.5, alpha: 0.0)
     let unpressedTextColor = UIColor.init(white: 0, alpha: 1)
     let defaultBackgroundColor = UIColor.init(white: 1.0, alpha: 1)
     let verticalGuideColor = UIColor.init(white: 0.0, alpha: 1)
-    let whiteColumnUnpressedTextColor = UIColor.init(white: 0.75, alpha: 1)
-    let whiteColumnPressedTextColor = UIColor.init(white: 0.65, alpha: 1)
-    let blackColumnUnpressedTextColor = UIColor.init(white: 0.28, alpha: 1)
-    let blackColumnPressedTextColor = UIColor.init(white: 0.4, alpha: 1)
-    let evenGuideColor = UIColor.whiteColor()
+    let evenColumnUnpressedTextColor = UIColor.init(white: 0.0, alpha: 1)
+    let evenColumnPressedTextColor = UIColor.init(white: 0.0, alpha: 1)
+    let oddColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
+    let oddColumnPressedTextColor = UIColor.init(white: 0.2, alpha: 1)
+    let evenGuideColor = UIColor.init(white: 0.5, alpha: 1)
     let evenGuideAnimationColor = UIColor.init(white: 0.9, alpha: 1)
-    let oddGuideColor = UIColor.blackColor()
+    let oddGuideColor = UIColor.whiteColor()
     let oddGuideAnimationColor = UIColor.init(white: 0.1, alpha: 1)
     
     enum UtilKey: Int {
@@ -59,7 +60,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     enum LetterIdentifier: Int {
-        case whiteRowKey = 1, blackRowKey
+        case oddRowKey = 1, evenRowKey
     }
 
     override func updateViewConstraints() {
@@ -108,7 +109,7 @@ class KeyboardViewController: UIInputViewController {
         textAid.userInteractionEnabled = false
         textRowView.addSubview(textAid)
         // textAidProxy wrapper for textaid uilabel
-        textAidProxy = TextAidProxy(inLabel: textAid)
+        textAidProxy = TextAidProxy(inLabel: textAid, inDocumentProxy: self.textDocumentProxy)
         
         // create top row view
         let topRowView = UIView()
@@ -430,13 +431,17 @@ class KeyboardViewController: UIInputViewController {
         
         var buttons = [UIView]()
         
-        for title in titles {
+        for (i, title) in titles.enumerate() {
             
             let button = UIView()
             let label = UILabel(frame: CGRectMake(0, 0, 20, 20))
             label.translatesAutoresizingMaskIntoConstraints = false
             label.text = title
-            label.font = label.font.fontWithSize(unpressedFontSize)
+            if i % 2 == 0 {
+                label.font = label.font.fontWithSize(evenUnpressedFontSize)
+            } else {
+                label.font = label.font.fontWithSize(oddUnpressedFontSize)
+            }
             button.userInteractionEnabled = false
             button.addSubview(label)
             
@@ -589,11 +594,11 @@ class KeyboardViewController: UIInputViewController {
         for (i, button) in buttons.enumerate() {
             let buttonLabel = button.subviews[0] as! UILabel
             if i % 2 == 0 {
-                buttonLabel.textColor = whiteColumnUnpressedTextColor
-                buttonLabel.tag = LetterIdentifier.whiteRowKey.rawValue
+                buttonLabel.textColor = evenColumnUnpressedTextColor
+                buttonLabel.tag = LetterIdentifier.evenRowKey.rawValue
             } else {
-                buttonLabel.textColor = blackColumnUnpressedTextColor
-                buttonLabel.tag = LetterIdentifier.blackRowKey.rawValue
+                buttonLabel.textColor = oddColumnUnpressedTextColor
+                buttonLabel.tag = LetterIdentifier.oddRowKey.rawValue
             }
         }
         
@@ -605,10 +610,10 @@ class KeyboardViewController: UIInputViewController {
         // ignore the spacebar
         if buttonLabel.text != " " {
             button.backgroundColor = pressedBackgroundColor
-            if buttonLabel.tag == LetterIdentifier.whiteRowKey.rawValue {
-                buttonLabel.textColor = whiteColumnPressedTextColor
-            } else if buttonLabel.tag == LetterIdentifier.blackRowKey.rawValue {
-                buttonLabel.textColor = blackColumnPressedTextColor
+            if buttonLabel.tag == LetterIdentifier.oddRowKey.rawValue {
+                buttonLabel.textColor = oddColumnPressedTextColor
+            } else if buttonLabel.tag == LetterIdentifier.evenRowKey.rawValue {
+                buttonLabel.textColor = evenColumnPressedTextColor
             } else {
                 buttonLabel.textColor = pressedTextColor
             }
@@ -626,10 +631,10 @@ class KeyboardViewController: UIInputViewController {
             let changeAppearance: () -> Void = {
                 () -> Void in
                 button?.backgroundColor = self.unpressedBackgroundColor
-                if buttonLabel.tag == LetterIdentifier.whiteRowKey.rawValue {
-                    buttonLabel.textColor = self.whiteColumnUnpressedTextColor
-                } else if buttonLabel.tag == LetterIdentifier.blackRowKey.rawValue {
-                    buttonLabel.textColor = self.blackColumnUnpressedTextColor
+                if buttonLabel.tag == LetterIdentifier.oddRowKey.rawValue {
+                    buttonLabel.textColor = self.oddColumnUnpressedTextColor
+                } else if buttonLabel.tag == LetterIdentifier.evenRowKey.rawValue {
+                    buttonLabel.textColor = self.evenColumnUnpressedTextColor
                 } else {
                     buttonLabel.textColor = self.unpressedTextColor
                 }
@@ -751,6 +756,7 @@ class KeyboardViewController: UIInputViewController {
         } else {
             textColor = UIColor.blackColor()
         }
+        textAidProxy.clear()
     }
     
     override func viewWillAppear(animated: Bool) {
