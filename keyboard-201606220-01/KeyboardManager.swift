@@ -36,7 +36,7 @@ class KeyboardManager {
         } else {
             unhide(self.lowerPuncsAndNumbersPuncKey)
             hide(self.lettersAndShift)
-            hide(guides)
+            //hide(guides)
             let label = self.numbersKey.subviews[0] as! UILabel
             // put correct label on numbersKey
             label.text = "ABC"
@@ -61,7 +61,7 @@ class KeyboardManager {
     
     func loadStart() {
         unhide(self.lettersAndShift)
-        unhide(guides)
+        //unhide(guides)
         hide(self.lowerPuncsAndNumbersPuncKey)
         hide(self.puncs)
         if self.isPuncsPage {
