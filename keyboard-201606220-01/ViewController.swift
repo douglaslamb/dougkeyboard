@@ -27,9 +27,13 @@ class ViewController: UIViewController {
         
         "Setup:\n\n" +
         "1. Go to Settings -> General -> Keyboard -> Keyboards -> Add New Keyboard\n" +
-        "2. Tap Doug's Keyboard\n" +
+        "2. Tap Doug\n" +
         "3. Bring up the keyboard by tapping a text field in any app\n" +
-        "4. Tap the globe icon in the lower-left corner until Doug's Keyboard appears"
+        "4. Tap the globe icon in the lower-left corner until Doug appears\n\n" +
+        "Please send me the email address of anyone interested in trying this, or have them email douglaslamb@douglaslamb.com."
+            
+        
+        
         
         // setup
         view.backgroundColor = backgroundColor

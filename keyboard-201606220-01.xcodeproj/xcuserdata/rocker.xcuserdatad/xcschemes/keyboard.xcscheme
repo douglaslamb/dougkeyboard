@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "BF5CEAF81D1B38F20078C2D1"
-               BuildableName = "Tap.appex"
+               BuildableName = "Doug.appex"
                BlueprintName = "keyboard"
                ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
             </BuildableReference>
@@ -30,7 +30,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "BF5CEAC31D1B38C20078C2D1"
-               BuildableName = "Tap.app"
+               BuildableName = "Doug.app"
                BlueprintName = "keyboard-201606220-01"
                ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
             </BuildableReference>
@@ -48,7 +48,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BF5CEAF81D1B38F20078C2D1"
-            BuildableName = "Tap.appex"
+            BuildableName = "Doug.appex"
             BlueprintName = "keyboard"
             ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
          </BuildableReference>
@@ -72,7 +72,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BF5CEAC31D1B38C20078C2D1"
-            BuildableName = "Tap.app"
+            BuildableName = "Doug.app"
             BlueprintName = "keyboard-201606220-01"
             ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
          </BuildableReference>
@@ -92,7 +92,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BF5CEAC31D1B38C20078C2D1"
-            BuildableName = "Tap.app"
+            BuildableName = "Doug.app"
             BlueprintName = "keyboard-201606220-01"
             ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
          </BuildableReference>
