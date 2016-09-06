@@ -551,7 +551,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "keyboard-201606220-01/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.doug;
+				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.tap;
 				PRODUCT_NAME = Doug;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -567,7 +567,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "keyboard-201606220-01/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.doug;
+				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.tap;
 				PRODUCT_NAME = Doug;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -627,7 +627,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = keyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.doug.extension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.tap.extension;
 				PRODUCT_NAME = Doug;
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -642,7 +642,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = keyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.doug.extension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.tap.extension;
 				PRODUCT_NAME = Doug;
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
