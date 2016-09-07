@@ -31,9 +31,6 @@ class ViewController: UIViewController {
         "3. Bring up the keyboard by tapping a text field in any app\n" +
         "4. Tap the globe icon in the lower-left corner until Doug appears\n\n" +
         "Please send me the email address of anyone interested in trying this, or have them email douglaslamb@douglaslamb.com."
-            
-        
-        
         
         // setup
         view.backgroundColor = backgroundColor

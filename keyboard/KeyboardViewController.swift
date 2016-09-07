@@ -21,6 +21,9 @@ class KeyboardViewController: UIInputViewController {
     var utilRowView: UIView!
     var textRowView: UIView!
     
+    // global UI
+    var doubleTapRecognizer: UITapGestureRecognizer!
+    
     // global vars
     var prevButton = ""
     var prevDisplayButton: UIView?
@@ -301,10 +304,10 @@ class KeyboardViewController: UIInputViewController {
         let utilRowTouchButtons = wrapButtons(utilRowButtons)
         
         // add spacebar double tap recognizer
-        let spaceDoubleTapRecognizer = UITapGestureRecognizer(target: self, action: Selector("insertDoubleTapPeriod:"))
-        spaceDoubleTapRecognizer.numberOfTapsRequired = 2
-        spaceDoubleTapRecognizer.delaysTouchesEnded = false
-        utilRowTouchButtons[4].addGestureRecognizer(spaceDoubleTapRecognizer)
+        doubleTapRecognizer = UITapGestureRecognizer(target: self, action: Selector("insertDoubleTapPeriod:"))
+        doubleTapRecognizer.numberOfTapsRequired = 2
+        doubleTapRecognizer.delaysTouchesEnded = false
+        utilRowTouchButtons[4].addGestureRecognizer(doubleTapRecognizer)
         
         for button in utilRowTouchButtons {
             utilRowView.addSubview(button)
@@ -355,7 +358,7 @@ class KeyboardViewController: UIInputViewController {
         // and the constraintMaker later
         // put top and mid number rows in one array for hiding later
         manager
-            .numbersAndPuncs = topRowNumberTouchButtons + midRowNumberTouchButtons + Array(bottomRowNumberTouchButtons[5..<7])
+            .numbersAndPuncs = topRowNumberTouchButtons + midRowNumberTouchButtons + Array(bottomRowNumberTouchButtons[5...7])
         
         // put ". < ? ..." and numbersPuncKey in one array for hiding later
         manager
@@ -613,10 +616,17 @@ class KeyboardViewController: UIInputViewController {
                     let buttonLabel = displayButton.subviews[0] as! UILabel
                     let currButtonLabel = buttonLabel.text!
                     let character = manager.isShift || isSpaceShift ? currButtonLabel: currButtonLabel.lowercaseString
+                    // !!! put code for cancelling double touch
+                    // here
+                    if prevButton == " " && {
+                        doubleTapRecognizer.enabled = false
+                        doubleTapRecognizer.enabled = true
+                    }
                     if isSpaceShift {
                         self.textDocumentProxy.deleteBackward()
                         textAidProxy.deleteBackward()
                     }
+                    print(character)
                     self.textDocumentProxy.insertText(character)
                     textAidProxy.insertText(character)
                     isTouchInButton = true
