@@ -59,7 +59,7 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
-    static func addRowConstraintsToSuperview(rows: [[UIView]], sideSpace: CGFloat = 0, topSpace: CGFloat = 0, bottomSpace: CGFloat = 0, betweenSpace: CGFloat = 0, containingView: UIView) {
+    static func addRowConstraintsToSuperview(rows: [[UIView!]], sideSpace: CGFloat = 0, topSpace: CGFloat = 0, bottomSpace: CGFloat = 0, betweenSpace: CGFloat = 0, containingView: UIView) {
         
         var constraints = [NSLayoutConstraint]()
         
@@ -99,7 +99,7 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
-    static func addTexRowViewConstraints(textRowView: UIView) {
+    static func addTextRowViewConstraints(textRowView: UIView) {
         textRowView.subviews[0].centerXAnchor.constraintEqualToAnchor(textRowView.centerXAnchor).active = true
         textRowView.subviews[0].centerYAnchor.constraintEqualToAnchor(textRowView.centerYAnchor).active = true
     }

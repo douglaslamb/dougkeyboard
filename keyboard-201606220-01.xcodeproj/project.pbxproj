@@ -100,6 +100,7 @@
 		BFCD545F1D7563FC00ABEE00 /* DotView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DotView.swift; path = ../DotView.swift; sourceTree = "<group>"; };
 		BFCDD7FD1D4B246E00809A7B /* KeyboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardManager.swift; sourceTree = "<group>"; };
 		BFD23A5A1D6422B1003B1376 /* Appearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Appearance.swift; path = ../keyboard/Appearance.swift; sourceTree = "<group>"; };
+		BFDD06BA1D81344E0081D15A /* Doug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Doug.entitlements; sourceTree = "<group>"; };
 		BFF371EA1D7A974A00B68BDB /* TextAidProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextAidProxy.swift; path = ../TextAidProxy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -160,6 +161,7 @@
 		BF5CEAC61D1B38C20078C2D1 /* keyboard-201606220-01 */ = {
 			isa = PBXGroup;
 			children = (
+				BFDD06BA1D81344E0081D15A /* Doug.entitlements */,
 				BFF371EA1D7A974A00B68BDB /* TextAidProxy.swift */,
 				BFCD545F1D7563FC00ABEE00 /* DotView.swift */,
 				BFD23A5A1D6422B1003B1376 /* Appearance.swift */,
@@ -290,6 +292,11 @@
 					BF5CEAC31D1B38C20078C2D1 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 4482NHM9RH;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					BF5CEAD71D1B38C20078C2D1 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -302,6 +309,11 @@
 					BF5CEAF81D1B38F20078C2D1 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 4482NHM9RH;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -546,6 +558,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "keyboard-201606220-01/Doug.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
@@ -562,6 +575,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "keyboard-201606220-01/Doug.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
@@ -623,6 +637,7 @@
 		BF5CEB021D1B38F20078C2D1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "keyboard-201606220-01/Doug.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = keyboard/Info.plist;
@@ -638,6 +653,7 @@
 		BF5CEB031D1B38F20078C2D1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "keyboard-201606220-01/Doug.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = keyboard/Info.plist;

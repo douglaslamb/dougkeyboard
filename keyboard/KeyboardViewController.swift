@@ -14,6 +14,9 @@ class KeyboardViewController: UIInputViewController {
     // and bottomRowLettersButtons (letter plural)
     // it's just the way I wrote them
     
+    // settings
+    var isTextAid: Bool = true
+    
     // views
     var topRowView: UIView!
     var midRowView: UIView!
@@ -32,7 +35,7 @@ class KeyboardViewController: UIInputViewController {
     var longDeleteTimer: NSTimer! = nil
     var isSpaceShift = false
     var firstTouchPoint: CGPoint? = nil
-    var textAidProxy: TextAidProxy!
+    var textProxy: UIKeyInput!
     
     // global constants
     let evenUnpressedFontSize = CGFloat(18.0)
@@ -98,21 +101,24 @@ class KeyboardViewController: UIInputViewController {
             view.userInteractionEnabled = false
             self.inputView!.addSubview(view)
         }
-    
+   
         manager.guides = verticalGuideViews
         
-        // create text row view
-        
-        let textRowView = UIView()
-        textRowView.userInteractionEnabled = false
-        self.inputView!.addSubview(textRowView)
-        
-        let textAid = UILabel()
-        textAid.translatesAutoresizingMaskIntoConstraints = false
-        textAid.userInteractionEnabled = false
-        textRowView.addSubview(textAid)
-        // textAidProxy wrapper for textaid uilabel
-        textAidProxy = TextAidProxy(inLabel: textAid, inDocumentProxy: self.textDocumentProxy)
+        if isTextAid {
+            // create text row view
+            
+            textRowView = UIView()
+            textRowView.userInteractionEnabled = false
+            self.inputView!.addSubview(textRowView)
+            
+            let textAidLabel = UILabel()
+            textAidLabel.translatesAutoresizingMaskIntoConstraints = false
+            textAidLabel.userInteractionEnabled = false
+            textRowView.addSubview(textAidLabel)
+            // textAidProxy wrapper for textaid uilabel
+            let rawTextProxy = textProxy as! TextAidProxy
+            rawTextProxy.label = textAidLabel
+        }
         
         // create top row view
         let topRowView = UIView()
@@ -416,7 +422,10 @@ class KeyboardViewController: UIInputViewController {
             .puncs = topRowPuncTouchButtons + midRowPuncTouchButtons + bottomRowPuncTouchButtons
         
         // add constraints for rows in superview
-        let rows = [[textRowView], [self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
+        var rows = [[self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
+        if isTextAid {
+            rows = [[textRowView]] + rows
+        }
         
         for row in rows {
             for view in row {
@@ -438,7 +447,9 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
         autoresizeIntoConstraintsOff(bottomRowPuncTouchButtons)
         ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, verticalGuideViews: verticalGuideViews, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, bottomPuncs: bottomRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, bottomTouchPuncs: bottomRowPuncTouchButtons, betweenSpace: 0, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
-        ConstraintMaker.addTexRowViewConstraints(textRowView)
+        if isTextAid {
+            ConstraintMaker.addTextRowViewConstraints(textRowView)
+        }
         
         // do startup hiding
         manager.loadStart()
@@ -448,12 +459,9 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func insertDoubleTapPeriod(sender: UITapGestureRecognizer) {
-        self.textDocumentProxy.deleteBackward()
-        self.textDocumentProxy.deleteBackward()
-        textAidProxy.deleteBackward()
-        textAidProxy.deleteBackward()
-        self.textDocumentProxy.insertText(".")
-        textAidProxy.insertText(".")
+        textProxy.deleteBackward()
+        textProxy.deleteBackward()
+        textProxy.insertText(".")
         isSpaceShift = false
     }
     
@@ -540,8 +548,7 @@ class KeyboardViewController: UIInputViewController {
             // if touch was not detected in any button
             if (prevButton != "") {
                 // if touch was just in a button
-                self.textDocumentProxy.deleteBackward()
-                textAidProxy.deleteBackward()
+                textProxy.deleteBackward()
                 self.prevButton = ""
                 makePrevKeyUnpressed(false)
             }
@@ -563,16 +570,13 @@ class KeyboardViewController: UIInputViewController {
             // if the current button is not the previous
             if (self.prevButton == "") {
                 // if the previous button was outside buttons
-                self.textDocumentProxy.insertText(character)
-                textAidProxy.insertText(character)
+                textProxy.insertText(character)
             } else {
                 // in this case the previous button
                 // was a different character.
                 // i.e. slide from button to button
-                self.textDocumentProxy.deleteBackward()
-                textAidProxy.deleteBackward()
-                self.textDocumentProxy.insertText(character)
-                textAidProxy.insertText(character)
+                textProxy.deleteBackward()
+                textProxy.insertText(character)
                 makePrevKeyUnpressed(false)
             }
             makeKeyPressed(displayButton)
@@ -611,24 +615,23 @@ class KeyboardViewController: UIInputViewController {
                     self.disableTouch = true;
                     // found the button so return
                     // return
+                    if prevButton == " " {
+                        cancelDoubleTap()
+                    }
                 } else {
                     let displayButton = subview.subviews[0]
                     let buttonLabel = displayButton.subviews[0] as! UILabel
                     let currButtonLabel = buttonLabel.text!
                     let character = manager.isShift || isSpaceShift ? currButtonLabel: currButtonLabel.lowercaseString
-                    // !!! put code for cancelling double touch
-                    // here
-                    if prevButton == " " && {
-                        doubleTapRecognizer.enabled = false
-                        doubleTapRecognizer.enabled = true
-                    }
                     if isSpaceShift {
-                        self.textDocumentProxy.deleteBackward()
-                        textAidProxy.deleteBackward()
+                        textProxy.deleteBackward()
                     }
-                    print(character)
-                    self.textDocumentProxy.insertText(character)
-                    textAidProxy.insertText(character)
+                    // cancel double tap recognizer
+                    // if a tap is detected not on space
+                    if prevButton == " " && character != " " {
+                        cancelDoubleTap()
+                    }
+                    textProxy.insertText(character)
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
                     makeKeyPressed(displayButton)
@@ -643,6 +646,11 @@ class KeyboardViewController: UIInputViewController {
         if (!isTouchInButton) {
             self.prevButton = ""
         }
+    }
+    
+    func cancelDoubleTap() {
+        doubleTapRecognizer.enabled = false
+        doubleTapRecognizer.enabled = true
     }
     
     func makeLetterButtonsAlternateColors (buttons: [UIView]) {
@@ -722,11 +730,9 @@ class KeyboardViewController: UIInputViewController {
                 manager.shiftOn()
             }
         case UtilKey.returnKey.rawValue:
-            self.textDocumentProxy.insertText("\n")
-            textAidProxy.clear()
+            textProxy.insertText("\n")
         case UtilKey.backspaceKey.rawValue:
-            self.textDocumentProxy.deleteBackward()
-            textAidProxy.deleteBackward()
+            textProxy.deleteBackward()
         case UtilKey.numbersLettersKey.rawValue:
             if manager.isNumbersPage {
                 // switch back to letters page
@@ -754,8 +760,7 @@ class KeyboardViewController: UIInputViewController {
         // FUNCTION WAS CREATED ONLY FOR startLongDelete
         // BECAUSE startLongDelete NEEDS IT
         // bc NSTimers cannot call more than one method
-        self.textDocumentProxy.deleteBackward()
-        textAidProxy.deleteBackward()
+        textProxy.deleteBackward()
     }
     
     func stopLongDelete() {
@@ -812,7 +817,10 @@ class KeyboardViewController: UIInputViewController {
         } else {
             textColor = UIColor.blackColor()
         }
-        textAidProxy.clear()
+        if isTextAid {
+            let rawTextAidProxy = textProxy as! TextAidProxy
+            rawTextAidProxy.clear()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -823,5 +831,16 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         print(inputView!.frame.height)
+    }
+    
+    override func loadView() {
+        super.loadView()
+        let settings = NSUserDefaults.init(suiteName: "group.com.douglaslamb.tap")
+        //isTextAid = settings!.boolForKey("isTextAid")
+        if isTextAid {
+            textProxy = TextAidProxy(inDocumentProxy: textDocumentProxy)
+        } else {
+            textProxy = textDocumentProxy
+        }
     }
 }
