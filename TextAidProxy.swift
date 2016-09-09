@@ -70,14 +70,4 @@ class TextAidProxy: NSObject, UIKeyInput {
             }
         }
     }
-    
-    private func dropFirstWordIfNeeded() {
-        if label.text != nil {
-            var textArray = label.text!.componentsSeparatedByString(" ")
-            if textArray.count > wordLimit {
-                textArray.removeAtIndex(0)
-                label.text = textArray.joinWithSeparator(" ")
-            }
-        }
-    }
 }

@@ -100,7 +100,7 @@ class ConstraintMaker {
     }
     
     static func addTextRowViewConstraints(textRowView: UIView) {
-        textRowView.subviews[0].centerXAnchor.constraintEqualToAnchor(textRowView.centerXAnchor).active = true
+        textRowView.subviews[0].rightAnchor.constraintEqualToAnchor(textRowView.centerXAnchor, constant: 20).active = true
         textRowView.subviews[0].centerYAnchor.constraintEqualToAnchor(textRowView.centerYAnchor).active = true
     }
     

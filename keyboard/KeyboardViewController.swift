@@ -54,9 +54,11 @@ class KeyboardViewController: UIInputViewController {
     let verticalGuideColor = UIColor.init(white: 0.0, alpha: 1)
     let evenColumnUnpressedTextColor = UIColor.init(white: 0.0, alpha: 1)
     let evenColumnPressedTextColor = UIColor.init(white: 0.0, alpha: 1)
-    let oddColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
+    //20160909 let oddColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
+    let oddColumnUnpressedTextColor = UIColor.init(white: 0.7, alpha: 1)
     let oddColumnPressedTextColor = UIColor.init(white: 0.2, alpha: 1)
-    let evenGuideColor = UIColor.init(white: 0.5, alpha: 1)
+    // 20160909 let evenGuideColor = UIColor.init(white: 0.5, alpha: 1)
+    let evenGuideColor = UIColor.init(white: 0.3, alpha: 1)
     let evenGuideAnimationColor = UIColor.init(white: 0.9, alpha: 1)
     let oddGuideColor = UIColor.whiteColor()
     let oddGuideAnimationColor = UIColor.init(white: 0.1, alpha: 1)
@@ -511,6 +513,11 @@ class KeyboardViewController: UIInputViewController {
             
             // add button to return array
             buttons.append(button)
+            
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // DEBUG
+            label.hidden = true
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
         return buttons
     }
