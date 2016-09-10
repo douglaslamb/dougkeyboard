@@ -10,10 +10,11 @@ import UIKit
 
 class KeyboardManager {
     
-    var lettersAndShift: [UIView]!
-    var numbersAndPuncs: [UIView]!
-    var lowerPuncsAndNumbersPuncKey: [UIView]!
-    var puncs: [UIView]!
+    var charTouchButtons: [UIView]!
+    
+    var letterPageChars: [String]!
+    var numberPageChars: [String]!
+    var puncPageChars: [String]!
     
     var isShift: Bool = false
     var isNumbersPage: Bool = false
@@ -29,14 +30,10 @@ class KeyboardManager {
         // set correct label on numbersPuncKey
         let label = self.numbersPuncKey.subviews[0] as! UILabel
         label.text = "#+="
-        unhide(self.numbersAndPuncs)
+        changeLabelsText(numberPageChars)
         if self.isPuncsPage {
-            hide(self.puncs)
             self.isPuncsPage = false
         } else {
-            unhide(self.lowerPuncsAndNumbersPuncKey)
-            hide(self.lettersAndShift)
-            //hide(guides)
             let label = self.numbersKey.subviews[0] as! UILabel
             // put correct label on numbersKey
             label.text = "ABC"
@@ -44,9 +41,15 @@ class KeyboardManager {
         }
     }
     
+    private func changeLabelsText(chars: [String]) {
+        for (i, button) in charTouchButtons.enumerate() {
+            let label = button.subviews[0] as! UILabel
+            label.text = chars[i]
+        }
+    }
+    
     func goToPuncsPage() {
-        hide(self.numbersAndPuncs)
-        unhide(self.puncs)
+        changeLabelsText(puncPageChars)
         // set correct label on numbersPuncKey
         let label = self.numbersPuncKey.subviews[0] as! UILabel
         label.text = "123"
@@ -60,15 +63,9 @@ class KeyboardManager {
     }
     
     func loadStart() {
-        unhide(self.lettersAndShift)
-        //unhide(guides)
-        hide(self.lowerPuncsAndNumbersPuncKey)
-        hide(self.puncs)
+        changeLabelsText(letterPageChars)
         if self.isPuncsPage {
-            hide(self.puncs)
             self.isPuncsPage = false
-        } else {
-            hide(self.numbersAndPuncs)
         }
         // put correct label on numbersKey
         let label = self.numbersKey.subviews[0] as! UILabel
@@ -86,8 +83,6 @@ class KeyboardManager {
     func shiftOff() {
         self.isShift = false
         self.shiftKey.image = UIImage(named: "shiftOff")
-        //!!!!! change back maybe 20160903
-        //self.shiftKey.backgroundColor = UIColor.grayColor()
     }
     
     func hide(buttons: [UIView]) {

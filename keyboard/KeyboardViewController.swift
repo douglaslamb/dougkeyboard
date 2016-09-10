@@ -18,11 +18,11 @@ class KeyboardViewController: UIInputViewController {
     var isTextAid: Bool = true
     
     // views
+    var textRowView: UIView!
     var topRowView: UIView!
     var midRowView: UIView!
     var bottomRowView: UIView!
     var utilRowView: UIView!
-    var textRowView: UIView!
     
     // global UI
     var doubleTapRecognizer: UITapGestureRecognizer!
@@ -83,6 +83,57 @@ class KeyboardViewController: UIInputViewController {
         // initial setup
         inputView?.backgroundColor = defaultBackgroundColor
         
+        // init row views
+        textRowView = UIView()
+        topRowView = UIView()
+        midRowView = UIView()
+        bottomRowView = UIView()
+        utilRowView = UIView()
+        
+        // put in array for convenience
+        let rowViews = [topRowView, midRowView, bottomRowView, utilRowView, textRowView]
+        
+        // add rowViews to inputview and set default settings
+        for rowView in rowViews {
+            inputView!.addSubview(rowView)
+            setRowDefaults(rowView)
+        }
+        
+        // create button arrays
+        let topRowTouchButtons = createBlankTouchButtonsWithLabels(9)
+        let midRowTouchButtons = createBlankTouchButtonsWithLabels(9)
+        var bottomRowTouchButtons = createBlankTouchButtonsWithLabels(8)
+        
+        // put touch buttons in manager for label switching
+        manager.charTouchButtons = topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons
+        
+        // add backspace key to bottom row
+        let backspaceImage = UIImage(named: "backspaceOff")
+        let backspaceKey = UIImageView(image: backspaceImage)
+        setupImageView(backspaceKey)
+        let backspaceTouchKey = UIView()
+        backspaceTouchKey.addSubview(backspaceKey)
+        backspaceKey.tag = UtilKey.backspaceKey.rawValue
+        bottomRowTouchButtons.append(backspaceKey)
+        
+        // add and configure long press recognizer
+        let backspaceLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleBackspaceLongPress:"))
+        backspaceTouchKey.addGestureRecognizer(backspaceLongPressRecognizer)
+        
+        // add touchButtons to rowViews
+        addSubviews(topRowView, subviews: topRowTouchButtons)
+        addSubviews(midRowView, subviews: midRowTouchButtons)
+        addSubviews(bottomRowView, subviews: bottomRowTouchButtons)
+        
+        // page labels chars
+        let yen = "\u{00A5}"
+        let pound = "\u{00A3}"
+        let euro = "\u{20AC}"
+        let bullet = "\u{2022}"
+        manager.letterPageChars = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "A", "S", "D", "F", "G", "H", "J", "K", "P", "Z", "X", "C", "V", "B", "N", "M", "L"]
+        manager.numberPageChars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "/", ":", ";", "(", ")", "$", "&", "0", ".", ",", "?", "!", "'", "\"", "@", ""]
+        manager.puncPageChars = ["[", "]", "{", "}", "#", "%", "^", "*", bullet, "_", "\\", "|", "~", "<", ">", euro, pound, yen, ".", ",", "?", "!", "'", "+", "="]
+        
         // create vertical guides
         var verticalGuideViews = [UIView]()
         
@@ -106,107 +157,14 @@ class KeyboardViewController: UIInputViewController {
    
         manager.guides = verticalGuideViews
         
-        if isTextAid {
-            // create text row view
-            
-            textRowView = UIView()
-            textRowView.userInteractionEnabled = false
-            self.inputView!.addSubview(textRowView)
-            
-            let textAidLabel = UILabel()
-            textAidLabel.translatesAutoresizingMaskIntoConstraints = false
-            textAidLabel.userInteractionEnabled = false
-            textRowView.addSubview(textAidLabel)
-            // textAidProxy wrapper for textaid uilabel
-            let rawTextProxy = textProxy as! TextAidProxy
-            rawTextProxy.label = textAidLabel
-        }
-        
-        // create top row view
-        let topRowView = UIView()
-        topRowView.opaque = false
-        // create buttons
-        let topRowButtonTitles = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O"]
-        let topRowButtons = createButtons(topRowButtonTitles)
-        makeLetterButtonsAlternateColors(topRowButtons)
-        // create touch buttons
-        var topRowTouchButtons: [UIView] = wrapButtons(topRowButtons)
-        // put each button in a touchview and add touchview to view
-        for button in topRowTouchButtons {
-            topRowView.addSubview(button)
-        }
-        
-        self.inputView!.addSubview(topRowView)
-        self.topRowView = topRowView
-        
-        // create mid row view
-        let midRowView = UIView()
-        midRowView.opaque = false
-        // create buttons
-        let midRowButtonTitles = ["A", "S", "D", "F", "G", "H", "J", "K", "P"]
-        let midRowButtons = createButtons(midRowButtonTitles)
-        makeLetterButtonsAlternateColors(midRowButtons)
-        // create touch buttons
-        var midRowTouchButtons: [UIView] = wrapButtons(midRowButtons)
-        for button in midRowTouchButtons {
-            midRowView.addSubview(button)
-        }
-        
-        self.inputView!.addSubview(midRowView)
-        self.midRowView = midRowView
-        
-        // create bottom row buttons
-        
-        // empty array to eventually contain
-        // all bottom row buttons
-        
-        var bottomRowButtons = [UIView]()
-        
-        // add letter buttons to bottom row
-        
-        let bottomRowLetterTitles = ["Z", "X", "C", "V", "B", "N", "M", "L"]
-        let bottomRowLettersButtons = createButtons(bottomRowLetterTitles)
-        makeLetterButtonsAlternateColors(bottomRowLettersButtons)
-        bottomRowButtons = bottomRowButtons + bottomRowLettersButtons
-        // wrap these now so I can put them into the manager
-        // without including the backspace key, which the manager
-        // does not want because backspace is never hidden
-        var bottomRowTouchButtons = wrapButtons(bottomRowButtons)
-        
-        // put letters and shiftkey in one array to control hiding
-        manager.lettersAndShift = topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons
-        
-        // add backspace key to bottom row
-        
-        let backspaceImage = UIImage(named: "backspaceOff")
-        let backspaceKey = UIImageView(image: backspaceImage)
-        setupImageView(backspaceKey)
-        let backspaceTouchKey = UIView()
-        backspaceTouchKey.addSubview(backspaceKey)
-        backspaceKey.tag = UtilKey.backspaceKey.rawValue
-        bottomRowButtons.append(backspaceKey)
-        
-        // add and configure long press recognizer
-        let backspaceLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleBackspaceLongPress:"))
-        backspaceTouchKey.addGestureRecognizer(backspaceLongPressRecognizer)
-        
-        // put the backspace key in bottomRowTouchButtons now
-        // because it still needs its constraints set later
-        bottomRowTouchButtons.append(backspaceTouchKey)
-        
-        // create bottom row view and add all buttons to view
-        
-        let bottomRowView = UIView()
-        bottomRowView.opaque = false
-        
-        // create touch buttons
-        // put each button in a touchview and add touchview to view
-        for button in bottomRowTouchButtons {
-            bottomRowView.addSubview(button)
-        }
-        
-        self.inputView!.addSubview(bottomRowView)
-        self.bottomRowView = bottomRowView
+        // add label to textRowView
+        let textAidLabel = UILabel()
+        textAidLabel.translatesAutoresizingMaskIntoConstraints = false
+        textAidLabel.userInteractionEnabled = false
+        textRowView.addSubview(textAidLabel)
+        // add label to textProxy
+        let rawTextProxy = textProxy as! TextAidProxy
+        rawTextProxy.label = textAidLabel
         
         // create util row buttons
         
@@ -232,8 +190,6 @@ class KeyboardViewController: UIInputViewController {
         numbersPuncKeyLabel.text = "#+="
         numbersPuncKey.addSubview(numbersPuncKeyLabel)
         
-        /// !!!!! maybe change this back!!!! 20160903
-        //numbersPuncKey.backgroundColor = UIColor.grayColor()
         numbersPuncKey.opaque = false
         Appearance.setCornerRadius(numbersPuncKey)
         numbersPuncKey.translatesAutoresizingMaskIntoConstraints = false
@@ -253,8 +209,6 @@ class KeyboardViewController: UIInputViewController {
         numbersKeyLabel.text = "123"
         numbersKey.addSubview(numbersKeyLabel)
         
-        /// !!!!! maybe change this back!!!! 20160903
-        //numbersKey.backgroundColor = UIColor.grayColor()
         numbersKey.opaque = false
         Appearance.setCornerRadius(numbersKey)
         numbersKey.translatesAutoresizingMaskIntoConstraints = false
@@ -306,9 +260,6 @@ class KeyboardViewController: UIInputViewController {
         
         // add util buttons to util view
         
-        let utilRowView = UIView()
-        utilRowView.opaque = false
-        
         let utilRowTouchButtons = wrapButtons(utilRowButtons)
         
         // add spacebar double tap recognizer
@@ -320,108 +271,6 @@ class KeyboardViewController: UIInputViewController {
         for button in utilRowTouchButtons {
             utilRowView.addSubview(button)
         }
-        
-        self.inputView!.addSubview(utilRowView)
-        self.utilRowView = utilRowView
-        
-        // put shift into manager for hiding later
-        manager.lettersAndShift.append(utilRowTouchButtons[0])
-        
-        // NUMBERS PAGE!!!
-        
-        // create top row numbers
-        let topRowNumberButtonTitles = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        let topRowNumberButtons = createButtons(topRowNumberButtonTitles)
-        makeLetterButtonsAlternateColors(topRowNumberButtons)
-        let topRowNumberTouchButtons = wrapButtons(topRowNumberButtons)
-        
-        for button in topRowNumberTouchButtons {
-            topRowView.addSubview(button)
-        }
-        
-        // create mid row numbers
-        let midRowNumberButtonTitles = ["-", "/", ":", ";", "(", ")", "$", "&", "0"]
-        let midRowNumberButtons = createButtons(midRowNumberButtonTitles)
-        makeLetterButtonsAlternateColors(midRowNumberButtons)
-        let midRowNumberTouchButtons = wrapButtons(midRowNumberButtons)
-        
-        for button in midRowNumberTouchButtons {
-            midRowView.addSubview(button)
-        }
-        
-        /// create bottom row numbers
-        // this punctuation row does not have its own view
-        // it goes into the bottomRowView, but it will be hidden to start
-        let bottomRowNumberButtonTitles = [".", ",", "?", "!", "'", "\"", "@", ""]
-        var bottomRowNumberButtons = createButtons(bottomRowNumberButtonTitles)
-        makeLetterButtonsAlternateColors(bottomRowNumberButtons)
-        var bottomRowNumberTouchButtons = wrapButtons(bottomRowNumberButtons)
-        
-        for button in bottomRowNumberTouchButtons {
-            bottomRowView.addSubview(button)
-        }
-        
-        // THIS NEXT LINE NEEDS TO BE HERE instead of with the rest of the midrow stuff
-        // bc of how I'm adding these to the manager
-        // and the constraintMaker later
-        // put top and mid number rows in one array for hiding later
-        manager
-            .numbersAndPuncs = topRowNumberTouchButtons + midRowNumberTouchButtons + Array(bottomRowNumberTouchButtons[5...7])
-        
-        // put ". < ? ..." and numbersPuncKey in one array for hiding later
-        manager
-            .lowerPuncsAndNumbersPuncKey = Array(bottomRowNumberTouchButtons[0..<5]) + [utilRowTouchButtons[1]]
-        
-        // PUNCTUATION PAGE !!!
-        
-        // create top row punc
-        let bullet = "\u{2022}"
-        let topRowPuncButtonTitles = ["[", "]", "{", "}", "#", "%", "^", "*", bullet]
-        let topRowPuncButtons = createButtons(topRowPuncButtonTitles)
-        makeLetterButtonsAlternateColors(topRowPuncButtons)
-        let topRowPuncTouchButtons = wrapButtons(topRowPuncButtons)
-        
-        for button in topRowPuncTouchButtons {
-            topRowView.addSubview(button)
-        }
-        
-        // create mid row punc
-        let euro = "\u{20AC}"
-        let pound = "\u{00A3}"
-        let yen = "\u{00A5}"
-        let midRowPuncButtonTitles = ["_", "\\", "|", "~", "<", ">", euro, pound, yen]
-        let midRowPuncButtons = createButtons(midRowPuncButtonTitles)
-        makeLetterButtonsAlternateColors(midRowPuncButtons)
-        let midRowPuncTouchButtons = wrapButtons(midRowPuncButtons)
-        
-        for button in midRowPuncTouchButtons {
-            midRowView.addSubview(button)
-        }
-        
-        //create bottom row punc
-        let bottomRowPuncButtonTitles = ["+", "="]
-        let bottomRowPuncButtons = createButtons(bottomRowPuncButtonTitles)
-        for (i, button) in bottomRowPuncButtons.enumerate() {
-            let label = button.subviews[0] as! UILabel
-            // This even/odd arrangement seems wrong
-            // but for these two buttons it is right
-            if i % 2 == 0 {
-                label.textColor = oddColumnUnpressedTextColor
-                label.tag = LetterIdentifier.oddRowKey.rawValue
-            } else {
-                label.textColor = evenColumnUnpressedTextColor
-                label.tag = LetterIdentifier.evenRowKey.rawValue
-            }
-        }
-        let bottomRowPuncTouchButtons = wrapButtons(bottomRowPuncButtons)
-        
-        for button in bottomRowPuncTouchButtons {
-            bottomRowView.addSubview(button)
-        }
-        
-        // put punc page in one array for hiding later
-        manager
-            .puncs = topRowPuncTouchButtons + midRowPuncTouchButtons + bottomRowPuncTouchButtons
         
         // add constraints for rows in superview
         var rows = [[self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
@@ -442,13 +291,9 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(midRowTouchButtons)
         autoresizeIntoConstraintsOff(bottomRowTouchButtons)
         autoresizeIntoConstraintsOff(utilRowTouchButtons)
-        autoresizeIntoConstraintsOff(topRowNumberTouchButtons)
-        autoresizeIntoConstraintsOff(midRowNumberTouchButtons)
-        autoresizeIntoConstraintsOff(bottomRowNumberTouchButtons)
-        autoresizeIntoConstraintsOff(topRowPuncTouchButtons)
-        autoresizeIntoConstraintsOff(midRowPuncTouchButtons)
-        autoresizeIntoConstraintsOff(bottomRowPuncTouchButtons)
-        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, verticalGuideViews: verticalGuideViews, topLetters: topRowButtons, midLetters: midRowButtons, bottomLettersShiftBackspace: bottomRowButtons, utilKeys: utilRowButtons, topNumbers: topRowNumberButtons, midNumbers: midRowNumberButtons, bottomPuncAndNumbersPuncKey: bottomRowNumberButtons, topPuncs: topRowPuncButtons, midPuncs: midRowPuncButtons, bottomPuncs: bottomRowPuncButtons, topTouchLetters: topRowTouchButtons, midTouchLetters: midRowTouchButtons, bottomTouchLettersShiftBackspace: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, topTouchNumbers: topRowNumberTouchButtons, midTouchNumbers: midRowNumberTouchButtons, bottomTouchPuncAndNumbersPuncKey: bottomRowNumberTouchButtons, topTouchPuncs: topRowPuncTouchButtons, midTouchPuncs: midRowPuncTouchButtons, bottomTouchPuncs: bottomRowPuncTouchButtons, betweenSpace: 0, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
+        
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, verticalGuideViews: verticalGuideViews, utilKeys: utilRowButtons, topTouchButtons: topRowTouchButtons, midTouchButtons: midRowTouchButtons, bottomTouchButtons: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, betweenSpace: 0, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
+        
         if isTextAid {
             ConstraintMaker.addTextRowViewConstraints(textRowView)
         }
@@ -457,6 +302,12 @@ class KeyboardViewController: UIInputViewController {
         manager.loadStart()
         if self.textDocumentProxy.keyboardType == UIKeyboardType.NumberPad {
             manager.goToNumbersPage()
+        }
+    }
+    
+    private func addSubviews(view: UIView, subviews: [UIView]) {
+        for subview in subviews {
+            view.addSubview(subview)
         }
     }
     
@@ -472,9 +323,7 @@ class KeyboardViewController: UIInputViewController {
         view.layer.masksToBounds = true
         Appearance.setCornerRadius(view)
         view.contentMode = UIViewContentMode.Center
-        // !!!!!!!!! MADE THIS OPAQUE SLOPPILY. remove the background color setting if need be
         view.opaque = false
-        //view.backgroundColor = UIColor.grayColor()
     }
     
     func wrapButtons (buttons: [UIView]) -> [UIView] {
@@ -516,7 +365,7 @@ class KeyboardViewController: UIInputViewController {
             
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
             // DEBUG
-            label.hidden = true
+            //label.hidden = true
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
         return buttons
@@ -544,7 +393,7 @@ class KeyboardViewController: UIInputViewController {
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             // if touch is in a button, and button is not hidden then handle touch
-            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden && subview.subviews[0].tag == 0 {
+            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden && subviews[0].tag == 0 {
                 handleTouchMoveInButton(subview)
                 isTouchInButton = true
                 // found the button so return
@@ -563,8 +412,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func handleTouchMoveInButton(view: UIView) {
-        let displayButton = view.subviews[0]
-        let buttonLabel = displayButton.subviews[0] as! UILabel
+        let buttonLabel = view.subviews[0] as! UILabel
         let currButtonLabel = buttonLabel.text!
         // if touch is in spacebar return early
         if currButtonLabel == " " {
@@ -586,7 +434,6 @@ class KeyboardViewController: UIInputViewController {
                 textProxy.insertText(character)
                 makePrevKeyUnpressed(false)
             }
-            makeKeyPressed(displayButton)
             self.prevButton = currButtonLabel
         }
     }
@@ -626,8 +473,7 @@ class KeyboardViewController: UIInputViewController {
                         cancelDoubleTap()
                     }
                 } else {
-                    let displayButton = subview.subviews[0]
-                    let buttonLabel = displayButton.subviews[0] as! UILabel
+                    let buttonLabel = subview.subviews[0] as! UILabel
                     let currButtonLabel = buttonLabel.text!
                     let character = manager.isShift || isSpaceShift ? currButtonLabel: currButtonLabel.lowercaseString
                     if isSpaceShift {
@@ -641,7 +487,6 @@ class KeyboardViewController: UIInputViewController {
                     textProxy.insertText(character)
                     isTouchInButton = true
                     self.prevButton = currButtonLabel
-                    makeKeyPressed(displayButton)
                     if currButtonLabel == " " {
                         isSpaceShift = true
                     }
@@ -653,6 +498,49 @@ class KeyboardViewController: UIInputViewController {
         if (!isTouchInButton) {
             self.prevButton = ""
         }
+    }
+    
+    private func createBlankTouchButtonsWithLabels(numButtons: Int) -> [UIView] {
+        // creates a bunch of UIView
+        // adds a label to each
+        // and adds each to an array which is returned
+        
+        var buttons = [UIView]()
+        for i in 0..<numButtons {
+            let touchButton = UIView()
+            let label = UILabel()
+            buttons.append(touchButton)
+            touchButton.addSubview(label)
+            
+            // set default properties
+            setTouchButtonDefaults(touchButton)
+            setLabelDefaults(label)
+            ConstraintMaker.centerViewInView(touchButton, subview: label)
+            
+            // alternate column settings
+            if i % 2 == 0 {
+                label.textColor = evenColumnUnpressedTextColor
+                label.tag = LetterIdentifier.evenRowKey.rawValue
+            } else {
+                label.textColor = oddColumnUnpressedTextColor
+                label.tag = LetterIdentifier.oddRowKey.rawValue
+            }
+        }
+        return buttons
+    }
+    
+    private func setTouchButtonDefaults(button: UIView) {
+        button.opaque = false
+    }
+    
+    private func setLabelDefaults(label: UILabel) {
+        label.userInteractionEnabled = false
+        label.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func setRowDefaults(row: UIView) {
+        row.opaque = false
+        row.userInteractionEnabled = false
     }
     
     func cancelDoubleTap() {
@@ -832,7 +720,8 @@ class KeyboardViewController: UIInputViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        ConstraintMaker.setWindowHeight(inputView!)
+        //self.view.translatesAutoresizingMaskIntoConstraints = false
+        ConstraintMaker.setWindowHeight(self.view)
     }
     
     override func viewDidAppear(animated: Bool) {
