@@ -198,7 +198,7 @@ class ConstraintMaker {
     
     static func centerViewInView(view: UIView, subview: UIView, verticalConstant: CGFloat = 0) {
         subview.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
-        subview.centerYAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: verticalConstant).active = true
+        subview.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: verticalConstant).active = true
     }
     
     static func centerLabels(buttons: [UIView], verticalConstant: CGFloat = 0) {

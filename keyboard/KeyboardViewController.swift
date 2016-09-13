@@ -68,7 +68,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     enum LetterIdentifier: Int {
-        case oddRowKey = 1, evenRowKey
+        case oddRowKey = 10, evenRowKey
     }
 
     override func updateViewConstraints() {
@@ -90,6 +90,28 @@ class KeyboardViewController: UIInputViewController {
         bottomRowView = UIView()
         utilRowView = UIView()
         
+        // create vertical guides and add to view
+        var verticalGuideViews = [UIView]()
+        
+        for i in 0..<9 {
+            let view = UIView()
+            var thisGuideColor: UIColor
+            var thisGuideAnimationColor: UIColor
+            if i % 2 == 0 {
+                thisGuideColor = evenGuideColor
+                thisGuideAnimationColor = evenGuideAnimationColor
+            } else {
+                thisGuideColor = oddGuideColor
+                thisGuideAnimationColor = oddGuideAnimationColor
+            }
+            view.backgroundColor = thisGuideColor
+            verticalGuideViews.append(view)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.userInteractionEnabled = false
+            self.inputView!.addSubview(view)
+        }
+   
+        manager.guides = verticalGuideViews
         // put in array for convenience
         let rowViews = [topRowView, midRowView, bottomRowView, utilRowView, textRowView]
         
@@ -114,7 +136,8 @@ class KeyboardViewController: UIInputViewController {
         let backspaceTouchKey = UIView()
         backspaceTouchKey.addSubview(backspaceKey)
         backspaceKey.tag = UtilKey.backspaceKey.rawValue
-        bottomRowTouchButtons.append(backspaceKey)
+        bottomRowTouchButtons.append(backspaceTouchKey)
+        ConstraintMaker.centerViewInView(backspaceTouchKey, subview: backspaceKey)
         
         // add and configure long press recognizer
         let backspaceLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleBackspaceLongPress:"))
@@ -132,37 +155,14 @@ class KeyboardViewController: UIInputViewController {
         let bullet = "\u{2022}"
         manager.letterPageChars = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "A", "S", "D", "F", "G", "H", "J", "K", "P", "Z", "X", "C", "V", "B", "N", "M", "L"]
         manager.numberPageChars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "/", ":", ";", "(", ")", "$", "&", "0", ".", ",", "?", "!", "'", "\"", "@", ""]
-        manager.puncPageChars = ["[", "]", "{", "}", "#", "%", "^", "*", bullet, "_", "\\", "|", "~", "<", ">", euro, pound, yen, ".", ",", "?", "!", "'", "+", "="]
-        
-        // create vertical guides
-        var verticalGuideViews = [UIView]()
-        
-        for i in 0..<9 {
-            let view = UIView()
-            var thisGuideColor: UIColor
-            var thisGuideAnimationColor: UIColor
-            if i % 2 == 0 {
-                thisGuideColor = evenGuideColor
-                thisGuideAnimationColor = evenGuideAnimationColor
-            } else {
-                thisGuideColor = oddGuideColor
-                thisGuideAnimationColor = oddGuideAnimationColor
-            }
-            view.backgroundColor = thisGuideColor
-            verticalGuideViews.append(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            view.userInteractionEnabled = false
-            self.inputView!.addSubview(view)
-        }
-   
-        manager.guides = verticalGuideViews
+        manager.puncPageChars = ["[", "]", "{", "}", "#", "%", "^", "*", bullet, "_", "\\", "|", "~", "<", ">", euro, pound, yen, ".", ",", "?", "!", "'", "+", "=", ""]
         
         // add label to textRowView
         let textAidLabel = UILabel()
         textAidLabel.translatesAutoresizingMaskIntoConstraints = false
         textAidLabel.userInteractionEnabled = false
         textRowView.addSubview(textAidLabel)
-        // add label to textProxy
+        // add label to textProxy object
         let rawTextProxy = textProxy as! TextAidProxy
         rawTextProxy.label = textAidLabel
         
@@ -232,6 +232,7 @@ class KeyboardViewController: UIInputViewController {
         // spacebar
         
         let spacebarKey = UIView()
+        spacebarKey.tag = 30    // to designate it as a text entering key
         
         let spacebarKeyLabel = UILabel(frame: CGRectMake(10.0, 10.0, 60, 25))
         spacebarKeyLabel.text = " "
@@ -258,15 +259,18 @@ class KeyboardViewController: UIInputViewController {
         
         utilRowButtons.append(returnKey)
         
-        // add util buttons to util view
+        // wrap util buttons into touch buttons
         
-        let utilRowTouchButtons = wrapButtons(utilRowButtons)
+        var utilRowTouchButtons = wrapButtons(utilRowButtons)
         
         // add spacebar double tap recognizer
         doubleTapRecognizer = UITapGestureRecognizer(target: self, action: Selector("insertDoubleTapPeriod:"))
         doubleTapRecognizer.numberOfTapsRequired = 2
         doubleTapRecognizer.delaysTouchesEnded = false
+        utilRowTouchButtons[4] = spacebarKey
         utilRowTouchButtons[4].addGestureRecognizer(doubleTapRecognizer)
+        
+        // add utilRowTouch buttons to utilRowView
         
         for button in utilRowTouchButtons {
             utilRowView.addSubview(button)
@@ -324,15 +328,16 @@ class KeyboardViewController: UIInputViewController {
         Appearance.setCornerRadius(view)
         view.contentMode = UIViewContentMode.Center
         view.opaque = false
+        view.userInteractionEnabled = false
     }
     
     func wrapButtons (buttons: [UIView]) -> [UIView] {
         var touchViews: [UIView] = [UIView]()
         for button in buttons {
-                let touchView = UIView()
-                touchView.addSubview(button)
-                touchViews.append(touchView)
-                button.translatesAutoresizingMaskIntoConstraints = false
+            let touchView = UIView()
+            touchView.addSubview(button)
+            touchViews.append(touchView)
+            button.translatesAutoresizingMaskIntoConstraints = false
         }
         return touchViews
     }
@@ -381,7 +386,6 @@ class KeyboardViewController: UIInputViewController {
         if firstTouchPoint != nil {
             let touchPoint = touches.first!.locationInView(inputView)
             let firstTouchDistance = pow(touchPoint.x - firstTouchPoint!.x, 2) + pow(touchPoint.y - firstTouchPoint!.y, 2)
-            print(sqrt(firstTouchDistance))
             if firstTouchDistance < minFirstTouchDistance {
                 return
             } else {
@@ -393,7 +397,7 @@ class KeyboardViewController: UIInputViewController {
         for subview in subviews {
             let touchPoint = touches.first!.locationInView(subview)
             // if touch is in a button, and button is not hidden then handle touch
-            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden && subviews[0].tag == 0 {
+            if subview.pointInside(touchPoint, withEvent: event) && !subview.hidden && subview.tag > 9 {
                 handleTouchMoveInButton(subview)
                 isTouchInButton = true
                 // found the button so return
@@ -406,7 +410,6 @@ class KeyboardViewController: UIInputViewController {
                 // if touch was just in a button
                 textProxy.deleteBackward()
                 self.prevButton = ""
-                makePrevKeyUnpressed(false)
             }
         }
     }
@@ -432,7 +435,6 @@ class KeyboardViewController: UIInputViewController {
                 // i.e. slide from button to button
                 textProxy.deleteBackward()
                 textProxy.insertText(character)
-                makePrevKeyUnpressed(false)
             }
             self.prevButton = currButtonLabel
         }
@@ -453,7 +455,6 @@ class KeyboardViewController: UIInputViewController {
         // !!!!!!!!!!!!!!!!!!!
         
         if prevDisplayButton != nil {
-            makePrevKeyUnpressed(false)
         }
         
         // check each uiview for touch
@@ -520,10 +521,10 @@ class KeyboardViewController: UIInputViewController {
             // alternate column settings
             if i % 2 == 0 {
                 label.textColor = evenColumnUnpressedTextColor
-                label.tag = LetterIdentifier.evenRowKey.rawValue
+                touchButton.tag = LetterIdentifier.evenRowKey.rawValue
             } else {
                 label.textColor = oddColumnUnpressedTextColor
-                label.tag = LetterIdentifier.oddRowKey.rawValue
+                touchButton.tag = LetterIdentifier.oddRowKey.rawValue
             }
         }
         return buttons
@@ -540,7 +541,7 @@ class KeyboardViewController: UIInputViewController {
     
     private func setRowDefaults(row: UIView) {
         row.opaque = false
-        row.userInteractionEnabled = false
+        //row.userInteractionEnabled = false
     }
     
     func cancelDoubleTap() {
@@ -556,10 +557,10 @@ class KeyboardViewController: UIInputViewController {
             let buttonLabel = button.subviews[0] as! UILabel
             if i % 2 == 0 {
                 buttonLabel.textColor = evenColumnUnpressedTextColor
-                buttonLabel.tag = LetterIdentifier.evenRowKey.rawValue
+                button.tag = LetterIdentifier.evenRowKey.rawValue
             } else {
                 buttonLabel.textColor = oddColumnUnpressedTextColor
-                buttonLabel.tag = LetterIdentifier.oddRowKey.rawValue
+                button.tag = LetterIdentifier.oddRowKey.rawValue
             }
         }
         
@@ -571,9 +572,9 @@ class KeyboardViewController: UIInputViewController {
         // ignore the spacebar
         if buttonLabel.text != " " {
             button.backgroundColor = pressedBackgroundColor
-            if buttonLabel.tag == LetterIdentifier.oddRowKey.rawValue {
+            if button.tag == LetterIdentifier.oddRowKey.rawValue {
                 buttonLabel.textColor = oddColumnPressedTextColor
-            } else if buttonLabel.tag == LetterIdentifier.evenRowKey.rawValue {
+            } else if button.tag == LetterIdentifier.evenRowKey.rawValue {
                 buttonLabel.textColor = evenColumnPressedTextColor
             } else {
                 buttonLabel.textColor = pressedTextColor
@@ -591,9 +592,9 @@ class KeyboardViewController: UIInputViewController {
             let changeAppearance: () -> Void = {
                 () -> Void in
                 button?.backgroundColor = self.unpressedBackgroundColor
-                if buttonLabel.tag == LetterIdentifier.oddRowKey.rawValue {
+                if button!.tag == LetterIdentifier.oddRowKey.rawValue {
                     buttonLabel.textColor = self.oddColumnUnpressedTextColor
-                } else if buttonLabel.tag == LetterIdentifier.evenRowKey.rawValue {
+                } else if button!.tag == LetterIdentifier.evenRowKey.rawValue {
                     buttonLabel.textColor = self.evenColumnUnpressedTextColor
                 } else {
                     buttonLabel.textColor = self.unpressedTextColor
@@ -625,6 +626,7 @@ class KeyboardViewController: UIInputViewController {
                 manager.shiftOn()
             }
         case UtilKey.returnKey.rawValue:
+            print("return happened")
             textProxy.insertText("\n")
         case UtilKey.backspaceKey.rawValue:
             textProxy.deleteBackward()
@@ -664,6 +666,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func handleBackspaceLongPress(sender: UILongPressGestureRecognizer) {
+        print("handleBackspaceLongPress")
         if sender.state == UIGestureRecognizerState.Began {
             startLongDelete()
         } else if sender.state == UIGestureRecognizerState.Ended {
@@ -680,7 +683,6 @@ class KeyboardViewController: UIInputViewController {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.disableTouch = false;
         if prevDisplayButton != nil && event?.allTouches()?.count < 2 {
-            makePrevKeyUnpressed(true)
             if manager.isShift {
                 manager.shiftOff()
             }

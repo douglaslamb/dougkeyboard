@@ -30,6 +30,9 @@ class KeyboardManager {
         // set correct label on numbersPuncKey
         let label = self.numbersPuncKey.subviews[0] as! UILabel
         label.text = "#+="
+        shiftKey.hidden = true
+        numbersPuncKey.hidden = false
+        shiftOff()
         changeLabelsText(numberPageChars)
         if self.isPuncsPage {
             self.isPuncsPage = false
@@ -70,6 +73,8 @@ class KeyboardManager {
         // put correct label on numbersKey
         let label = self.numbersKey.subviews[0] as! UILabel
         label.text = "123"
+        numbersPuncKey.hidden = true
+        shiftKey.hidden = false
         // modify global state
         self.isNumbersPage = false
     }
