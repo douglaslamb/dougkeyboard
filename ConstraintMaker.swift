@@ -99,12 +99,17 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
-    static func addTextRowViewConstraints(textRowView: UIView) {
+    static func addTextRowViewConstraints(textRowView: UIView, showCharsButton: UIView) {
         textRowView.subviews[0].rightAnchor.constraintEqualToAnchor(textRowView.centerXAnchor, constant: 20).active = true
         textRowView.subviews[0].centerYAnchor.constraintEqualToAnchor(textRowView.centerYAnchor).active = true
+        
+        showCharsButton.rightAnchor.constraintEqualToAnchor(textRowView.rightAnchor).active = true
+        showCharsButton.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true
+        showCharsButton.heightAnchor.constraintEqualToAnchor(textRowView.heightAnchor).active = true
+        showCharsButton.widthAnchor.constraintEqualToAnchor(textRowView.heightAnchor).active = true
     }
     
-    static func addAllButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, verticalGuideViews: [UIView], utilKeys: [UIView], topTouchButtons: [UIView], midTouchButtons: [UIView], bottomTouchButtons: [UIView], utilTouchKeys: [UIView], betweenSpace: CGFloat = 0, shiftWidth: CGFloat = 0.03, nextKeyboardWidth: CGFloat = 0.8, spaceKeyWidth: CGFloat = 0.3, charVerticalConstant: CGFloat = 0) {
+    static func addAllButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, verticalGuideViews: [UIView], topTouchButtons: [UIView], midTouchButtons: [UIView], bottomTouchButtons: [UIView], utilTouchKeys: [UIView], betweenSpace: CGFloat = 0, shiftWidth: CGFloat = 0.03, nextKeyboardWidth: CGFloat = 0.8, spaceKeyWidth: CGFloat = 0.3, charVerticalConstant: CGFloat = 0) {
         
         //==============================
         // Constants for Dimensions
@@ -124,42 +129,6 @@ class ConstraintMaker {
             view.leftAnchor.constraintEqualToAnchor(topTouchButtons[i].leftAnchor).active = true
             view.rightAnchor.constraintEqualToAnchor(topTouchButtons[i].rightAnchor).active = true
         }
-        
-        // utilRow
-        for (i, button) in utilKeys.enumerate() {
-            if i == 0 || i == 1 {
-                button.leftAnchor.constraintEqualToAnchor(utilRowView.leftAnchor, constant: betweenSpace * 0.5).active = true
-                button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: nextKeyboardWidth, constant: betweenSpace * -1).active = true
-                if i == 1 {
-                    centerLabel(button)
-                }
-            } else {
-                if i == 2 {
-                    button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor).active = true
-                    centerLabel(button)
-                } else {
-                    if i == 3 {
-                        button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor).active = true
-                    } else {
-                        if i == 4 {
-                            button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: spaceKeyWidth, constant: betweenSpace * -1).active = true
-                            button.viewWithTag(20)!.centerXAnchor.constraintEqualToAnchor(button.centerXAnchor).active = true
-                            button.viewWithTag(20)!.centerYAnchor.constraintEqualToAnchor(button.centerYAnchor).active = true
-                        } else {
-                            if i == 5 {
-                                button.rightAnchor.constraintEqualToAnchor(utilRowView.rightAnchor, constant: betweenSpace * -0.5).active = true
-                            }
-                        }
-                    }
-                }
-                button.leftAnchor.constraintEqualToAnchor(utilKeys[i - 1].rightAnchor, constant: betweenSpace).active = true
-            }
-            // all buttons in row get this
-            button.topAnchor.constraintEqualToAnchor(utilRowView.topAnchor, constant: utilRowTopSpace).active = true
-            button.bottomAnchor.constraintEqualToAnchor(utilRowView.bottomAnchor, constant: -1 * utilRowBottomSpace).active = true
-        }
-        /*
-       */
     }
     
     static func addTouchButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topTouchButtons: [UIView], midTouchButtons: [UIView], bottomTouchButtons: [UIView], utilKeys: [UIView], betweenSpace: CGFloat = 2, nextKeyboardWidth: CGFloat = 0.12, spaceKeyWidth: CGFloat = 0.48) {
@@ -172,17 +141,17 @@ class ConstraintMaker {
         // utilRow
         // SPECIFY THE SIZE OF THE UTIL ROW KEYS HERE
         for (i, button) in utilKeys.enumerate() {
-            if i == 0 || i == 1 {
+            if i == 0 {
                 button.leftAnchor.constraintEqualToAnchor(utilRowView.leftAnchor).active = true
                 button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: nextKeyboardWidth).active = true
             } else {
-                if i == 2 {
+                if i == 1 {
                     button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor).active = true
                 } else {
-                    if i == 3 {
+                    if i == 2 {
                         button.widthAnchor.constraintEqualToAnchor(utilKeys[0].widthAnchor).active = true
                     } else {
-                        if i == 4 {
+                        if i == 3 {
                             button.widthAnchor.constraintEqualToAnchor(utilRowView.widthAnchor, multiplier: spaceKeyWidth).active = true
                         } else {
                             button.rightAnchor.constraintEqualToAnchor(utilRowView.rightAnchor).active = true

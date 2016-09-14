@@ -35,10 +35,6 @@
 		BFF371EC1D7A974A00B68BDB /* TextAidProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF371EA1D7A974A00B68BDB /* TextAidProxy.swift */; };
 		BFF371ED1D7A974A00B68BDB /* TextAidProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF371EA1D7A974A00B68BDB /* TextAidProxy.swift */; };
 		BFF371EE1D7A974A00B68BDB /* TextAidProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF371EA1D7A974A00B68BDB /* TextAidProxy.swift */; };
-		BFF43A811D83E4AA0071F056 /* UIViewWithLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF43A801D83E4AA0071F056 /* UIViewWithLabel.swift */; };
-		BFF43A821D83E4AA0071F056 /* UIViewWithLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF43A801D83E4AA0071F056 /* UIViewWithLabel.swift */; };
-		BFF43A831D83E4AA0071F056 /* UIViewWithLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF43A801D83E4AA0071F056 /* UIViewWithLabel.swift */; };
-		BFF43A841D83E4AA0071F056 /* UIViewWithLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF43A801D83E4AA0071F056 /* UIViewWithLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,7 +97,6 @@
 		BFD23A5A1D6422B1003B1376 /* Appearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Appearance.swift; path = ../keyboard/Appearance.swift; sourceTree = "<group>"; };
 		BFDD06BA1D81344E0081D15A /* Doug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Doug.entitlements; sourceTree = "<group>"; };
 		BFF371EA1D7A974A00B68BDB /* TextAidProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextAidProxy.swift; path = ../TextAidProxy.swift; sourceTree = "<group>"; };
-		BFF43A801D83E4AA0071F056 /* UIViewWithLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewWithLabel.swift; path = ../UIViewWithLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,7 +156,6 @@
 		BF5CEAC61D1B38C20078C2D1 /* keyboard-201606220-01 */ = {
 			isa = PBXGroup;
 			children = (
-				BFF43A801D83E4AA0071F056 /* UIViewWithLabel.swift */,
 				BFDD06BA1D81344E0081D15A /* Doug.entitlements */,
 				BFF371EA1D7A974A00B68BDB /* TextAidProxy.swift */,
 				BFD23A5A1D6422B1003B1376 /* Appearance.swift */,
@@ -384,7 +378,6 @@
 				BF5CEACA1D1B38C20078C2D1 /* ViewController.swift in Sources */,
 				BFF371EB1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
 				BF5CEAC81D1B38C20078C2D1 /* AppDelegate.swift in Sources */,
-				BFF43A811D83E4AA0071F056 /* UIViewWithLabel.swift in Sources */,
 				BF74C13B1D3D892D0088E585 /* ConstraintMaker.swift in Sources */,
 				BFCDD7FE1D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 			);
@@ -399,7 +392,6 @@
 				BFCDD7FF1D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 				BFD23A5C1D6422B1003B1376 /* Appearance.swift in Sources */,
 				BFF371EC1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
-				BFF43A821D83E4AA0071F056 /* UIViewWithLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,7 +404,6 @@
 				BFCDD8001D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 				BFD23A5D1D6422B1003B1376 /* Appearance.swift in Sources */,
 				BFF371ED1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
-				BFF43A831D83E4AA0071F056 /* UIViewWithLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,7 +416,6 @@
 				BFCDD8011D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 				BFD23A5E1D6422B1003B1376 /* Appearance.swift in Sources */,
 				BFF371EE1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
-				BFF43A841D83E4AA0071F056 /* UIViewWithLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

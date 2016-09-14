@@ -11,53 +11,59 @@ import UIKit
 class KeyboardManager {
     
     var charTouchButtons: [UIView]!
+    var charTouchButtonLabels: [UIView]!
     
     var letterPageChars: [String]!
     var numberPageChars: [String]!
     var puncPageChars: [String]!
     
     var isShift: Bool = false
-    var isNumbersPage: Bool = false
-    var isPuncsPage: Bool = false
     
-    var numbersKey: UIView!
-    var numbersPuncKey: UIView!
-    var shiftKey: UIImageView!
+    var numbersKeyLabel: UILabel!
+    var numbersPuncKeyLabel: UILabel!
+    var shiftKeyImageView: UIImageView!
+    
+    var shiftOrNumbersPuncTouchButton: UIView!
+    
+    var shiftKeyTag: Int!
+    var numbersPuncKeyTag: Int!
     
     var guides: [UIView]!
     
-    func goToNumbersPage() {
-        // set correct label on numbersPuncKey
-        let label = self.numbersPuncKey.subviews[0] as! UILabel
-        label.text = "#+="
-        shiftKey.hidden = true
-        numbersPuncKey.hidden = false
-        shiftOff()
-        changeLabelsText(numberPageChars)
-        if self.isPuncsPage {
-            self.isPuncsPage = false
-        } else {
-            let label = self.numbersKey.subviews[0] as! UILabel
-            // put correct label on numbersKey
-            label.text = "ABC"
-            self.isNumbersPage = true
-        }
+    func isNumbersPage() -> Bool {
+        let label = charTouchButtons[0].subviews[0] as! UILabel
+        return label.text != "Q"
     }
     
-    private func changeLabelsText(chars: [String]) {
+    func isPuncsPage() -> Bool {
+        let label = charTouchButtons[0].subviews[0] as! UILabel
+        return label.text == "["
+    }
+    
+    func changeLabelsText(chars: [String]) {
         for (i, button) in charTouchButtons.enumerate() {
             let label = button.subviews[0] as! UILabel
             label.text = chars[i]
         }
     }
     
+    func goToNumbersPage() {
+        if !isPuncsPage() {
+            numbersKeyLabel.text = "ABC"
+        }
+        numbersPuncKeyLabel.text = "#+="
+        numbersPuncKeyLabel.hidden = false
+        shiftKeyImageView.hidden = true
+        shiftOff()
+        changeLabelsText(numberPageChars)
+        // change tag
+        shiftOrNumbersPuncTouchButton.tag = numbersPuncKeyTag
+    }
+    
     func goToPuncsPage() {
         changeLabelsText(puncPageChars)
         // set correct label on numbersPuncKey
-        let label = self.numbersPuncKey.subviews[0] as! UILabel
-        label.text = "123"
-        // modify global state
-        self.isPuncsPage = true
+        numbersPuncKeyLabel.text = "123"
     }
     
     func goToLettersPage() {
@@ -67,38 +73,33 @@ class KeyboardManager {
     
     func loadStart() {
         changeLabelsText(letterPageChars)
-        if self.isPuncsPage {
-            self.isPuncsPage = false
-        }
         // put correct label on numbersKey
-        let label = self.numbersKey.subviews[0] as! UILabel
-        label.text = "123"
-        numbersPuncKey.hidden = true
-        shiftKey.hidden = false
-        // modify global state
-        self.isNumbersPage = false
+        numbersKeyLabel.text = "123"
+        numbersPuncKeyLabel.hidden = true
+        shiftKeyImageView.hidden = false
+        // change tag
+        shiftOrNumbersPuncTouchButton.tag = shiftKeyTag
     }
     
     func shiftOn() {
-        self.isShift = true
-        self.shiftKey.image = UIImage(named: "shiftOn")
-        self.shiftKey.backgroundColor = UIColor.whiteColor()
+        isShift = true
+        shiftKeyImageView.image = UIImage(named: "shiftOn")
     }
     
     func shiftOff() {
-        self.isShift = false
-        self.shiftKey.image = UIImage(named: "shiftOff")
+        isShift = false
+        shiftKeyImageView.image = UIImage(named: "shiftOff")
     }
     
-    func hide(buttons: [UIView]) {
-        for button in buttons {
-            button.hidden = true
-        }
-    }
-    
-    func unhide(buttons: [UIView]) {
-        for button in buttons {
-            button.hidden = false
+    func showHideLabels() {
+        if charTouchButtonLabels[0].hidden == true {
+            for label in charTouchButtonLabels {
+                label.hidden = false
+            }
+        } else {
+            for label in charTouchButtonLabels {
+                label.hidden = true
+            }
         }
     }
 }
