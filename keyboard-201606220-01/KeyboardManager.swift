@@ -102,5 +102,9 @@ class KeyboardManager {
             }
         }
     }
+    
+    func isLabelsHidden() -> Bool {
+        return charTouchButtonLabels[0].hidden == true
+    }
 }
 

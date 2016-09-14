@@ -286,6 +286,12 @@ class KeyboardViewController: UIInputViewController {
             utilRowView.addSubview(button)
         }
         
+        // check defaults and hide labels if needed
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if defaults.boolForKey("isLabelsHidden") {
+            manager.showHideLabels()
+        }
+        
         // add constraints for rows in superview
         var rows = [[textRowView], [self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
         
@@ -294,6 +300,7 @@ class KeyboardViewController: UIInputViewController {
                 view.translatesAutoresizingMaskIntoConstraints = false
             }
         }
+        
         ConstraintMaker.addRowConstraintsToSuperview(rows, containingView: self.inputView!)
         
         // SET CONSTRAINTS ON TOUCH AND DISPLAY BUTTONS
@@ -644,13 +651,20 @@ class KeyboardViewController: UIInputViewController {
         ConstraintMaker.setWindowHeight(self.view)
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // save settings
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setBool(manager.isLabelsHidden(), forKey: "isLabelsHidden")
+    }
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
     }
     
     override func loadView() {
         super.loadView()
-        let settings = NSUserDefaults.init(suiteName: "group.com.douglaslamb.tap")
         textProxy = TextAidProxy(inDocumentProxy: textDocumentProxy)
     }
 }
