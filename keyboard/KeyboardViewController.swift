@@ -21,6 +21,11 @@ class KeyboardViewController: UIInputViewController {
     var bottomRowView: UIView!
     var utilRowView: UIView!
     
+    // objects
+    var textProxy: UIKeyInput!
+    var manager: KeyboardManager = KeyboardManager()
+    var tutRunner: TutRunner!
+    
     // global UI
     var doubleTapRecognizer: UITapGestureRecognizer!
     
@@ -28,11 +33,9 @@ class KeyboardViewController: UIInputViewController {
     var prevButton = ""
     var prevDisplayButton: UIView?
     var disableTouch = false
-    var manager: KeyboardManager = KeyboardManager()
     var longDeleteTimer: NSTimer! = nil
     var isSpaceShift = false
     var firstTouchPoint: CGPoint? = nil
-    var textProxy: UIKeyInput!
     
     // global constants
     let minFirstTouchDistance = CGFloat(324)
@@ -55,7 +58,7 @@ class KeyboardViewController: UIInputViewController {
     let oddGuideAnimationColor = UIColor.init(white: 0.1, alpha: 1)
     
     enum UtilKey: Int {
-        case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey, showCharsKey
+        case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey, showCharsKey, tutKey
     }
     
     enum LetterIdentifier: Int {
@@ -155,7 +158,9 @@ class KeyboardViewController: UIInputViewController {
         let pound = "\u{00A3}"
         let euro = "\u{20AC}"
         let bullet = "\u{2022}"
-        manager.letterPageChars = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "A", "S", "D", "F", "G", "H", "J", "K", "P", "Z", "X", "C", "V", "B", "N", "M", "L"]
+        manager.letterPageChars = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "A",
+                                   "S", "D", "F", "G", "H", "J", "K", "P", "Z", "X",
+                                   "C", "V", "B", "N", "M", "L"]
         manager.numberPageChars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "/", ":", ";", "(", ")", "$", "&", "0", ".", ",", "?", "!", "'", "\"", "@", ""]
         manager.puncPageChars = ["[", "]", "{", "}", "#", "%", "^", "*", bullet, "_", "\\", "|", "~", "<", ">", euro, pound, yen, ".", ",", "?", "!", "'", "+", "=", ""]
         
@@ -178,6 +183,17 @@ class KeyboardViewController: UIInputViewController {
         showCharsTouchButton.addSubview(showCharsImageView)
         ConstraintMaker.centerViewInView(showCharsTouchButton, subview: showCharsImageView)
         textRowView.addSubview(showCharsTouchButton)
+        
+        // add tut button to textRowView
+        let tutTouchButton = createBlankTouchButton()
+        tutTouchButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        tutTouchButton.tag = UtilKey.tutKey.rawValue
+        let tutImageView = UIImageView(image: UIImage(named: "tutKey"))
+        setupImageView(tutImageView)
+        tutTouchButton.addSubview(tutImageView)
+        ConstraintMaker.centerViewInView(tutTouchButton, subview: tutImageView)
+        textRowView.addSubview(tutTouchButton)
         
         // create util row touch button array
         
@@ -312,13 +328,18 @@ class KeyboardViewController: UIInputViewController {
         
         ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, verticalGuideViews: verticalGuideViews, topTouchButtons: topRowTouchButtons, midTouchButtons: midRowTouchButtons, bottomTouchButtons: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, betweenSpace: 0, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
         
-        ConstraintMaker.addTextRowViewConstraints(textRowView, showCharsButton: showCharsTouchButton)
+        ConstraintMaker.addTextRowViewConstraints(textRowView, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
         
         // do startup hiding
         manager.loadStart()
         if self.textDocumentProxy.keyboardType == UIKeyboardType.NumberPad {
             manager.goToNumbersPage()
         }
+    }
+    
+    func runTut(buttons: [UIView], label: UILabel, manager: KeyboardManager) {
+        tutRunner = TutRunner(buttons: buttons, label: label, keyboardManager: manager)
+        tutRunner.run()
     }
     
     func addSubviews(view: UIView, subviews: [UIView]) {
@@ -339,17 +360,6 @@ class KeyboardViewController: UIInputViewController {
         view.contentMode = UIViewContentMode.Center
         view.opaque = false
         view.userInteractionEnabled = false
-    }
-    
-    func wrapButtons (buttons: [UIView]) -> [UIView] {
-        var touchViews: [UIView] = [UIView]()
-        for button in buttons {
-            let touchView = UIView()
-            touchView.addSubview(button)
-            touchViews.append(touchView)
-            button.translatesAutoresizingMaskIntoConstraints = false
-        }
-        return touchViews
     }
     
     func createBlankTouchButton() -> UIView {

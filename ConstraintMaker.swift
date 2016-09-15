@@ -99,7 +99,7 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
-    static func addTextRowViewConstraints(textRowView: UIView, showCharsButton: UIView) {
+    static func addTextRowViewConstraints(textRowView: UIView, showCharsButton: UIView, tutButton: UIView) {
         textRowView.subviews[0].rightAnchor.constraintEqualToAnchor(textRowView.centerXAnchor, constant: 20).active = true
         textRowView.subviews[0].centerYAnchor.constraintEqualToAnchor(textRowView.centerYAnchor).active = true
         
@@ -107,6 +107,11 @@ class ConstraintMaker {
         showCharsButton.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true
         showCharsButton.heightAnchor.constraintEqualToAnchor(textRowView.heightAnchor).active = true
         showCharsButton.widthAnchor.constraintEqualToAnchor(textRowView.heightAnchor).active = true
+        
+        tutButton.rightAnchor.constraintEqualToAnchor(showCharsButton.leftAnchor).active = true
+        tutButton.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true
+        tutButton.heightAnchor.constraintEqualToAnchor(textRowView.heightAnchor).active = true
+        tutButton.widthAnchor.constraintEqualToAnchor(textRowView.heightAnchor).active = true
     }
     
     static func addAllButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, verticalGuideViews: [UIView], topTouchButtons: [UIView], midTouchButtons: [UIView], bottomTouchButtons: [UIView], utilTouchKeys: [UIView], betweenSpace: CGFloat = 0, shiftWidth: CGFloat = 0.03, nextKeyboardWidth: CGFloat = 0.8, spaceKeyWidth: CGFloat = 0.3, charVerticalConstant: CGFloat = 0) {
