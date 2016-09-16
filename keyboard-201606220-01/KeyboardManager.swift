@@ -92,7 +92,7 @@ class KeyboardManager {
     }
     
     func showHideLabels() {
-        if charTouchButtonLabels[0].hidden == true {
+        if charTouchButtonLabels[0].hidden {
             for label in charTouchButtonLabels {
                 label.hidden = false
             }
@@ -104,7 +104,7 @@ class KeyboardManager {
     }
     
     func isLabelsHidden() -> Bool {
-        return charTouchButtonLabels[0].hidden == true
+        return charTouchButtonLabels[0].hidden
     }
 }
 

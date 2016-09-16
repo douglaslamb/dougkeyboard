@@ -14,6 +14,7 @@ class TextAidProxy: NSObject, UIKeyInput {
     var label: UILabel!
     var prevChar: String?
     let documentProxy: UITextDocumentProxy
+    var tutRunner: TutRunner!
     
     // global constants
     // ERASE IF NO LONGER NEEDED
@@ -25,7 +26,6 @@ class TextAidProxy: NSObject, UIKeyInput {
     }
     
     @objc func insertText(text: String) {
-        documentProxy.insertText(text)
         if text != "\n" {
             if label.text != nil {
                 label.text = label.text! + text
@@ -40,6 +40,11 @@ class TextAidProxy: NSObject, UIKeyInput {
         } else {
             clear()
             prevChar = nil
+        }
+        if !(tutRunner!.isRunning()) {
+            documentProxy.insertText(text)
+        } else {
+            tutRunner!.testText(text)
         }
     }
     

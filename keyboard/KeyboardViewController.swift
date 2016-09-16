@@ -28,6 +28,7 @@ class KeyboardViewController: UIInputViewController {
     
     // global UI
     var doubleTapRecognizer: UITapGestureRecognizer!
+    var tutDoubleTapRecognizer: UITapGestureRecognizer!
     
     // global vars
     var prevButton = ""
@@ -76,6 +77,7 @@ class KeyboardViewController: UIInputViewController {
         
         // initial setup
         inputView?.backgroundColor = defaultBackgroundColor
+        
         
         // init row views
         textRowView = UIView()
@@ -194,6 +196,11 @@ class KeyboardViewController: UIInputViewController {
         tutTouchButton.addSubview(tutImageView)
         ConstraintMaker.centerViewInView(tutTouchButton, subview: tutImageView)
         textRowView.addSubview(tutTouchButton)
+        // add double tap recognizer
+        tutDoubleTapRecognizer = UITapGestureRecognizer(target: self, action: Selector("startStopTut:"))
+        tutDoubleTapRecognizer.numberOfTapsRequired = 2
+        tutDoubleTapRecognizer.delaysTouchesEnded = false
+        tutTouchButton.addGestureRecognizer(tutDoubleTapRecognizer)
         
         // create util row touch button array
         
@@ -330,6 +337,10 @@ class KeyboardViewController: UIInputViewController {
         
         ConstraintMaker.addTextRowViewConstraints(textRowView, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
         
+        // init tut runner
+        tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, keyboardManager: manager)
+        rawTextProxy.tutRunner = tutRunner
+        
         // do startup hiding
         manager.loadStart()
         if self.textDocumentProxy.keyboardType == UIKeyboardType.NumberPad {
@@ -337,9 +348,12 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
-    func runTut(buttons: [UIView], label: UILabel, manager: KeyboardManager) {
-        tutRunner = TutRunner(buttons: buttons, label: label, keyboardManager: manager)
-        tutRunner.run()
+    func startStopTut(sender: UITapGestureRecognizer) {
+        if tutRunner.isRunning() {
+            tutRunner.end()
+        } else {
+            tutRunner.run()
+        }
     }
     
     func addSubviews(view: UIView, subviews: [UIView]) {
@@ -412,6 +426,8 @@ class KeyboardViewController: UIInputViewController {
     func cancelDoubleTap() {
         doubleTapRecognizer.enabled = false
         doubleTapRecognizer.enabled = true
+        tutDoubleTapRecognizer.enabled = false
+        tutDoubleTapRecognizer.enabled = true
     }
     
     func makeKeyPressed(button: UIView) {
@@ -453,36 +469,38 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func doKeyFunction(key: UIView) {
-        let tag = key.tag
-        switch tag {
-        case UtilKey.nextKeyboardKey.rawValue:
-            self.advanceToNextInputMode()
-        case UtilKey.shiftKey.rawValue:
-            if manager.isShift {
-                manager.shiftOff()
-            } else {
-                manager.shiftOn()
+        if !(tutRunner.isRunning()) {
+                let tag = key.tag
+                switch tag {
+            case UtilKey.nextKeyboardKey.rawValue:
+                self.advanceToNextInputMode()
+            case UtilKey.shiftKey.rawValue:
+                if manager.isShift {
+                    manager.shiftOff()
+                } else {
+                    manager.shiftOn()
+                }
+            case UtilKey.returnKey.rawValue:
+                textProxy.insertText("\n")
+            case UtilKey.backspaceKey.rawValue:
+                textProxy.deleteBackward()
+            case UtilKey.numbersLettersKey.rawValue:
+                if manager.isNumbersPage() {
+                    manager.goToLettersPage()
+                } else {
+                    manager.goToNumbersPage()
+                }
+            case UtilKey.numbersPuncKey.rawValue:
+                if manager.isPuncsPage() {
+                    manager.goToNumbersPage()
+                } else {
+                    manager.goToPuncsPage()
+                }
+            case UtilKey.showCharsKey.rawValue:
+                manager.showHideLabels()
+            default:
+                return
             }
-        case UtilKey.returnKey.rawValue:
-            textProxy.insertText("\n")
-        case UtilKey.backspaceKey.rawValue:
-            textProxy.deleteBackward()
-        case UtilKey.numbersLettersKey.rawValue:
-            if manager.isNumbersPage() {
-                manager.goToLettersPage()
-            } else {
-                manager.goToNumbersPage()
-            }
-        case UtilKey.numbersPuncKey.rawValue:
-            if manager.isPuncsPage() {
-                manager.goToNumbersPage()
-            } else {
-                manager.goToPuncsPage()
-            }
-        case UtilKey.showCharsKey.rawValue:
-            manager.showHideLabels()
-        default:
-            return
         }
     }
     
@@ -663,6 +681,11 @@ class KeyboardViewController: UIInputViewController {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        // end tutorial if running
+        if tutRunner.isRunning() {
+            tutRunner.end()
+        }
         
         // save settings
         let defaults = NSUserDefaults.standardUserDefaults()
