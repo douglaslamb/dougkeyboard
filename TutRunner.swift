@@ -14,6 +14,7 @@ class TutRunner {
     let buttons: [UIView]
     let label: UILabel
     let manager: KeyboardManager
+    let showCharsDoubleTapRecognizer: UIGestureRecognizer
     
     // constants
     let kbIndexes: [Int] = [9, 22, 20, 11, 2, 12, 13, 14, 7, 15, 16, 25, 24, 23, 8, 17, 0, 3, 10, 4, 6, 21, 1, 19, 5, 18]
@@ -21,25 +22,41 @@ class TutRunner {
     let unhighlightColor: UIColor = UIColor.init(white: 0.1, alpha: 0)
     
     // stateful vars
-    var didHideLabels: Bool = false
     var currChar: String?
     var nextAlphabetIndex: Int = 0
     
-    init(buttons: [UIView], label: UILabel, keyboardManager: KeyboardManager) {
+    init(buttons: [UIView], label: UILabel, keyboardManager: KeyboardManager, showCharsDoubleTapRecognizer: UIGestureRecognizer) {
         self.buttons = buttons
         self.label = label
         manager = keyboardManager
+        self.showCharsDoubleTapRecognizer = showCharsDoubleTapRecognizer
     }
     
     func run() {
         // constants
         let labelText = "Eyes here."
         label.text = labelText
-        if !(manager.isLabelsHidden()) {
-            manager.showHideLabels()
-            didHideLabels = true
+        if manager.isNumbersPage() {
+            manager.goToLettersPage()
         }
+        if !(manager.userDidHideLabels) {
+            manager.showHideLabels()
+        }
+        showCharsDoubleTapRecognizer.enabled = false
         goToNextButton()
+    }
+    
+    func end() {
+        unhighlightButton(buttons[kbIndexes[nextAlphabetIndex - 1]])
+        if !(manager.userDidHideLabels) {
+            manager.showHideLabels()
+        }
+        showCharsDoubleTapRecognizer.enabled = true
+        
+        // reset label and vars
+        label.text = ""
+        currChar = nil
+        nextAlphabetIndex = 0
     }
     
     func goToNextButton() {
@@ -75,19 +92,6 @@ class TutRunner {
         if text.uppercaseString == currChar {
             goToNextButton()
         }
-    }
-    
-    func end() {
-        unhighlightButton(buttons[kbIndexes[nextAlphabetIndex - 1]])
-        if didHideLabels {
-            manager.showHideLabels()
-        }
-        
-        // reset label and vars
-        label.text = ""
-        didHideLabels = false
-        currChar = nil
-        nextAlphabetIndex = 0
     }
     
     func isRunning() -> Bool {

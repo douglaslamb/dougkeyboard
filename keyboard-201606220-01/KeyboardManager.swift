@@ -30,6 +30,9 @@ class KeyboardManager {
     
     var guides: [UIView]!
     
+    // stateful vars
+    var userDidHideLabels = false
+    
     func isNumbersPage() -> Bool {
         let label = charTouchButtons[0].subviews[0] as! UILabel
         return label.text != "Q"
@@ -58,6 +61,9 @@ class KeyboardManager {
         changeLabelsText(numberPageChars)
         // change tag
         shiftOrNumbersPuncTouchButton.tag = numbersPuncKeyTag
+        if isLabelsHidden() {
+            showHideLabels()
+        }
     }
     
     func goToPuncsPage() {
@@ -79,6 +85,10 @@ class KeyboardManager {
         shiftKeyImageView.hidden = false
         // change tag
         shiftOrNumbersPuncTouchButton.tag = shiftKeyTag
+        // hide labels if needed
+        if userDidHideLabels {
+            showHideLabels()
+        }
     }
     
     func shiftOn() {

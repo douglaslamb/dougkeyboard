@@ -29,6 +29,7 @@ class KeyboardViewController: UIInputViewController {
     // global UI
     var doubleTapRecognizer: UITapGestureRecognizer!
     var tutDoubleTapRecognizer: UITapGestureRecognizer!
+    var showCharsDoubleTapRecognizer: UITapGestureRecognizer!
     
     // global vars
     var prevButton = ""
@@ -39,7 +40,7 @@ class KeyboardViewController: UIInputViewController {
     var firstTouchPoint: CGPoint? = nil
     
     // global constants
-    let minFirstTouchDistance = CGFloat(324)
+    let minFirstTouchDistance = CGFloat(361)
     
     // appearance
     let defaultFontSize = 18
@@ -185,6 +186,11 @@ class KeyboardViewController: UIInputViewController {
         showCharsTouchButton.addSubview(showCharsImageView)
         ConstraintMaker.centerViewInView(showCharsTouchButton, subview: showCharsImageView)
         textRowView.addSubview(showCharsTouchButton)
+        // add double tap recognizer
+        showCharsDoubleTapRecognizer = UITapGestureRecognizer(target: self, action: Selector("userShowHideLabels:"))
+        showCharsDoubleTapRecognizer.numberOfTapsRequired = 2
+        showCharsDoubleTapRecognizer.delaysTouchesEnded = false
+        showCharsTouchButton.addGestureRecognizer(showCharsDoubleTapRecognizer)
         
         // add tut button to textRowView
         let tutTouchButton = createBlankTouchButton()
@@ -309,10 +315,10 @@ class KeyboardViewController: UIInputViewController {
             utilRowView.addSubview(button)
         }
         
-        // check defaults and hide labels if needed
+        // set manager userDidHideLabels from defaults
         let defaults = NSUserDefaults.standardUserDefaults()
-        if defaults.boolForKey("isLabelsHidden") {
-            manager.showHideLabels()
+        if defaults.boolForKey("userDidHideLabels") {
+            manager.userDidHideLabels = true
         }
         
         // add constraints for rows in superview
@@ -338,7 +344,7 @@ class KeyboardViewController: UIInputViewController {
         ConstraintMaker.addTextRowViewConstraints(textRowView, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
         
         // init tut runner
-        tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, keyboardManager: manager)
+        tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, keyboardManager: manager, showCharsDoubleTapRecognizer: showCharsDoubleTapRecognizer)
         rawTextProxy.tutRunner = tutRunner
         
         // do startup hiding
@@ -426,8 +432,6 @@ class KeyboardViewController: UIInputViewController {
     func cancelDoubleTap() {
         doubleTapRecognizer.enabled = false
         doubleTapRecognizer.enabled = true
-        tutDoubleTapRecognizer.enabled = false
-        tutDoubleTapRecognizer.enabled = true
     }
     
     func makeKeyPressed(button: UIView) {
@@ -482,6 +486,7 @@ class KeyboardViewController: UIInputViewController {
                 }
             case UtilKey.returnKey.rawValue:
                 textProxy.insertText("\n")
+                prevButton = "\n"
             case UtilKey.backspaceKey.rawValue:
                 textProxy.deleteBackward()
             case UtilKey.numbersLettersKey.rawValue:
@@ -496,8 +501,17 @@ class KeyboardViewController: UIInputViewController {
                 } else {
                     manager.goToPuncsPage()
                 }
+                    /*
             case UtilKey.showCharsKey.rawValue:
-                manager.showHideLabels()
+                if !manager.isNumbersPage() {
+                    manager.showHideLabels()
+                }
+                if manager.userDidHideLabels {
+                    manager.userDidHideLabels = false
+                } else {
+                    manager.userDidHideLabels = true
+                }
+ */
             default:
                 return
             }
@@ -536,6 +550,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        super.touchesBegan(touches, withEvent: event)
         // get view touch is in
         let touchPoint = touches.first!.locationInView(inputView)
         let touchView = view.hitTest(touchPoint, withEvent: nil)
@@ -553,8 +568,6 @@ class KeyboardViewController: UIInputViewController {
         // check for nil for safety
         if touchView != nil {
             if (touchView!.tag < 9) {
-                // pass to utility key function handler
-                doKeyFunction(touchView!)
                 // disable touch so if user drags out of util
                 // key it won't crash
                 self.disableTouch = true;
@@ -562,6 +575,8 @@ class KeyboardViewController: UIInputViewController {
                     cancelDoubleTap()
                 }
                 self.prevButton = ""
+                // pass to utility key function handler
+                doKeyFunction(touchView!)
             } else {
                 let buttonLabel = touchView!.subviews[0] as! UILabel
                 let rawChar = buttonLabel.text!
@@ -586,6 +601,7 @@ class KeyboardViewController: UIInputViewController {
     }
    
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        super.touchesMoved(touches, withEvent: event)
         // if touch is disabled return and do nothing
         if self.disableTouch {
             return
@@ -640,10 +656,23 @@ class KeyboardViewController: UIInputViewController {
             self.prevButton = rawChar
         }
     }
+    
+    func userShowHideLabels(sender: UIGestureRecognizer) {
+        if !manager.isNumbersPage() {
+            manager.showHideLabels()
+        }
+        if manager.userDidHideLabels {
+            manager.userDidHideLabels = false
+        } else {
+            manager.userDidHideLabels = true
+        }
+    }
    
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        super.touchesEnded(touches, withEvent: event)
         self.disableTouch = false;
-        if prevDisplayButton != nil && event?.allTouches()?.count < 2 {
+        //if prevButton != "" && event?.allTouches()?.count < 2 {
+        if prevButton != "" {
             if manager.isShift {
                 manager.shiftOff()
             }
@@ -662,10 +691,12 @@ class KeyboardViewController: UIInputViewController {
     }
 
     override func textWillChange(textInput: UITextInput?) {
+        super.textWillChange(textInput)
         // The app is about to change the document's contents. Perform any preparation here.
     }
 
     override func textDidChange(textInput: UITextInput?) {
+        super.textDidChange(textInput)
         // The app has just changed the document's contents, the document context has been updated.
         let rawTextAidProxy = textProxy as! TextAidProxy
         if !textDocumentProxy.hasText() {
@@ -689,7 +720,7 @@ class KeyboardViewController: UIInputViewController {
         
         // save settings
         let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setBool(manager.isLabelsHidden(), forKey: "isLabelsHidden")
+        defaults.setBool(manager.userDidHideLabels, forKey: "userDidHideLabels")
     }
     
     override func viewDidAppear(animated: Bool) {
