@@ -55,9 +55,12 @@ class KeyboardViewController: UIInputViewController {
     let oddColumnPressedTextColor = UIColor.init(white: 0.2, alpha: 1)
     // 20160909 let evenGuideColor = UIColor.init(white: 0.5, alpha: 1)
     let evenGuideColor = UIColor.init(white: 0.3, alpha: 1)
-    let evenGuideAnimationColor = UIColor.init(white: 0.9, alpha: 1)
     let oddGuideColor = UIColor.whiteColor()
-    let oddGuideAnimationColor = UIColor.init(white: 0.1, alpha: 1)
+    
+    // guide colors
+    let middleGuideColor = UIColor.init(white: 0.7, alpha: 1)
+    let nextoutGuideColor = UIColor.init(white: 0.5, alpha: 1)
+    let outerGuideColor = UIColor.init(white: 0.3, alpha: 1)
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey, showCharsKey, tutKey
@@ -90,17 +93,11 @@ class KeyboardViewController: UIInputViewController {
         // create vertical guides and add to view
         var verticalGuideViews = [UIView]()
         
+        let guideColors: [UIColor] = [outerGuideColor, oddGuideColor, nextoutGuideColor, oddGuideColor, middleGuideColor, oddGuideColor, nextoutGuideColor, oddGuideColor, outerGuideColor]
+        
         for i in 0..<9 {
             let view = UIView()
-            var thisGuideColor: UIColor
-            var thisGuideAnimationColor: UIColor
-            if i % 2 == 0 {
-                thisGuideColor = evenGuideColor
-                thisGuideAnimationColor = evenGuideAnimationColor
-            } else {
-                thisGuideColor = oddGuideColor
-                thisGuideAnimationColor = oddGuideAnimationColor
-            }
+            let thisGuideColor: UIColor = guideColors [i]
             view.backgroundColor = thisGuideColor
             verticalGuideViews.append(view)
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -126,6 +123,36 @@ class KeyboardViewController: UIInputViewController {
         
         // put touch buttons in manager for label switching
         manager.charTouchButtons = topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons
+        
+        /*
+        // !!!!!!!!!!!!!!!!!!!!!!!!! CHECKERBOARD
+        // hide guides first
+        for view in manager.guides {
+            view.hidden = true
+        }
+        
+        for (i, button) in manager.charTouchButtons.enumerate() {
+            let label = button.subviews[0] as! UILabel
+            if i % 2 == 0 {
+                button.backgroundColor = UIColor.whiteColor()
+                label.textColor = UIColor.init(white: 0.4, alpha: 1)
+            } else {
+                var intVal = 7 - abs((i % 9) - 4)
+                if i > 16 {
+                    intVal = intVal - 1
+                }
+                if i < 9 {
+                    intVal = intVal + 1
+                }
+                var textVal = intVal + 6
+                let buttonColor = UIColor.init(white: CGFloat(intVal) * 0.1, alpha: 1)
+                let textColor = UIColor.init(white: CGFloat(textVal) * 0.1, alpha: 1)
+                button.backgroundColor = buttonColor
+                label.textColor = textColor
+            }
+        }
+        // !!!!!!!!!!!!!!!!!!!!!!!!!
+ */
         
         // add backspace key to bottom row
         let backspaceImage = UIImageView(image: UIImage(named: "backspaceOff"))
