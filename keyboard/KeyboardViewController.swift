@@ -124,7 +124,6 @@ class KeyboardViewController: UIInputViewController {
         // put touch buttons in manager for label switching
         manager.charTouchButtons = topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons
         
-        /*
         // !!!!!!!!!!!!!!!!!!!!!!!!! CHECKERBOARD
         // hide guides first
         for view in manager.guides {
@@ -152,7 +151,6 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         // !!!!!!!!!!!!!!!!!!!!!!!!!
- */
         
         // add backspace key to bottom row
         let backspaceImage = UIImageView(image: UIImage(named: "backspaceOff"))
