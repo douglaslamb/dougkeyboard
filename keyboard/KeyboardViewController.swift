@@ -10,10 +10,6 @@ import UIKit
 
 class KeyboardViewController: UIInputViewController {
     
-    // it's bottomRowNumberButtons (number singular)
-    // and bottomRowLettersButtons (letter plural)
-    // it's just the way I wrote them
-    
     // views
     var textRowView: UIView!
     var topRowView: UIView!
@@ -33,11 +29,11 @@ class KeyboardViewController: UIInputViewController {
     
     // global vars
     var prevButton = ""
-    var prevDisplayButton: UIView?
     var disableTouch = false
-    var longDeleteTimer: NSTimer! = nil
+    var longDeleteTimer: NSTimer!
     var isSpaceShift = false
-    var firstTouchPoint: CGPoint? = nil
+    var firstTouchPoint: CGPoint?
+    var doubleTapPuncModifier: Int?
     
     // global constants
     let minFirstTouchDistance = CGFloat(361)
@@ -69,7 +65,7 @@ class KeyboardViewController: UIInputViewController {
     enum LetterIdentifier: Int {
         case oddRowKey = 10, evenRowKey
     }
-
+    
     override func updateViewConstraints() {
         super.updateViewConstraints()
     
@@ -189,7 +185,10 @@ class KeyboardViewController: UIInputViewController {
         manager.letterPageChars = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "A",
                                    "S", "D", "F", "G", "H", "J", "K", "P", "Z", "X",
                                    "C", "V", "B", "N", "M", "L"]
-        manager.numberPageChars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "/", ":", ";", "(", ")", "$", "&", "0", ".", ",", "?", "!", "'", "\"", "@", ""]
+        manager.numberPageChars = ["-", "/", ":", "1", "2", "3", ";", "(", ")",
+                                   "!", "'", "\"", "4", "5", "6", "@", "$", "&",
+                                   ".", ",", "?", "7", "8", "9", "0", ""]
+ 
         manager.puncPageChars = ["[", "]", "{", "}", "#", "%", "^", "*", bullet, "_", "\\", "|", "~", "<", ">", euro, pound, yen, ".", ",", "?", "!", "'", "+", "=", ""]
         
         // add UIlabel to textRowView
@@ -394,16 +393,30 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func insertDoubleTapPeriod(sender: UITapGestureRecognizer) {
-        textProxy.deleteBackward()
-        textProxy.deleteBackward()
-        textProxy.insertText(".")
+        let doubleTapPuncModifiers = [",", "'", "?", "!"]
+        var deleteTimes: Int
+        var text: String
+        
+        // decide if a modifier is being pressed
+        if doubleTapPuncModifier != nil {
+            deleteTimes = 3
+            text = doubleTapPuncModifiers[doubleTapPuncModifier!]
+        } else {
+            deleteTimes = 2
+            text = "."
+        }
+        
+        // then insert the character
+        for i in 0..<deleteTimes {
+            textProxy.deleteBackward()
+        }
+        textProxy.insertText(text)
         isSpaceShift = false
     }
     
     func setupImageView(view: UIImageView) {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = UIViewContentMode.Center
-        view.opaque = false
         view.userInteractionEnabled = false
     }
     
@@ -442,7 +455,6 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func setTouchButtonDefaults(button: UIView) {
-        button.opaque = false
     }
     
     func setLabelDefaults(label: UILabel) {
@@ -451,50 +463,12 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func setRowDefaults(row: UIView) {
-        row.opaque = false
+        row.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func cancelDoubleTap() {
         doubleTapRecognizer.enabled = false
         doubleTapRecognizer.enabled = true
-    }
-    
-    func makeKeyPressed(button: UIView) {
-        // change button label to pressed color
-        let buttonLabel = button.subviews[0] as! UILabel
-        // ignore the spacebar
-        if buttonLabel.text != " " {
-            if button.tag == LetterIdentifier.oddRowKey.rawValue {
-                buttonLabel.textColor = oddColumnPressedTextColor
-            } else if button.tag == LetterIdentifier.evenRowKey.rawValue {
-                buttonLabel.textColor = evenColumnPressedTextColor
-            }
-        }
-        // save new button as prevDisplayButton
-        prevDisplayButton = button
-    }
-    
-    func makePrevKeyUnpressed(lag: Bool) {
-        let button = prevDisplayButton
-        let buttonLabel = button?.subviews[0] as! UILabel
-        // ignore the spacebar
-        if buttonLabel.text != " " {
-            let changeAppearance: () -> Void = {
-                () -> Void in
-                if button!.tag == LetterIdentifier.oddRowKey.rawValue {
-                    buttonLabel.textColor = self.oddColumnUnpressedTextColor
-                } else if button!.tag == LetterIdentifier.evenRowKey.rawValue {
-                    buttonLabel.textColor = self.evenColumnUnpressedTextColor
-                }
-            }
-            if lag {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.06 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), changeAppearance)
-            } else {
-                changeAppearance()
-            }
-        }
-        // nil prev button
-        prevDisplayButton = nil
     }
     
     func doKeyFunction(key: UIView) {
@@ -526,17 +500,6 @@ class KeyboardViewController: UIInputViewController {
                 } else {
                     manager.goToPuncsPage()
                 }
-                    /*
-            case UtilKey.showCharsKey.rawValue:
-                if !manager.isNumbersPage() {
-                    manager.showHideLabels()
-                }
-                if manager.userDidHideLabels {
-                    manager.userDidHideLabels = false
-                } else {
-                    manager.userDidHideLabels = true
-                }
- */
             default:
                 return
             }
@@ -576,19 +539,25 @@ class KeyboardViewController: UIInputViewController {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesBegan(touches, withEvent: event)
+        
         // get view touch is in
-        let touchPoint = touches.first!.locationInView(inputView)
-        let touchView = view.hitTest(touchPoint, withEvent: nil)
+        let touchPoint = touches.first!.locationInView(view)
         firstTouchPoint = touchPoint
+        
+        // set values for doubleTapPeriod modifier
+        let viewArr = [utilRowView, bottomRowView, midRowView, topRowView, textRowView]
+        for (i, rowView) in viewArr.enumerate() {
+            if rowView.pointInside(touchPoint, withEvent: nil) {
+                print("inside" + String(i))
+                doubleTapPuncModifier = i
+            }
+        }
         
         // !!!! DEBUG
         print(firstTouchPoint)
         // !!!! DEBUG
         
-        // !!! some logic I haven't remembered why I am keeping 20160914
-        if prevDisplayButton != nil {
-        }
-        // !!!
+        let touchView = view.hitTest(touchPoint, withEvent: nil)
         
         // check for nil for safety
         if touchView != nil {
@@ -619,6 +588,7 @@ class KeyboardViewController: UIInputViewController {
                 if rawChar == " " {
                     isSpaceShift = true
                 }
+                
             }
         } else {
             self.prevButton = ""
@@ -731,8 +701,6 @@ class KeyboardViewController: UIInputViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        //self.view.translatesAutoresizingMaskIntoConstraints = false
-        ConstraintMaker.setWindowHeight(self.view)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -750,6 +718,8 @@ class KeyboardViewController: UIInputViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        //self.view.translatesAutoresizingMaskIntoConstraints = false
+        ConstraintMaker.setWindowHeight(self.view)
     }
     
     override func loadView() {

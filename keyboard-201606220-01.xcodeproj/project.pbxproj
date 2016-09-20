@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BF06DD181D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */; };
+		BF06DD191D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */; };
+		BF06DD1A1D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */; };
+		BF06DD1B1D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */; };
 		BF5CEAC81D1B38C20078C2D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */; };
 		BF5CEACA1D1B38C20078C2D1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */; };
 		BF5CEACD1D1B38C20078C2D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACB1D1B38C20078C2D1 /* Main.storyboard */; };
@@ -80,6 +84,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIResponderKeyboardCache.swift; sourceTree = SOURCE_ROOT; };
 		BF5CEAC41D1B38C20078C2D1 /* Doug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Doug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -161,6 +166,7 @@
 		BF5CEAC61D1B38C20078C2D1 /* keyboard-201606220-01 */ = {
 			isa = PBXGroup;
 			children = (
+				BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */,
 				BFDD06BA1D81344E0081D15A /* Doug.entitlements */,
 				BFF371EA1D7A974A00B68BDB /* TextAidProxy.swift */,
 				BFD23A5A1D6422B1003B1376 /* Appearance.swift */,
@@ -382,6 +388,7 @@
 			files = (
 				BFAF45BB1D8ACA8D00A19EF1 /* TutRunner.swift in Sources */,
 				BFD23A5B1D6422B1003B1376 /* Appearance.swift in Sources */,
+				BF06DD181D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */,
 				BF5CEACA1D1B38C20078C2D1 /* ViewController.swift in Sources */,
 				BFF371EB1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
 				BF5CEAC81D1B38C20078C2D1 /* AppDelegate.swift in Sources */,
@@ -400,6 +407,7 @@
 				BFCDD7FF1D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 				BFD23A5C1D6422B1003B1376 /* Appearance.swift in Sources */,
 				BFF371EC1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
+				BF06DD191D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +421,7 @@
 				BFCDD8001D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 				BFD23A5D1D6422B1003B1376 /* Appearance.swift in Sources */,
 				BFF371ED1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
+				BF06DD1A1D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +435,7 @@
 				BFCDD8011D4B246E00809A7B /* KeyboardManager.swift in Sources */,
 				BFD23A5E1D6422B1003B1376 /* Appearance.swift in Sources */,
 				BFF371EE1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
+				BF06DD1B1D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

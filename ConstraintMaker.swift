@@ -187,6 +187,8 @@ class ConstraintMaker {
     }
     
     static func setWindowHeight(view: UIView) {
-        view.heightAnchor.constraintEqualToConstant(270).active = true
+        let constraint = view.heightAnchor.constraintEqualToConstant(270)
+        constraint.priority = 999.0
+        constraint.active = true
     }
 }

@@ -67,8 +67,12 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "1"
+         BundleIdentifier = "com.boonbits.captio"
+         RemotePath = "/var/containers/Bundle/Application/A26CE698-D421-4E17-B5AE-538A8D6B57FA/Captio.app">
+      </RemoteRunnable>
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BF5CEAC31D1B38C20078C2D1"
@@ -76,7 +80,7 @@
             BlueprintName = "keyboard-201606220-01"
             ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
