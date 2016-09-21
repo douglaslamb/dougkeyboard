@@ -99,9 +99,14 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
-    static func addTextRowViewConstraints(textRowView: UIView, showCharsButton: UIView, tutButton: UIView) {
-        textRowView.subviews[0].rightAnchor.constraintEqualToAnchor(textRowView.centerXAnchor, constant: 20).active = true
-        textRowView.subviews[0].centerYAnchor.constraintEqualToAnchor(textRowView.centerYAnchor).active = true
+    static func addTextRowViewConstraints(textRowView: UIView, label: UILabel, labelMask: UIView, showCharsButton: UIView, tutButton: UIView) {
+        label.rightAnchor.constraintEqualToAnchor(textRowView.centerXAnchor, constant: 20).active = true
+        label.centerYAnchor.constraintEqualToAnchor(textRowView.centerYAnchor).active = true
+        
+        labelMask.leftAnchor.constraintEqualToAnchor(textRowView.leftAnchor).active = true
+        labelMask.bottomAnchor.constraintEqualToAnchor(textRowView.bottomAnchor).active = true
+        labelMask.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true
+        labelMask.widthAnchor.constraintEqualToConstant(30).active = true
         
         showCharsButton.rightAnchor.constraintEqualToAnchor(textRowView.rightAnchor).active = true
         showCharsButton.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true

@@ -26,6 +26,7 @@ class KeyboardViewController: UIInputViewController {
     var doubleTapRecognizer: UITapGestureRecognizer!
     var tutDoubleTapRecognizer: UITapGestureRecognizer!
     var showCharsDoubleTapRecognizer: UITapGestureRecognizer!
+    var spacebarTouchButton: UIView!
     
     // global vars
     var prevButton = ""
@@ -200,6 +201,14 @@ class KeyboardViewController: UIInputViewController {
         let rawTextProxy = textProxy as! TextAidProxy
         rawTextProxy.label = textAidLabel
         
+        // add labelMask to textRowView
+        
+        let labelMask = UIView()
+        labelMask.translatesAutoresizingMaskIntoConstraints = false
+        labelMask.userInteractionEnabled = false
+        labelMask.backgroundColor = defaultBackgroundColor
+        textRowView.addSubview(labelMask)
+        
         // add showchars button to textRowView
         let showCharsTouchButton = createBlankTouchButton()
         showCharsTouchButton.translatesAutoresizingMaskIntoConstraints = false
@@ -298,8 +307,9 @@ class KeyboardViewController: UIInputViewController {
         
         // spacebar
         
-        let spacebarTouchButton = createBlankTouchButton()
+        spacebarTouchButton = createBlankTouchButton()
         spacebarTouchButton.tag = 30    // to designate it as a text entering key
+        
         
         let spacebarKeyLabel = UILabel(frame: CGRectMake(10.0, 10.0, 60, 25))
         spacebarKeyLabel.text = " "
@@ -365,7 +375,7 @@ class KeyboardViewController: UIInputViewController {
         
         ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, verticalGuideViews: verticalGuideViews, topTouchButtons: topRowTouchButtons, midTouchButtons: midRowTouchButtons, bottomTouchButtons: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, betweenSpace: 0, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
         
-        ConstraintMaker.addTextRowViewConstraints(textRowView, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
+        ConstraintMaker.addTextRowViewConstraints(textRowView, label: textAidLabel, labelMask: labelMask, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
         
         // init tut runner
         tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, keyboardManager: manager, showCharsDoubleTapRecognizer: showCharsDoubleTapRecognizer)
@@ -394,15 +404,17 @@ class KeyboardViewController: UIInputViewController {
     
     func insertDoubleTapPeriod(sender: UITapGestureRecognizer) {
         let doubleTapPuncModifiers = [",", "'", "?", "!"]
-        var deleteTimes: Int
+        var deleteTimes: Int = 2
         var text: String
         
         // decide if a modifier is being pressed
         if doubleTapPuncModifier != nil {
-            deleteTimes = 3
             text = doubleTapPuncModifiers[doubleTapPuncModifier!]
+            // if touch is in textRow or not
+            if doubleTapPuncModifier != 3 {
+                deleteTimes = 3
+            }
         } else {
-            deleteTimes = 2
             text = "."
         }
         
@@ -412,6 +424,7 @@ class KeyboardViewController: UIInputViewController {
         }
         textProxy.insertText(text)
         isSpaceShift = false
+        disableTouch = true
     }
     
     func setupImageView(view: UIImageView) {
@@ -544,15 +557,14 @@ class KeyboardViewController: UIInputViewController {
         let touchPoint = touches.first!.locationInView(view)
         firstTouchPoint = touchPoint
         
-        // set values for doubleTapPeriod modifier
-        let viewArr = [utilRowView, bottomRowView, midRowView, topRowView, textRowView]
+        let viewArr = [bottomRowView, midRowView, topRowView, textRowView]
         for (i, rowView) in viewArr.enumerate() {
-            if rowView.pointInside(touchPoint, withEvent: nil) {
+            if rowView.pointInside(view.convertPoint(touchPoint, toView: rowView), withEvent: nil) {
                 print("inside" + String(i))
                 doubleTapPuncModifier = i
             }
         }
-        
+    
         // !!!! DEBUG
         print(firstTouchPoint)
         // !!!! DEBUG
@@ -678,6 +690,11 @@ class KeyboardViewController: UIInputViewController {
         if isSpaceShift {
             isSpaceShift = false
         }
+        // set doubleTapPuncModifier to nil if touch ends outside spacebar
+        let touchPoint = touches.first?.locationInView(spacebarTouchButton)
+        if !spacebarTouchButton.pointInside(touchPoint!, withEvent: nil) {
+            doubleTapPuncModifier = nil
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -701,6 +718,8 @@ class KeyboardViewController: UIInputViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        //self.view.translatesAutoresizingMaskIntoConstraints = false
+        ConstraintMaker.setWindowHeight(self.view)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -718,12 +737,10 @@ class KeyboardViewController: UIInputViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        //self.view.translatesAutoresizingMaskIntoConstraints = false
-        ConstraintMaker.setWindowHeight(self.view)
     }
     
     override func loadView() {
         super.loadView()
-        textProxy = TextAidProxy(inDocumentProxy: textDocumentProxy)
+        textProxy = TextAidProxy(documentProxy: textDocumentProxy)
     }
 }
