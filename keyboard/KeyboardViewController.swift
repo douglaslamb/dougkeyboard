@@ -192,13 +192,12 @@ class KeyboardViewController: UIInputViewController {
         manager.letterPageChars = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "A",
                                    "S", "D", "F", "G", "H", "J", "K", "P", "Z", "X",
                                    "C", "V", "B", "N", "M", "L"]
+        /*
         manager.numberPageChars = ["-", "/", ":", "1", "2", "3", ";", "(", ")",
                                    "!", "'", "\"", "4", "5", "6", "@", "$", "&",
                                    ".", ",", "?", "7", "8", "9", "0", ""]
-        
-        manager.numberPageChars = ["-", "/", ":", "1", "2", "3", ";", "(", ")",
-                                   "!", "'", "\"", "4", "5", "6", "@", "$", "&",
-                                   ".", ",", "?", "7", "8", "9", "0", ""]
+ */
+        manager.numberPageChars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "/", ":", ";", "(", ")", "$", "&", "0", ".", ",", "?", "!", "'", "\"", "@", ""]
  
         manager.puncPageChars = ["[", "]", "{", "}", "#", "%", "^", "*", bullet, "_", "\\", "|", "~", "<", ">", euro, pound, yen, ".", ",", "?", "!", "'", "+", "=", ""]
         
@@ -435,10 +434,24 @@ class KeyboardViewController: UIInputViewController {
         
         // do startup hiding
         manager.loadStart()
-        if self.textDocumentProxy.keyboardType == UIKeyboardType.NumberPad {
+        
+        
+        // go to numberpage if necessary
+        let keyboardType = textDocumentProxy.keyboardType
+        print(keyboardType!.rawValue)
+        if keyboardType == UIKeyboardType.NumberPad || keyboardType == UIKeyboardType.PhonePad || keyboardType == UIKeyboardType.NamePhonePad {
             manager.goToNumbersPage()
         }
+        /*
+        switch keyboardType {
+        case UIKeyboardType.NumberPad, UIKeyboardType.phonePad, UIKeyboardType.asciiCapableNumberPad, UIKeyboardType.namePhonePad:
+            manager.goToNumbersPage()
+        default:
+            return
+        }
+        */
     }
+    
     
     func startStopTut(sender: UITapGestureRecognizer) {
         if tutRunner.isRunning() {

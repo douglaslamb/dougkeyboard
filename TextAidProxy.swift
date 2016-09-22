@@ -26,10 +26,10 @@ class TextAidProxy: NSObject, UIKeyInput {
         // send text to tut or docProxy
         if !(tutRunner!.isRunning()) {
             documentProxy.insertText(text)
+            refresh()
         } else {
             tutRunner!.testText(text)
         }
-        refresh()
     }
     
     @objc func deleteBackward() {
