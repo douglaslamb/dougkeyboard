@@ -48,11 +48,14 @@ class KeyboardViewController: UIInputViewController {
     let evenColumnUnpressedTextColor = UIColor.init(white: 0.9, alpha: 1)
     let evenColumnPressedTextColor = UIColor.init(white: 0.0, alpha: 1)
     //20160909 let oddColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
-    let oddColumnUnpressedTextColor = UIColor.init(white: 0.3, alpha: 1)
+    let oddColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
     let oddColumnPressedTextColor = UIColor.init(white: 0.2, alpha: 1)
     // 20160909 let evenGuideColor = UIColor.init(white: 0.5, alpha: 1)
     let evenGuideColor = UIColor.init(white: 0.3, alpha: 1)
     let oddGuideColor = UIColor.whiteColor()
+    
+    // icon colors
+    let defaultIconStrokeColor = UIColor.init(white: 0.9, alpha: 1)
     
     // guide colors
     let middleGuideColor = UIColor.init(white: 0.7, alpha: 1)
@@ -117,10 +120,9 @@ class KeyboardViewController: UIInputViewController {
         let topRowTouchButtons = createBlankTouchButtonsWithLabels(9)
         let midRowTouchButtons = createBlankTouchButtonsWithLabels(9)
         var bottomRowTouchButtons = createBlankTouchButtonsWithLabels(8)
+       
         
-        // put touch buttons in manager for label switching
-        manager.charTouchButtons = topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons
-        
+        /*
         // !!!!!!!!!!!!!!!!!!!!!!!!! CHECKERBOARD
         // hide guides first
         for view in manager.guides {
@@ -148,11 +150,12 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         // !!!!!!!!!!!!!!!!!!!!!!!!!
+        */
         
         // add backspace key to bottom row
         let backspaceImage = UIImageView(image: UIImage(named: "backspaceOff"))
         backspaceImage.image = backspaceImage.image?.imageWithRenderingMode(.AlwaysTemplate)
-        backspaceImage.tintColor = evenColumnUnpressedTextColor
+        backspaceImage.tintColor = defaultIconStrokeColor
         setupImageView(backspaceImage)
         let backspaceTouchKey = UIView()
         backspaceTouchKey.addSubview(backspaceImage)
@@ -166,12 +169,15 @@ class KeyboardViewController: UIInputViewController {
         let backspaceLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleBackspaceLongPress:"))
         backspaceTouchKey.addGestureRecognizer(backspaceLongPressRecognizer)
         
+        // put touch buttons in manager for label switching
+        manager.charTouchButtons = topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons 
+        
         // put touch button labels in manager for label hiding
-        var charTouchButtonLabels = [UIView]()
-        for view in manager.charTouchButtons {
-            charTouchButtonLabels.append(view.subviews[0])
+        var charTouchButtonLabels = [UILabel]()
+        for view in manager.charTouchButtons[0..<manager.charTouchButtons.count - 1] {
+            charTouchButtonLabels.append(view.subviews[0] as! UILabel)
         }
-        manager.charTouchButtonLabels = charTouchButtonLabels + [backspaceImage]
+        manager.charTouchButtonLabels = charTouchButtonLabels 
         
         // add touchButtons to rowViews
         addSubviews(topRowView, subviews: topRowTouchButtons)
@@ -186,6 +192,10 @@ class KeyboardViewController: UIInputViewController {
         manager.letterPageChars = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "A",
                                    "S", "D", "F", "G", "H", "J", "K", "P", "Z", "X",
                                    "C", "V", "B", "N", "M", "L"]
+        manager.numberPageChars = ["-", "/", ":", "1", "2", "3", ";", "(", ")",
+                                   "!", "'", "\"", "4", "5", "6", "@", "$", "&",
+                                   ".", ",", "?", "7", "8", "9", "0", ""]
+        
         manager.numberPageChars = ["-", "/", ":", "1", "2", "3", ";", "(", ")",
                                    "!", "'", "\"", "4", "5", "6", "@", "$", "&",
                                    ".", ",", "?", "7", "8", "9", "0", ""]
@@ -347,6 +357,48 @@ class KeyboardViewController: UIInputViewController {
         
         for button in utilRowTouchButtons {
             utilRowView.addSubview(button)
+        }
+        
+         
+        // !!!!!!!!!!!!!!!!!!!!!!!!! CASCADING GUIDES
+        // hide guides first
+        for view in manager.guides {
+            view.hidden = true
+        }
+        
+        for (i, button) in manager.charTouchButtons.enumerate() {
+            let yVal = i / 9
+            let xVal = i % 9
+            let topRowEvenColor = UIColor.init(white: 0.45, alpha: 1)
+            let midRowEvenColor = UIColor.init(white: 0.35, alpha: 1)
+            let bottomRowEvenColor = UIColor.init(white: 0.2, alpha: 1)
+            let evenColors = [topRowEvenColor, midRowEvenColor, bottomRowEvenColor]
+            
+            let topRowOddColor = UIColor.init(white: 1.0, alpha: 1)
+            let midRowOddColor = UIColor.init(white: 1.0, alpha: 1)
+            let bottomRowOddColor = UIColor.init(white: 1.0, alpha: 1)
+            let oddColors = [topRowOddColor, midRowOddColor, bottomRowOddColor]
+            
+            // !!!!!!!!!!!!!!! LOGARITHMIC FONT SIZES
+             
+            let baseFontSize: CGFloat = 12
+            let xLoc = CGFloat(abs(xVal - 4))
+            let yLoc = CGFloat(yVal + 1)
+            let scaleFactor = CGFloat(1.12)
+            let distance: CGFloat = sqrt(pow(2.0, xLoc) + pow(2.0, yLoc))
+            let thisLabelFontSize = pow(scaleFactor, distance) * baseFontSize
+            
+            let label = button.subviews[0] as? UILabel
+            if label != nil {
+                label!.font = label!.font.fontWithSize(thisLabelFontSize)
+            }
+            // !!!!!!!!!!!!!!!!
+            
+            if xVal % 2 == 0 {
+                button.backgroundColor = evenColors[yVal]
+            } else {
+                button.backgroundColor = oddColors[yVal]
+            }
         }
         
         // set manager userDidHideLabels from defaults
@@ -609,8 +661,8 @@ class KeyboardViewController: UIInputViewController {
    
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesMoved(touches, withEvent: event)
-        // if touch is disabled return and do nothing
-        if self.disableTouch {
+        // if touch is disabled or if isSpaceShift return and do nothing
+        if self.disableTouch || isSpaceShift {
             return
         }
         
@@ -737,6 +789,8 @@ class KeyboardViewController: UIInputViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        let rawTextAidProxy = textProxy as! TextAidProxy
+        rawTextAidProxy.refresh()
     }
     
     override func loadView() {

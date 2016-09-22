@@ -11,7 +11,7 @@ import UIKit
 class KeyboardManager {
     
     var charTouchButtons: [UIView]!
-    var charTouchButtonLabels: [UIView]!
+    var charTouchButtonLabels: [UILabel]!
     
     var letterPageChars: [String]!
     var numberPageChars: [String]!
@@ -34,18 +34,17 @@ class KeyboardManager {
     var userDidHideLabels = false
     
     func isNumbersPage() -> Bool {
-        let label = charTouchButtons[0].subviews[0] as! UILabel
+        let label = charTouchButtonLabels[0]
         return label.text != "Q"
     }
     
     func isPuncsPage() -> Bool {
-        let label = charTouchButtons[0].subviews[0] as! UILabel
+        let label = charTouchButtonLabels[0]
         return label.text == "["
     }
     
     func changeLabelsText(chars: [String]) {
-        for (i, button) in charTouchButtons.enumerate() {
-            let label = button.subviews[0] as! UILabel
+        for (i, label) in charTouchButtonLabels.enumerate() {
             label.text = chars[i]
         }
     }

@@ -100,7 +100,8 @@ class ConstraintMaker {
     }
     
     static func addTextRowViewConstraints(textRowView: UIView, label: UILabel, labelMask: UIView, showCharsButton: UIView, tutButton: UIView) {
-        label.rightAnchor.constraintEqualToAnchor(textRowView.centerXAnchor, constant: 20).active = true
+        let labelOffset: CGFloat = 7
+        label.rightAnchor.constraintEqualToAnchor(textRowView.centerXAnchor, constant: labelOffset).active = true
         label.centerYAnchor.constraintEqualToAnchor(textRowView.centerYAnchor).active = true
         
         labelMask.leftAnchor.constraintEqualToAnchor(textRowView.leftAnchor).active = true
