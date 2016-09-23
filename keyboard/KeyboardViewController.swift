@@ -665,7 +665,6 @@ class KeyboardViewController: UIInputViewController {
                 if rawChar == " " {
                     isSpaceShift = true
                 }
-                
             }
         } else {
             self.prevButton = ""
@@ -776,9 +775,7 @@ class KeyboardViewController: UIInputViewController {
         super.textDidChange(textInput)
         // The app has just changed the document's contents, the document context has been updated.
         let rawTextAidProxy = textProxy as! TextAidProxy
-        if !textDocumentProxy.hasText() {
-            rawTextAidProxy.clear()
-        }
+        rawTextAidProxy.refresh()
     }
     
     override func viewWillAppear(animated: Bool) {
