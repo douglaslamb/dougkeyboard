@@ -26,10 +26,12 @@ class TutRunner {
     let label: UILabel
     let manager: KeyboardManager
     let showCharsDoubleTapRecognizer: UIGestureRecognizer
+    let textDocumentProxy: UITextDocumentProxy
     
     // constants
     let kbIndexes: [Int] = [9, 22, 20, 11, 2, 12, 13, 14, 7, 15, 16, 25, 24, 23, 8, 17, 0, 3, 10, 4, 6, 21, 1, 19, 5, 18]
     let highlightColor: UIColor = UIColor.init(white: 0.8, alpha: 1.0)
+    let goodjobMessage: String = "Good job!"
     
     // stateful vars
     var currChar: String?
@@ -40,50 +42,65 @@ class TutRunner {
     var isTutRunning: Bool = false
     var currState: TutState?
     
-    init(buttons: [UIView], label: UILabel, keyboardManager: KeyboardManager, showCharsDoubleTapRecognizer: UIGestureRecognizer) {
+    init(buttons: [UIView], label: UILabel, keyboardManager: KeyboardManager, showCharsDoubleTapRecognizer: UIGestureRecognizer, textDocumentProxy: UITextDocumentProxy) {
         self.buttons = buttons
         self.label = label
         manager = keyboardManager
         self.showCharsDoubleTapRecognizer = showCharsDoubleTapRecognizer
-       
+        self.textDocumentProxy = textDocumentProxy
     }
     
     func loadNextState() {
-        print("loadNextState")
-        // unhighlightbuttons if necessary
-        if buttonsToUnhighlight != nil {
-            unhighlightButtons()
-        }
-        
-        // load next state into global
-        let state = tutStates.removeFirst()
-        currState = state
-        
-        // set message to user
-        label.text = state.message
-        
-        // create and store buttons to unhighlight
-        if state.highlightKeys != nil {
-            var buttons = [ButtonToUnhighlight]()
-            for button in state.highlightKeys! {
-                let buttonStruct = ButtonToUnhighlight(button: button, unhighlightColor: button.backgroundColor)
-                buttons.append(buttonStruct)
-                button.backgroundColor = highlightColor
+        if tutStates.count == 0 {
+            end()
+        } else {
+            // delete previous message in textDocumentProxy
+            if currState != nil {
+                for i in 0..<currState!.message!.characters.count {
+                    textDocumentProxy.deleteBackward()
+                }
             }
-            buttonsToUnhighlight = buttons
-        } 
+            
+            unhighlightButtons()
+            
+            // load next state into global
+            let state = tutStates.removeFirst()
+            currState = state
+            
+            // set message to user
+            textDocumentProxy.insertText((state.message)!)
+            
+            // create and store buttons to unhighlight
+            if state.highlightKeys != nil {
+                var buttons = [ButtonToUnhighlight]()
+                for button in state.highlightKeys! {
+                    let buttonStruct = ButtonToUnhighlight(button: button, unhighlightColor: button.backgroundColor)
+                    buttons.append(buttonStruct)
+                    button.backgroundColor = highlightColor
+                }
+                buttonsToUnhighlight = buttons
+            }
+        }
     }
     
     func unhighlightButtons() {
-        for button in buttonsToUnhighlight! {
-            button.button?.backgroundColor = button.unhighlightColor
+        if buttonsToUnhighlight != nil {
+            for button in buttonsToUnhighlight! {
+                button.button?.backgroundColor = button.unhighlightColor
+            }
+            buttonsToUnhighlight = nil
         }
-        buttonsToUnhighlight = nil
     }
     
     func run() {
         isTutRunning = true
         // constants
+        
+        // clear label
+        label.text = ""
+        
+        // create space in document proxy
+        textDocumentProxy.insertText(" ")
         
         // define uppercase chars array
         var upperCaseChars = [String]()
@@ -93,54 +110,51 @@ class TutRunner {
         
         // fill tutstate array
         tutStates = [
-            TutState(requiredCharacters: nil, message: "Tutorial. Press any key.", highlightKeys: nil),
-            TutState(requiredCharacters: upperCaseChars, message: "Hold space for capitalization.", highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: "Good job!", highlightKeys: nil),
+            TutState(requiredCharacters: nil, message: "Tutorial. Press any letter key.", highlightKeys: nil),
+            TutState(requiredCharacters: upperCaseChars, message: "Hold space and type for caps.", highlightKeys: nil),
+            TutState(requiredCharacters: nil, message: goodjobMessage, highlightKeys: nil),
             TutState(requiredCharacters: ["."], message: "Double tap space for period.", highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: "Good job!", highlightKeys: nil),
-            TutState(requiredCharacters: [","], message: "Hold first row and double tap space for comma.", highlightKeys: nil),
-            TutState(requiredCharacters: ["'"], message: "Hold second row and double tap space for apostrophe.", highlightKeys: nil),
-            TutState(requiredCharacters: ["?"], message: "Hold third row and double tap space for question mark.", highlightKeys: nil),
+            TutState(requiredCharacters: nil, message: goodjobMessage, highlightKeys: nil),
+            TutState(requiredCharacters: [","], message: "Hold first row and double tap space for comma.", highlightKeys: Array(buttons[18..<26])),
+            TutState(requiredCharacters: ["'"], message: "Hold second row and double tap space for apostrophe.", highlightKeys: Array(buttons[9..<18])),
+            TutState(requiredCharacters: ["?"], message: "Hold third row and double tap space for question mark.", highlightKeys: Array(buttons[0..<9])),
             TutState(requiredCharacters: ["!"], message: "Hold top row and double tap space for exclamation point.", highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: "Good job!", highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: "Practice with hidden labels.", highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: "Eyes here.", highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: "Good job!", highlightKeys: nil),
+            TutState(requiredCharacters: nil, message: goodjobMessage, highlightKeys: nil),
+            TutState(requiredCharacters: nil, message: "I love you!", highlightKeys: nil)
         ]
         
         loadNextState()
         
-        //let labelText = "Eyes here."
-        //label.text = labelText
-        
         if manager.isNumbersPage() {
             manager.goToLettersPage()
         }
-        /*
-        if !(manager.userDidHideLabels) {
-            manager.showHideLabels()
-        }
- */
+        
         showCharsDoubleTapRecognizer.enabled = false
-        //goToNextButton()
     }
     
     func end() {
-        isTutRunning = false
+        // delete previous message in textDocumentProxy
+        if currState != nil {
+            for i in 0..<currState!.message!.characters.count {
+                textDocumentProxy.deleteBackward()
+            }
+        }
+        
         if isAlphaPracRunning() {
             unhighlightButton(buttons[kbIndexes[nextAlphabetIndex - 1]])
         } else {
             unhighlightButtons()
         }
-        if !(manager.userDidHideLabels) {
-            manager.showHideLabels()
-        }
-        showCharsDoubleTapRecognizer.enabled = true
         
         // reset label and vars
         label.text = ""
         currChar = nil
+        currState = nil
         nextAlphabetIndex = 0
+        isTutRunning = false
+        
+        // renable buttons
+        showCharsDoubleTapRecognizer.enabled = true
     }
     
     func goToNextButton() {
@@ -175,8 +189,17 @@ class TutRunner {
         }
     }
     
+    func insertTextInLabel(text: String) {
+        if label.text != nil {
+            label.text = label.text! + text
+        } else {
+            label.text = text
+        }
+    }
+    
     func testText(text: String) {
-        print("textText")
+        print("testText")
+        insertTextInLabel(text)
         if isAlphaPracRunning() {
             if text.uppercaseString == currChar {
                 goToNextButton()

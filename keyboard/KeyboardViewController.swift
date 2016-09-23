@@ -26,6 +26,7 @@ class KeyboardViewController: UIInputViewController {
     var doubleTapRecognizer: UITapGestureRecognizer!
     var tutDoubleTapRecognizer: UITapGestureRecognizer!
     var showCharsDoubleTapRecognizer: UITapGestureRecognizer!
+    var nextKBDoubleTapRecognizer: UITapGestureRecognizer!
     var spacebarTouchButton: UIView!
     
     // global vars
@@ -309,6 +310,12 @@ class KeyboardViewController: UIInputViewController {
         setupImageView(nextKeyboardImageView)
         nextKeyboardTouchButton.tag = UtilKey.nextKeyboardKey.rawValue
         
+        // add double tap recognizer
+        nextKBDoubleTapRecognizer = UITapGestureRecognizer(target: self, action: Selector("advanceToNextInputMode"))
+        nextKBDoubleTapRecognizer.numberOfTapsRequired = 2
+        nextKBDoubleTapRecognizer.delaysTouchesEnded = false
+        nextKeyboardTouchButton.addGestureRecognizer(nextKBDoubleTapRecognizer)
+        
         nextKeyboardTouchButton.addSubview(nextKeyboardImageView)
         ConstraintMaker.centerViewInView(nextKeyboardTouchButton, subview: nextKeyboardImageView)
         
@@ -429,7 +436,7 @@ class KeyboardViewController: UIInputViewController {
         ConstraintMaker.addTextRowViewConstraints(textRowView, label: textAidLabel, labelMask: labelMask, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
         
         // init tut runner
-        tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, keyboardManager: manager, showCharsDoubleTapRecognizer: showCharsDoubleTapRecognizer)
+        tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, keyboardManager: manager, showCharsDoubleTapRecognizer: showCharsDoubleTapRecognizer, textDocumentProxy: textDocumentProxy)
         rawTextProxy.tutRunner = tutRunner
         
         // do startup hiding
@@ -553,8 +560,8 @@ class KeyboardViewController: UIInputViewController {
         if !(tutRunner.isRunning()) {
                 let tag = key.tag
                 switch tag {
-            case UtilKey.nextKeyboardKey.rawValue:
-                self.advanceToNextInputMode()
+            //case UtilKey.nextKeyboardKey.rawValue:
+                //self.advanceToNextInputMode()
             case UtilKey.shiftKey.rawValue:
                 if manager.isShift {
                     manager.shiftOff()
@@ -625,13 +632,12 @@ class KeyboardViewController: UIInputViewController {
         let viewArr = [bottomRowView, midRowView, topRowView, textRowView]
         for (i, rowView) in viewArr.enumerate() {
             if rowView.pointInside(view.convertPoint(touchPoint, toView: rowView), withEvent: nil) {
-                print("inside" + String(i))
                 doubleTapPuncModifier = i
             }
         }
     
         // !!!! DEBUG
-        print(firstTouchPoint)
+        print(CACurrentMediaTime())
         // !!!! DEBUG
         
         let touchView = view.hitTest(touchPoint, withEvent: nil)
@@ -787,10 +793,6 @@ class KeyboardViewController: UIInputViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // end tutorial if running
-        if tutRunner.isRunning() {
-            tutRunner.end()
-        }
         
         // save settings
         let defaults = NSUserDefaults.standardUserDefaults()
@@ -806,5 +808,13 @@ class KeyboardViewController: UIInputViewController {
     override func loadView() {
         super.loadView()
         textProxy = TextAidProxy(documentProxy: textDocumentProxy)
+    }
+    
+    override func advanceToNextInputMode() {
+        super.advanceToNextInputMode()
+        // end tutorial if running
+        if tutRunner.isRunning() {
+            tutRunner.end()
+        }
     }
 }

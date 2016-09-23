@@ -33,8 +33,14 @@ class TextAidProxy: NSObject, UIKeyInput {
     }
     
     @objc func deleteBackward() {
-        documentProxy.deleteBackward()
-        refresh()
+        if tutRunner.isRunning() {
+            if label.text != nil {
+                label.text = String(label.text!.characters.dropLast())
+            }
+        } else {
+            documentProxy.deleteBackward()
+            refresh()
+        }
     }
 
     @objc func hasText() -> Bool {
@@ -42,16 +48,19 @@ class TextAidProxy: NSObject, UIKeyInput {
     }
  
     func clear() {
+        print("textAidProxy.clear")
         label.text = ""
     }
     
     func refresh() {
-        let displayText = documentProxy.documentContextBeforeInput
-        // short circuit eval
-        if displayText == nil || displayText!.characters.last == "\n" {
-            clear()
-        } else {
-            label.text = displayText!
+        if !tutRunner.isRunning() {
+            let displayText = documentProxy.documentContextBeforeInput
+            // short circuit eval
+            if displayText == nil || displayText!.characters.last == "\n" {
+                clear()
+            } else {
+                label.text = displayText!
+            }
         }
     }
 }
