@@ -121,7 +121,6 @@ class KeyboardViewController: UIInputViewController {
         let topRowTouchButtons = createBlankTouchButtonsWithLabels(9)
         let midRowTouchButtons = createBlankTouchButtonsWithLabels(9)
         var bottomRowTouchButtons = createBlankTouchButtonsWithLabels(8)
-       
         
         /*
         // !!!!!!!!!!!!!!!!!!!!!!!!! CHECKERBOARD
@@ -230,7 +229,7 @@ class KeyboardViewController: UIInputViewController {
         ConstraintMaker.centerViewInView(showCharsTouchButton, subview: showCharsImageView)
         textRowView.addSubview(showCharsTouchButton)
         // add double tap recognizer
-        showCharsDoubleTapRecognizer = UITapGestureRecognizer(target: self, action: Selector("userShowHideLabels:"))
+        showCharsDoubleTapRecognizer = UITapGestureRecognizer(target: self, action: Selector("userCycleLabelsDisplayMode:"))
         showCharsDoubleTapRecognizer.numberOfTapsRequired = 2
         showCharsDoubleTapRecognizer.delaysTouchesEnded = false
         showCharsTouchButton.addGestureRecognizer(showCharsDoubleTapRecognizer)
@@ -365,7 +364,6 @@ class KeyboardViewController: UIInputViewController {
             utilRowView.addSubview(button)
         }
         
-         
         // !!!!!!!!!!!!!!!!!!!!!!!!! CASCADING GUIDES
         // hide guides first
         for view in manager.guides {
@@ -409,9 +407,13 @@ class KeyboardViewController: UIInputViewController {
         
         // set manager userDidHideLabels from defaults
         let defaults = NSUserDefaults.standardUserDefaults()
+        // !!! LEGACY 20160924
+        /*
         if defaults.boolForKey("userDidHideLabels") {
             manager.userDidHideLabels = true
         }
+        */
+        manager.labelsDisplayMode = defaults.integerForKey("labelsDisplayMode")
         
         // add constraints for rows in superview
         var rows = [[textRowView], [self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
@@ -441,7 +443,6 @@ class KeyboardViewController: UIInputViewController {
         
         // do startup hiding
         manager.loadStart()
-        
         
         // go to numberpage if necessary
         let keyboardType = textDocumentProxy.keyboardType
@@ -734,7 +735,11 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
-    func userShowHideLabels(sender: UIGestureRecognizer) {
+    func userCycleLabelsDisplayMode(sender: UIGestureRecognizer) {
+        manager.cycleLabelsDisplayMode()
+        
+        // !!! LEGACY 
+        /*
         if !manager.isNumbersPage() {
             manager.showHideLabels()
         }
@@ -743,6 +748,8 @@ class KeyboardViewController: UIInputViewController {
         } else {
             manager.userDidHideLabels = true
         }
+        */
+        // !!!
     }
    
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -793,10 +800,11 @@ class KeyboardViewController: UIInputViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        
         // save settings
         let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setBool(manager.userDidHideLabels, forKey: "userDidHideLabels")
+        defaults.setInteger(manager.labelsDisplayMode, forKey: "labelsDisplayMode")
+        
+        // LEGACY 20160924 defaults.setBool(manager.userDidHideLabels, forKey: "userDidHideLabels")
     }
     
     override func viewDidAppear(animated: Bool) {

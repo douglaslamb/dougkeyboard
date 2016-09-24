@@ -10,6 +10,20 @@ import UIKit
 
 class KeyboardManager {
     
+    enum LabelsDisplayMode: Int {
+        case lowContrast = 0, highContrast, hidden
+    }
+    
+    struct LabelColorScheme {
+        
+        let evenColumn, oddColumn: UIColor
+        
+        init (evenColumnWhite: CGFloat, oddColumnWhite: CGFloat) {
+            self.evenColumn = UIColor.init(white: evenColumnWhite, alpha: 1)
+            self.oddColumn = UIColor.init(white: oddColumnWhite, alpha: 1)
+        }
+    }
+    
     var charTouchButtons: [UIView]!
     var charTouchButtonLabels: [UILabel]!
     
@@ -17,7 +31,6 @@ class KeyboardManager {
     var numberPageChars: [String]!
     var puncPageChars: [String]!
     
-    var isShift: Bool = false
     
     var numbersKeyLabel: UILabel!
     var numbersPuncKeyLabel: UILabel!
@@ -31,7 +44,58 @@ class KeyboardManager {
     var guides: [UIView]!
     
     // stateful vars
+    var isShift: Bool = false
     var userDidHideLabels = false
+    var labelsDisplayMode = 0
+    
+    // constants
+    let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnWhite: 0.4, oddColumnWhite: 0.7), LabelColorScheme(evenColumnWhite: 0.9, oddColumnWhite: 0.2)]
+    
+    func loadStart() {
+        changeLabelsText(letterPageChars)
+        // put correct label on numbersKey
+        numbersKeyLabel.text = "123"
+        numbersPuncKeyLabel.hidden = true
+        shiftKeyImageView.hidden = false
+        
+        // change tag
+        shiftOrNumbersPuncTouchButton.tag = shiftKeyTag
+        
+        /* LEGACY
+        // hide labels if needed
+        if userDidHideLabels {
+            showHideLabels()
+        }
+        */
+        
+        setLabelsColor()
+    }
+    
+    func cycleLabelsDisplayMode() {
+        // increment labelDisplayMode and divide so it wraps
+        labelsDisplayMode = (labelsDisplayMode + 1) % 3
+        setLabelsColor()
+    }
+    
+    func setLabelsColor() {
+        for (i, label) in charTouchButtonLabels.enumerate() {
+            
+            // if labelsDisplay mode is not hidden
+            if labelsDisplayMode != LabelsDisplayMode.hidden.rawValue {
+                
+                // set even and odd text row columns
+                // to labelColorSchemes values at labelDisplayMode
+                if i % 9 % 2 == 0 {
+                    label.textColor = labelColorSchemes[labelsDisplayMode].evenColumn
+                } else {
+                    label.textColor = labelColorSchemes[labelsDisplayMode].oddColumn
+                }
+            } else {
+                // else hide label
+                label.hidden = true
+            }
+        } 
+    }
     
     func isNumbersPage() -> Bool {
         let label = charTouchButtonLabels[0]
@@ -75,20 +139,7 @@ class KeyboardManager {
         shiftOff()
         loadStart()
     }
-    
-    func loadStart() {
-        changeLabelsText(letterPageChars)
-        // put correct label on numbersKey
-        numbersKeyLabel.text = "123"
-        numbersPuncKeyLabel.hidden = true
-        shiftKeyImageView.hidden = false
-        // change tag
-        shiftOrNumbersPuncTouchButton.tag = shiftKeyTag
-        // hide labels if needed
-        if userDidHideLabels {
-            showHideLabels()
-        }
-    }
+   
     
     func shiftOn() {
         isShift = true
