@@ -49,7 +49,8 @@ class KeyboardManager {
     var labelsDisplayMode = 0
     
     // constants
-    let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnWhite: 0.4, oddColumnWhite: 0.7), LabelColorScheme(evenColumnWhite: 0.9, oddColumnWhite: 0.2)]
+    // first scheme in array is low contrast. second is high
+    let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnWhite: 0.6, oddColumnWhite: 0.7), LabelColorScheme(evenColumnWhite: 1.0, oddColumnWhite: 0.0)]
     
     func loadStart() {
         changeLabelsText(letterPageChars)
@@ -61,18 +62,12 @@ class KeyboardManager {
         // change tag
         shiftOrNumbersPuncTouchButton.tag = shiftKeyTag
         
-        /* LEGACY
-        // hide labels if needed
-        if userDidHideLabels {
-            showHideLabels()
-        }
-        */
-        
         setLabelsColor()
     }
     
     func cycleLabelsDisplayMode() {
         // increment labelDisplayMode and divide so it wraps
+        print("manager.cycleLabels")
         labelsDisplayMode = (labelsDisplayMode + 1) % 3
         setLabelsColor()
     }
@@ -82,6 +77,7 @@ class KeyboardManager {
             
             // if labelsDisplay mode is not hidden
             if labelsDisplayMode != LabelsDisplayMode.hidden.rawValue {
+                label.hidden = false
                 
                 // set even and odd text row columns
                 // to labelColorSchemes values at labelDisplayMode
@@ -167,4 +163,3 @@ class KeyboardManager {
         return charTouchButtonLabels[0].hidden
     }
 }
-

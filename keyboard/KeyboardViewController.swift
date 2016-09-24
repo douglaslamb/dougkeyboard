@@ -55,8 +55,17 @@ class KeyboardViewController: UIInputViewController {
     let evenGuideColor = UIColor.init(white: 0.3, alpha: 1)
     let oddGuideColor = UIColor.whiteColor()
     
+    // guide colors
+    let topRowEvenColor = UIColor.init(white: 0.45, alpha: 1)
+    let midRowEvenColor = UIColor.init(white: 0.35, alpha: 1)
+    let bottomRowEvenColor = UIColor.init(white: 0.2, alpha: 1)
+    let topRowOddColor = UIColor.init(white: 1.0, alpha: 1)
+    let midRowOddColor = UIColor.init(white: 1.0, alpha: 1)
+    let bottomRowOddColor = UIColor.init(white: 1.0, alpha: 1)
+    
     // icon colors
-    let defaultIconStrokeColor = UIColor.init(white: 0.9, alpha: 1)
+    let negativeIconsColor = UIColor.init(white: 0.9, alpha: 1)
+    let defaultIconsColor = UIColor.init(white: 0.0, alpha: 1)
     
     // guide colors
     let middleGuideColor = UIColor.init(white: 0.7, alpha: 1)
@@ -122,40 +131,10 @@ class KeyboardViewController: UIInputViewController {
         let midRowTouchButtons = createBlankTouchButtonsWithLabels(9)
         var bottomRowTouchButtons = createBlankTouchButtonsWithLabels(8)
         
-        /*
-        // !!!!!!!!!!!!!!!!!!!!!!!!! CHECKERBOARD
-        // hide guides first
-        for view in manager.guides {
-            view.hidden = true
-        }
-        
-        for (i, button) in manager.charTouchButtons.enumerate() {
-            let label = button.subviews[0] as! UILabel
-            if i % 2 == 0 {
-                button.backgroundColor = UIColor.whiteColor()
-                label.textColor = UIColor.init(white: 0.4, alpha: 1)
-            } else {
-                var intVal = 7 - abs((i % 9) - 4)
-                if i > 16 {
-                    intVal = intVal - 1
-                }
-                if i < 9 {
-                    intVal = intVal + 1
-                }
-                var textVal = intVal + 6
-                let buttonColor = UIColor.init(white: CGFloat(intVal) * 0.1, alpha: 1)
-                let textColor = UIColor.init(white: CGFloat(textVal) * 0.1, alpha: 1)
-                button.backgroundColor = buttonColor
-                label.textColor = textColor
-            }
-        }
-        // !!!!!!!!!!!!!!!!!!!!!!!!!
-        */
-        
         // add backspace key to bottom row
         let backspaceImage = UIImageView(image: UIImage(named: "backspaceOff"))
         backspaceImage.image = backspaceImage.image?.imageWithRenderingMode(.AlwaysTemplate)
-        backspaceImage.tintColor = defaultIconStrokeColor
+        backspaceImage.tintColor = negativeIconsColor
         setupImageView(backspaceImage)
         let backspaceTouchKey = UIView()
         backspaceTouchKey.addSubview(backspaceImage)
@@ -211,19 +190,33 @@ class KeyboardViewController: UIInputViewController {
         rawTextProxy.label = textAidLabel
         
         // add labelMask to textRowView
-        
         let labelMask = UIView()
         labelMask.translatesAutoresizingMaskIntoConstraints = false
         labelMask.userInteractionEnabled = false
         labelMask.backgroundColor = defaultBackgroundColor
         textRowView.addSubview(labelMask)
         
+        // add tutMessageView to textRowView
+        let tutMessageLabel = UILabel()
+        tutMessageLabel.translatesAutoresizingMaskIntoConstraints = false
+        tutMessageLabel.userInteractionEnabled = false
+        tutMessageLabel.backgroundColor = midRowEvenColor
+        tutMessageLabel.textColor = UIColor.whiteColor()
+        tutMessageLabel.layer.masksToBounds = true
+        tutMessageLabel.layer.cornerRadius = 5
+        tutMessageLabel.font = tutMessageLabel.font.fontWithSize(13)
+        tutMessageLabel.textAlignment = NSTextAlignment.Center
+        tutMessageLabel.numberOfLines = 0
+        textRowView.addSubview(tutMessageLabel)
+        
         // add showchars button to textRowView
         let showCharsTouchButton = createBlankTouchButton()
         showCharsTouchButton.translatesAutoresizingMaskIntoConstraints = false
         
         showCharsTouchButton.tag = UtilKey.showCharsKey.rawValue
-        let showCharsImageView = UIImageView(image: UIImage(named: "showCharsKey"))
+        let showCharsImageView = UIImageView(image: UIImage(named: "cycleLabelsModeKey"))
+        showCharsImageView.image = showCharsImageView.image?.imageWithRenderingMode(.AlwaysTemplate)
+        showCharsImageView.tintColor = defaultIconsColor
         setupImageView(showCharsImageView)
         showCharsTouchButton.addSubview(showCharsImageView)
         ConstraintMaker.centerViewInView(showCharsTouchButton, subview: showCharsImageView)
@@ -240,6 +233,8 @@ class KeyboardViewController: UIInputViewController {
         
         tutTouchButton.tag = UtilKey.tutKey.rawValue
         let tutImageView = UIImageView(image: UIImage(named: "tutKey"))
+        tutImageView.image = tutImageView.image?.imageWithRenderingMode(.AlwaysTemplate)
+        tutImageView.tintColor = defaultIconsColor
         setupImageView(tutImageView)
         tutTouchButton.addSubview(tutImageView)
         ConstraintMaker.centerViewInView(tutTouchButton, subview: tutImageView)
@@ -373,14 +368,8 @@ class KeyboardViewController: UIInputViewController {
         for (i, button) in manager.charTouchButtons.enumerate() {
             let yVal = i / 9
             let xVal = i % 9
-            let topRowEvenColor = UIColor.init(white: 0.45, alpha: 1)
-            let midRowEvenColor = UIColor.init(white: 0.35, alpha: 1)
-            let bottomRowEvenColor = UIColor.init(white: 0.2, alpha: 1)
             let evenColors = [topRowEvenColor, midRowEvenColor, bottomRowEvenColor]
             
-            let topRowOddColor = UIColor.init(white: 1.0, alpha: 1)
-            let midRowOddColor = UIColor.init(white: 1.0, alpha: 1)
-            let bottomRowOddColor = UIColor.init(white: 1.0, alpha: 1)
             let oddColors = [topRowOddColor, midRowOddColor, bottomRowOddColor]
             
             // !!!!!!!!!!!!!!! LOGARITHMIC FONT SIZES
@@ -405,14 +394,8 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         
-        // set manager userDidHideLabels from defaults
+        // set manager labelsDisplayMode from user defaults
         let defaults = NSUserDefaults.standardUserDefaults()
-        // !!! LEGACY 20160924
-        /*
-        if defaults.boolForKey("userDidHideLabels") {
-            manager.userDidHideLabels = true
-        }
-        */
         manager.labelsDisplayMode = defaults.integerForKey("labelsDisplayMode")
         
         // add constraints for rows in superview
@@ -435,10 +418,10 @@ class KeyboardViewController: UIInputViewController {
         
         ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, verticalGuideViews: verticalGuideViews, topTouchButtons: topRowTouchButtons, midTouchButtons: midRowTouchButtons, bottomTouchButtons: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, betweenSpace: 0, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
         
-        ConstraintMaker.addTextRowViewConstraints(textRowView, label: textAidLabel, labelMask: labelMask, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
+        ConstraintMaker.addTextRowViewConstraints(textRowView, label: textAidLabel, labelMask: labelMask, tutMessageLabel: tutMessageLabel, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
         
         // init tut runner
-        tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, keyboardManager: manager, showCharsDoubleTapRecognizer: showCharsDoubleTapRecognizer, textDocumentProxy: textDocumentProxy)
+        tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, tutMessageLabel: tutMessageLabel, keyboardManager: manager, showCharsDoubleTapRecognizer: showCharsDoubleTapRecognizer)
         rawTextProxy.tutRunner = tutRunner
         
         // do startup hiding
@@ -561,8 +544,6 @@ class KeyboardViewController: UIInputViewController {
         if !(tutRunner.isRunning()) {
                 let tag = key.tag
                 switch tag {
-            //case UtilKey.nextKeyboardKey.rawValue:
-                //self.advanceToNextInputMode()
             case UtilKey.shiftKey.rawValue:
                 if manager.isShift {
                     manager.shiftOff()
@@ -737,19 +718,6 @@ class KeyboardViewController: UIInputViewController {
     
     func userCycleLabelsDisplayMode(sender: UIGestureRecognizer) {
         manager.cycleLabelsDisplayMode()
-        
-        // !!! LEGACY 
-        /*
-        if !manager.isNumbersPage() {
-            manager.showHideLabels()
-        }
-        if manager.userDidHideLabels {
-            manager.userDidHideLabels = false
-        } else {
-            manager.userDidHideLabels = true
-        }
-        */
-        // !!!
     }
    
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -800,11 +768,9 @@ class KeyboardViewController: UIInputViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // save settings
+        // save labelsDisplayMode in user defaults
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setInteger(manager.labelsDisplayMode, forKey: "labelsDisplayMode")
-        
-        // LEGACY 20160924 defaults.setBool(manager.userDidHideLabels, forKey: "userDidHideLabels")
     }
     
     override func viewDidAppear(animated: Bool) {

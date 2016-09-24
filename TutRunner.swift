@@ -26,12 +26,11 @@ class TutRunner {
     let label: UILabel
     let manager: KeyboardManager
     let showCharsDoubleTapRecognizer: UIGestureRecognizer
-    let textDocumentProxy: UITextDocumentProxy
     
     // constants
     let kbIndexes: [Int] = [9, 22, 20, 11, 2, 12, 13, 14, 7, 15, 16, 25, 24, 23, 8, 17, 0, 3, 10, 4, 6, 21, 1, 19, 5, 18]
     let highlightColor: UIColor = UIColor.init(white: 0.8, alpha: 1.0)
-    let goodjobMessage: String = "Good job!"
+    let goodjobMessage: String = "Good job! Press any letter key."
     
     // stateful vars
     var currChar: String?
@@ -42,24 +41,22 @@ class TutRunner {
     var isTutRunning: Bool = false
     var currState: TutState?
     
-    init(buttons: [UIView], label: UILabel, keyboardManager: KeyboardManager, showCharsDoubleTapRecognizer: UIGestureRecognizer, textDocumentProxy: UITextDocumentProxy) {
+    // message pop up object
+    let tutMessageLabel: UILabel
+    
+    init(buttons: [UIView], label: UILabel, tutMessageLabel: UILabel, keyboardManager: KeyboardManager, showCharsDoubleTapRecognizer: UIGestureRecognizer) {
         self.buttons = buttons
         self.label = label
+        self.tutMessageLabel = tutMessageLabel
+        self.tutMessageLabel.hidden = true
         manager = keyboardManager
         self.showCharsDoubleTapRecognizer = showCharsDoubleTapRecognizer
-        self.textDocumentProxy = textDocumentProxy
     }
     
     func loadNextState() {
         if tutStates.count == 0 {
             end()
         } else {
-            // delete previous message in textDocumentProxy
-            if currState != nil {
-                for i in 0..<currState!.message!.characters.count {
-                    textDocumentProxy.deleteBackward()
-                }
-            }
             
             unhighlightButtons()
             
@@ -68,7 +65,7 @@ class TutRunner {
             currState = state
             
             // set message to user
-            textDocumentProxy.insertText((state.message)!)
+            tutMessageLabel.text = state.message
             
             // create and store buttons to unhighlight
             if state.highlightKeys != nil {
@@ -99,8 +96,8 @@ class TutRunner {
         // clear label
         label.text = ""
         
-        // create space in document proxy
-        textDocumentProxy.insertText(" ")
+        // unhide tutMessageView
+        tutMessageLabel.hidden = false
         
         // define uppercase chars array
         var upperCaseChars = [String]()
@@ -112,15 +109,12 @@ class TutRunner {
         tutStates = [
             TutState(requiredCharacters: nil, message: "Tutorial. Press any letter key.", highlightKeys: nil),
             TutState(requiredCharacters: upperCaseChars, message: "Hold space and type for caps.", highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: goodjobMessage, highlightKeys: nil),
             TutState(requiredCharacters: ["."], message: "Double tap space for period.", highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: goodjobMessage, highlightKeys: nil),
             TutState(requiredCharacters: [","], message: "Hold first row and double tap space for comma.", highlightKeys: Array(buttons[18..<26])),
             TutState(requiredCharacters: ["'"], message: "Hold second row and double tap space for apostrophe.", highlightKeys: Array(buttons[9..<18])),
             TutState(requiredCharacters: ["?"], message: "Hold third row and double tap space for question mark.", highlightKeys: Array(buttons[0..<9])),
             TutState(requiredCharacters: ["!"], message: "Hold top row and double tap space for exclamation point.", highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: goodjobMessage, highlightKeys: nil),
-            TutState(requiredCharacters: nil, message: "I love you!", highlightKeys: nil)
+            TutState(requiredCharacters: nil, message: "Good job! Press any letter key to end.", highlightKeys: nil),
         ]
         
         loadNextState()
@@ -133,20 +127,14 @@ class TutRunner {
     }
     
     func end() {
-        // delete previous message in textDocumentProxy
-        if currState != nil {
-            for i in 0..<currState!.message!.characters.count {
-                textDocumentProxy.deleteBackward()
-            }
-        }
-        
         if isAlphaPracRunning() {
             unhighlightButton(buttons[kbIndexes[nextAlphabetIndex - 1]])
         } else {
             unhighlightButtons()
         }
         
-        // reset label and vars
+        // cleanup
+        tutMessageLabel.hidden = true
         label.text = ""
         currChar = nil
         currState = nil

@@ -19,7 +19,7 @@
 		BF5CEADD1D1B38C20078C2D1 /* keyboard_201606220_01Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEADC1D1B38C20078C2D1 /* keyboard_201606220_01Tests.swift */; };
 		BF5CEAE81D1B38C20078C2D1 /* keyboard_201606220_01UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAE71D1B38C20078C2D1 /* keyboard_201606220_01UITests.swift */; };
 		BF5CEAFC1D1B38F20078C2D1 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAFB1D1B38F20078C2D1 /* KeyboardViewController.swift */; };
-		BF5CEB001D1B38F20078C2D1 /* Doug.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BF5CEAF91D1B38F20078C2D1 /* Doug.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BF5CEB001D1B38F20078C2D1 /* doug.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BF5CEAF91D1B38F20078C2D1 /* doug.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BF74C13B1D3D892D0088E585 /* ConstraintMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF74C13A1D3D892D0088E585 /* ConstraintMaker.swift */; };
 		BF74C13C1D3D892D0088E585 /* ConstraintMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF74C13A1D3D892D0088E585 /* ConstraintMaker.swift */; };
 		BF74C13D1D3D892D0088E585 /* ConstraintMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF74C13A1D3D892D0088E585 /* ConstraintMaker.swift */; };
@@ -76,7 +76,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				BF5CEB001D1B38F20078C2D1 /* Doug.appex in Embed App Extensions */,
+				BF5CEB001D1B38F20078C2D1 /* doug.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,7 +85,7 @@
 
 /* Begin PBXFileReference section */
 		BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIResponderKeyboardCache.swift; sourceTree = SOURCE_ROOT; };
-		BF5CEAC41D1B38C20078C2D1 /* Doug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Doug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF5CEAC41D1B38C20078C2D1 /* doug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = doug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		BF5CEACC1D1B38C20078C2D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -98,7 +98,7 @@
 		BF5CEAE31D1B38C20078C2D1 /* keyboard-201606220-01UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "keyboard-201606220-01UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5CEAE71D1B38C20078C2D1 /* keyboard_201606220_01UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keyboard_201606220_01UITests.swift; sourceTree = "<group>"; };
 		BF5CEAE91D1B38C20078C2D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BF5CEAF91D1B38F20078C2D1 /* Doug.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Doug.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF5CEAF91D1B38F20078C2D1 /* doug.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = doug.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5CEAFB1D1B38F20078C2D1 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		BF5CEAFD1D1B38F20078C2D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BF74C13A1D3D892D0088E585 /* ConstraintMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConstraintMaker.swift; path = ../ConstraintMaker.swift; sourceTree = "<group>"; };
@@ -155,10 +155,10 @@
 		BF5CEAC51D1B38C20078C2D1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BF5CEAC41D1B38C20078C2D1 /* Doug.app */,
+				BF5CEAC41D1B38C20078C2D1 /* doug.app */,
 				BF5CEAD81D1B38C20078C2D1 /* keyboard-201606220-01Tests.xctest */,
 				BF5CEAE31D1B38C20078C2D1 /* keyboard-201606220-01UITests.xctest */,
-				BF5CEAF91D1B38F20078C2D1 /* Doug.appex */,
+				BF5CEAF91D1B38F20078C2D1 /* doug.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -229,7 +229,7 @@
 			);
 			name = "keyboard-201606220-01";
 			productName = "keyboard-201606220-01";
-			productReference = BF5CEAC41D1B38C20078C2D1 /* Doug.app */;
+			productReference = BF5CEAC41D1B38C20078C2D1 /* doug.app */;
 			productType = "com.apple.product-type.application";
 		};
 		BF5CEAD71D1B38C20078C2D1 /* keyboard-201606220-01Tests */ = {
@@ -282,7 +282,7 @@
 			);
 			name = keyboard;
 			productName = keyboard;
-			productReference = BF5CEAF91D1B38F20078C2D1 /* Doug.appex */;
+			productReference = BF5CEAF91D1B38F20078C2D1 /* doug.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -577,7 +577,7 @@
 				INFOPLIST_FILE = "keyboard-201606220-01/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.tap;
-				PRODUCT_NAME = Doug;
+				PRODUCT_NAME = doug;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -594,7 +594,7 @@
 				INFOPLIST_FILE = "keyboard-201606220-01/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.tap;
-				PRODUCT_NAME = Doug;
+				PRODUCT_NAME = doug;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -655,7 +655,7 @@
 				INFOPLIST_FILE = keyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.tap.extension;
-				PRODUCT_NAME = Doug;
+				PRODUCT_NAME = doug;
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -671,7 +671,7 @@
 				INFOPLIST_FILE = keyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.douglaslamb.tap.extension;
-				PRODUCT_NAME = Doug;
+				PRODUCT_NAME = doug;
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
