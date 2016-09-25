@@ -146,7 +146,6 @@ class TutRunner {
     }
     
     func goToNextButton() {
-        print("goToNextButton")
         if nextAlphabetIndex < 26 {
             if nextAlphabetIndex == 1 {
                 label.text = ""
@@ -186,7 +185,6 @@ class TutRunner {
     }
     
     func testText(text: String) {
-        print("testText")
         insertTextInLabel(text)
         if isAlphaPracRunning() {
             if text.uppercaseString == currChar {

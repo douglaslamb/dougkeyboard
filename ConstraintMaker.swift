@@ -125,29 +125,17 @@ class ConstraintMaker {
         tutButton.widthAnchor.constraintEqualToAnchor(textRowView.heightAnchor).active = true
     }
     
-    static func addAllButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, verticalGuideViews: [UIView], topTouchButtons: [UIView], midTouchButtons: [UIView], bottomTouchButtons: [UIView], utilTouchKeys: [UIView], betweenSpace: CGFloat = 0, shiftWidth: CGFloat = 0.03, nextKeyboardWidth: CGFloat = 0.8, spaceKeyWidth: CGFloat = 0.3, charVerticalConstant: CGFloat = 0) {
+    static func addAllButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topTouchButtons: [UIView], midTouchButtons: [UIView], bottomTouchButtons: [UIView], utilTouchKeys: [UIView], shiftWidth: CGFloat = 0.03, nextKeyboardWidth: CGFloat = 0.8, spaceKeyWidth: CGFloat = 0.3, charVerticalConstant: CGFloat = 0) {
         
         //==============================
         // Constants for Dimensions
-        //
         //==============================
         
-        let utilRowTopSpace: CGFloat = 8
-        let utilRowBottomSpace: CGFloat = 8
-        
         // touch buttons
-        addTouchButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topTouchButtons: topTouchButtons, midTouchButtons: midTouchButtons, bottomTouchButtons: bottomTouchButtons, utilKeys: utilTouchKeys, betweenSpace: betweenSpace, nextKeyboardWidth: nextKeyboardWidth, spaceKeyWidth: spaceKeyWidth)
-        
-        // verticalGuideViews
-        for (i, view) in verticalGuideViews.enumerate() {
-            view.topAnchor.constraintEqualToAnchor(topRowView.topAnchor).active = true
-            view.bottomAnchor.constraintEqualToAnchor(bottomRowView.bottomAnchor).active = true
-            view.leftAnchor.constraintEqualToAnchor(topTouchButtons[i].leftAnchor).active = true
-            view.rightAnchor.constraintEqualToAnchor(topTouchButtons[i].rightAnchor).active = true
-        }
+        addTouchButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topTouchButtons: topTouchButtons, midTouchButtons: midTouchButtons, bottomTouchButtons: bottomTouchButtons, utilKeys: utilTouchKeys, nextKeyboardWidth: nextKeyboardWidth, spaceKeyWidth: spaceKeyWidth)
     }
     
-    static func addTouchButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topTouchButtons: [UIView], midTouchButtons: [UIView], bottomTouchButtons: [UIView], utilKeys: [UIView], betweenSpace: CGFloat = 2, nextKeyboardWidth: CGFloat = 0.12, spaceKeyWidth: CGFloat = 0.48) {
+    static func addTouchButtonConstraints(topRowView: UIView, midRowView: UIView, bottomRowView: UIView, utilRowView: UIView, topTouchButtons: [UIView], midTouchButtons: [UIView], bottomTouchButtons: [UIView], utilKeys: [UIView], nextKeyboardWidth: CGFloat = 0.12, spaceKeyWidth: CGFloat = 0.48) {
         
         // char rows
         addButtonConstraintsToRow(topTouchButtons, containingView: topRowView)

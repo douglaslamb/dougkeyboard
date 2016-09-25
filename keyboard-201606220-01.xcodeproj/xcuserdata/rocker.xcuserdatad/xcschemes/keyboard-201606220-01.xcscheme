@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "BF5CEAC31D1B38C20078C2D1"
-               BuildableName = "Doug.app"
+               BuildableName = "doug.app"
                BlueprintName = "keyboard-201606220-01"
                ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
             </BuildableReference>
@@ -53,7 +53,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BF5CEAC31D1B38C20078C2D1"
-            BuildableName = "Doug.app"
+            BuildableName = "doug.app"
             BlueprintName = "keyboard-201606220-01"
             ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
          </BuildableReference>
@@ -76,7 +76,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BF5CEAC31D1B38C20078C2D1"
-            BuildableName = "Doug.app"
+            BuildableName = "doug.app"
             BlueprintName = "keyboard-201606220-01"
             ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
          </BuildableReference>
@@ -95,7 +95,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BF5CEAC31D1B38C20078C2D1"
-            BuildableName = "Doug.app"
+            BuildableName = "doug.app"
             BlueprintName = "keyboard-201606220-01"
             ReferencedContainer = "container:keyboard-201606220-01.xcodeproj">
          </BuildableReference>

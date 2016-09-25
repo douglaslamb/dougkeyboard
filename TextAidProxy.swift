@@ -48,7 +48,6 @@ class TextAidProxy: NSObject, UIKeyInput {
     }
  
     func clear() {
-        print("textAidProxy.clear")
         label.text = ""
     }
     

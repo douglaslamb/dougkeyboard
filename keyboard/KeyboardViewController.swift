@@ -45,17 +45,12 @@ class KeyboardViewController: UIInputViewController {
     
     // colors
     let defaultBackgroundColor = UIColor.init(white: 1.0, alpha: 1)
-    let verticalGuideColor = UIColor.init(white: 0.0, alpha: 1)
     let evenColumnUnpressedTextColor = UIColor.init(white: 0.9, alpha: 1)
     let evenColumnPressedTextColor = UIColor.init(white: 0.0, alpha: 1)
-    //20160909 let oddColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
     let oddColumnUnpressedTextColor = UIColor.init(white: 0.2, alpha: 1)
     let oddColumnPressedTextColor = UIColor.init(white: 0.2, alpha: 1)
-    // 20160909 let evenGuideColor = UIColor.init(white: 0.5, alpha: 1)
-    let evenGuideColor = UIColor.init(white: 0.3, alpha: 1)
-    let oddGuideColor = UIColor.whiteColor()
     
-    // guide colors
+    // real guide colors
     let topRowEvenColor = UIColor.init(white: 0.45, alpha: 1)
     let midRowEvenColor = UIColor.init(white: 0.35, alpha: 1)
     let bottomRowEvenColor = UIColor.init(white: 0.2, alpha: 1)
@@ -66,11 +61,6 @@ class KeyboardViewController: UIInputViewController {
     // icon colors
     let negativeIconsColor = UIColor.init(white: 0.9, alpha: 1)
     let defaultIconsColor = UIColor.init(white: 0.0, alpha: 1)
-    
-    // guide colors
-    let middleGuideColor = UIColor.init(white: 0.7, alpha: 1)
-    let nextoutGuideColor = UIColor.init(white: 0.5, alpha: 1)
-    let outerGuideColor = UIColor.init(white: 0.3, alpha: 1)
     
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey, showCharsKey, tutKey
@@ -92,30 +82,12 @@ class KeyboardViewController: UIInputViewController {
         // initial setup
         inputView?.backgroundColor = defaultBackgroundColor
         
-        
         // init row views
         textRowView = UIView()
         topRowView = UIView()
         midRowView = UIView()
         bottomRowView = UIView()
         utilRowView = UIView()
-        
-        // create vertical guides and add to view
-        var verticalGuideViews = [UIView]()
-        
-        let guideColors: [UIColor] = [outerGuideColor, oddGuideColor, nextoutGuideColor, oddGuideColor, middleGuideColor, oddGuideColor, nextoutGuideColor, oddGuideColor, outerGuideColor]
-        
-        for i in 0..<9 {
-            let view = UIView()
-            let thisGuideColor: UIColor = guideColors [i]
-            view.backgroundColor = thisGuideColor
-            verticalGuideViews.append(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            view.userInteractionEnabled = false
-            self.inputView!.addSubview(view)
-        }
-   
-        manager.guides = verticalGuideViews
         
         // put in array for convenience
         let rowViews = [topRowView, midRowView, bottomRowView, utilRowView, textRowView]
@@ -171,11 +143,7 @@ class KeyboardViewController: UIInputViewController {
         manager.letterPageChars = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "A",
                                    "S", "D", "F", "G", "H", "J", "K", "P", "Z", "X",
                                    "C", "V", "B", "N", "M", "L"]
-        /*
-        manager.numberPageChars = ["-", "/", ":", "1", "2", "3", ";", "(", ")",
-                                   "!", "'", "\"", "4", "5", "6", "@", "$", "&",
-                                   ".", ",", "?", "7", "8", "9", "0", ""]
- */
+ 
         manager.numberPageChars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "/", ":", ";", "(", ")", "$", "&", "0", ".", ",", "?", "!", "'", "\"", "@", ""]
  
         manager.puncPageChars = ["[", "]", "{", "}", "#", "%", "^", "*", bullet, "_", "\\", "|", "~", "<", ">", euro, pound, yen, ".", ",", "?", "!", "'", "+", "=", ""]
@@ -320,7 +288,6 @@ class KeyboardViewController: UIInputViewController {
         spacebarTouchButton = createBlankTouchButton()
         spacebarTouchButton.tag = 30    // to designate it as a text entering key
         
-        
         let spacebarKeyLabel = UILabel(frame: CGRectMake(10.0, 10.0, 60, 25))
         spacebarKeyLabel.text = " "
         spacebarTouchButton.addSubview(spacebarKeyLabel)
@@ -359,25 +326,22 @@ class KeyboardViewController: UIInputViewController {
             utilRowView.addSubview(button)
         }
         
-        // !!!!!!!!!!!!!!!!!!!!!!!!! CASCADING GUIDES
-        // hide guides first
-        for view in manager.guides {
-            view.hidden = true
-        }
+        // cascading guides
+        
+        let evenColumnGuideColors = [topRowEvenColor, midRowEvenColor, bottomRowEvenColor]
+        let oddColumnGuideColors = [topRowOddColor, midRowOddColor, bottomRowOddColor]
+        let baseFontSize: CGFloat = 12
+        let scaleFactor = CGFloat(1.12)
         
         for (i, button) in manager.charTouchButtons.enumerate() {
             let yVal = i / 9
             let xVal = i % 9
-            let evenColors = [topRowEvenColor, midRowEvenColor, bottomRowEvenColor]
             
-            let oddColors = [topRowOddColor, midRowOddColor, bottomRowOddColor]
-            
-            // !!!!!!!!!!!!!!! LOGARITHMIC FONT SIZES
+            // font sizes get geometrically
+            // larger farther from the textaid
              
-            let baseFontSize: CGFloat = 12
             let xLoc = CGFloat(abs(xVal - 4))
             let yLoc = CGFloat(yVal + 1)
-            let scaleFactor = CGFloat(1.12)
             let distance: CGFloat = sqrt(pow(2.0, xLoc) + pow(2.0, yLoc))
             let thisLabelFontSize = pow(scaleFactor, distance) * baseFontSize
             
@@ -385,21 +349,20 @@ class KeyboardViewController: UIInputViewController {
             if label != nil {
                 label!.font = label!.font.fontWithSize(thisLabelFontSize)
             }
-            // !!!!!!!!!!!!!!!!
-            
             if xVal % 2 == 0 {
-                button.backgroundColor = evenColors[yVal]
+                button.backgroundColor = evenColumnGuideColors[yVal]
             } else {
-                button.backgroundColor = oddColors[yVal]
+                button.backgroundColor = oddColumnGuideColors[yVal]
             }
         }
         
-        // set manager labelsDisplayMode from user defaults
+        // set manager label display modes from user defaults
         let defaults = NSUserDefaults.standardUserDefaults()
-        manager.labelsDisplayMode = defaults.integerForKey("labelsDisplayMode")
+        manager.lettersPageLabelsDisplayMode = defaults.integerForKey("lettersPageLabelsDisplayMode")
+        manager.numbersPageLabelsDisplayMode = defaults.integerForKey("numbersPageLabelsDisplayMode")
         
         // add constraints for rows in superview
-        var rows = [[textRowView], [self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
+        let rows = [[textRowView], [self.topRowView], [self.midRowView], [self.bottomRowView], [self.utilRowView]]
         
         for row in rows {
             for view in row {
@@ -416,7 +379,7 @@ class KeyboardViewController: UIInputViewController {
         autoresizeIntoConstraintsOff(bottomRowTouchButtons)
         autoresizeIntoConstraintsOff(utilRowTouchButtons)
         
-        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, verticalGuideViews: verticalGuideViews, topTouchButtons: topRowTouchButtons, midTouchButtons: midRowTouchButtons, bottomTouchButtons: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, betweenSpace: 0, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
+        ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topTouchButtons: topRowTouchButtons, midTouchButtons: midRowTouchButtons, bottomTouchButtons: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
         
         ConstraintMaker.addTextRowViewConstraints(textRowView, label: textAidLabel, labelMask: labelMask, tutMessageLabel: tutMessageLabel, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
         
@@ -427,22 +390,7 @@ class KeyboardViewController: UIInputViewController {
         // do startup hiding
         manager.loadStart()
         
-        // go to numberpage if necessary
-        let keyboardType = textDocumentProxy.keyboardType
-        print(keyboardType!.rawValue)
-        if keyboardType == UIKeyboardType.NumberPad || keyboardType == UIKeyboardType.PhonePad || keyboardType == UIKeyboardType.NamePhonePad {
-            manager.goToNumbersPage()
-        }
-        /*
-        switch keyboardType {
-        case UIKeyboardType.NumberPad, UIKeyboardType.phonePad, UIKeyboardType.asciiCapableNumberPad, UIKeyboardType.namePhonePad:
-            manager.goToNumbersPage()
-        default:
-            return
-        }
-        */
     }
-    
     
     func startStopTut(sender: UITapGestureRecognizer) {
         if tutRunner.isRunning() {
@@ -475,7 +423,7 @@ class KeyboardViewController: UIInputViewController {
         }
         
         // then insert the character
-        for i in 0..<deleteTimes {
+        for _ in 0..<deleteTimes {
             textProxy.deleteBackward()
         }
         textProxy.insertText(text)
@@ -511,14 +459,10 @@ class KeyboardViewController: UIInputViewController {
             setLabelDefaults(label)
             ConstraintMaker.centerViewInView(touchButton, subview: label)
             
-            // alternate column settings
-            if i % 2 == 0 {
-                label.textColor = evenColumnUnpressedTextColor
-                touchButton.tag = LetterIdentifier.evenRowKey.rawValue
-            } else {
-                label.textColor = oddColumnUnpressedTextColor
-                touchButton.tag = LetterIdentifier.oddRowKey.rawValue
-            }
+            // !!! TEMP
+            // temporarily using this evenRowKey value for each key
+            // because the typing logic needs the tag to be above some number
+            touchButton.tag = LetterIdentifier.evenRowKey.rawValue
         }
         return buttons
     }
@@ -590,7 +534,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func handleBackspaceLongPress(sender: UILongPressGestureRecognizer) {
-        print("handleBackspaceLongPress")
+        //print("handleBackspaceLongPress")
         if sender.state == UIGestureRecognizerState.Began {
             startLongDelete()
         } else if sender.state == UIGestureRecognizerState.Ended {
@@ -619,7 +563,7 @@ class KeyboardViewController: UIInputViewController {
         }
     
         // !!!! DEBUG
-        print(CACurrentMediaTime())
+        //print(CACurrentMediaTime())
         // !!!! DEBUG
         
         let touchView = view.hitTest(touchPoint, withEvent: nil)
@@ -761,7 +705,6 @@ class KeyboardViewController: UIInputViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        //self.view.translatesAutoresizingMaskIntoConstraints = false
         ConstraintMaker.setWindowHeight(self.view)
     }
     
@@ -770,7 +713,8 @@ class KeyboardViewController: UIInputViewController {
         
         // save labelsDisplayMode in user defaults
         let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setInteger(manager.labelsDisplayMode, forKey: "labelsDisplayMode")
+        defaults.setInteger(manager.lettersPageLabelsDisplayMode, forKey: "lettersPageLabelsDisplayMode")
+        defaults.setInteger(manager.numbersPageLabelsDisplayMode, forKey: "numbersPageLabelsDisplayMode")
     }
     
     override func viewDidAppear(animated: Bool) {
