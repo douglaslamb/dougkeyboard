@@ -51,6 +51,12 @@ class KeyboardViewController: UIInputViewController {
     let oddColumnPressedTextColor = UIColor.init(white: 0.2, alpha: 1)
     
     // real guide colors
+    // !!! EXPERIMENTING
+    let topRowEvenWhiteVal = 0.45
+    let midRowEvenWhiteVal = 0.35
+    let bottomRowEvenWhiteVal = 0.2
+    let oddColumnWhiteVal = 1.0
+    // !!!
     let topRowEvenColor = UIColor.init(white: 0.45, alpha: 1)
     let midRowEvenColor = UIColor.init(white: 0.35, alpha: 1)
     let bottomRowEvenColor = UIColor.init(white: 0.2, alpha: 1)
@@ -326,10 +332,9 @@ class KeyboardViewController: UIInputViewController {
             utilRowView.addSubview(button)
         }
         
-        // cascading guides
+        // CASCADING GUIDES
         
-        let evenColumnGuideColors = [topRowEvenColor, midRowEvenColor, bottomRowEvenColor]
-        let oddColumnGuideColors = [topRowOddColor, midRowOddColor, bottomRowOddColor]
+        let evenColumnGuideWhiteVals = [topRowEvenWhiteVal, midRowEvenWhiteVal, bottomRowEvenWhiteVal]
         let baseFontSize: CGFloat = 12
         let scaleFactor = CGFloat(1.12)
         
@@ -349,10 +354,16 @@ class KeyboardViewController: UIInputViewController {
             if label != nil {
                 label!.font = label!.font.fontWithSize(thisLabelFontSize)
             }
+            
+            // set background color
+            
+            var whiteVal: Double
             if xVal % 2 == 0 {
-                button.backgroundColor = evenColumnGuideColors[yVal]
+                whiteVal = evenColumnGuideWhiteVals[yVal]
+                button.backgroundColor = UIColor.init(white: CGFloat(whiteVal), alpha: 1)
             } else {
-                button.backgroundColor = oddColumnGuideColors[yVal]
+                whiteVal = oddColumnWhiteVal
+                button.backgroundColor = UIColor.init(white: CGFloat(whiteVal), alpha: 1)
             }
         }
         
