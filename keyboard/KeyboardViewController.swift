@@ -560,6 +560,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        print(arc4random())
         super.touchesBegan(touches, withEvent: event)
         
         // get view touch is in
@@ -573,10 +574,6 @@ class KeyboardViewController: UIInputViewController {
             }
         }
     
-        // !!!! DEBUG
-        //print(CACurrentMediaTime())
-        // !!!! DEBUG
-        
         let touchView = view.hitTest(touchPoint, withEvent: nil)
         
         // check for nil for safety
@@ -689,6 +686,12 @@ class KeyboardViewController: UIInputViewController {
         }
         if isSpaceShift {
             isSpaceShift = false
+            let touchPoint = touches.first!.locationInView(spacebarTouchButton)
+            if prevButton != " " && prevButton != "" && spacebarTouchButton.pointInside(touchPoint, withEvent: nil) {
+                print("spaceshift correction")
+                textProxy.deleteBackward()
+                textProxy.insertText(prevButton.lowercaseString)
+            }
         }
         // set doubleTapPuncModifier to nil if touch ends outside spacebar
         let touchPoint = touches.first?.locationInView(spacebarTouchButton)
