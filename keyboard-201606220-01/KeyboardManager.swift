@@ -16,11 +16,15 @@ class KeyboardManager {
     
     struct LabelColorScheme {
         
-        let evenColumn, oddColumn: UIColor
+        let evenColumnTopRow, evenColumnMidRow, evenColumnBottomRow, oddColumnTopRow, oddColumnMidRow, oddColumnBottomRow: UIColor
         
-        init (evenColumnWhite: CGFloat, oddColumnWhite: CGFloat) {
-            self.evenColumn = UIColor.init(white: evenColumnWhite, alpha: 1)
-            self.oddColumn = UIColor.init(white: oddColumnWhite, alpha: 1)
+        init (evenColumnTopRow: CGFloat, oddColumnTopRow: CGFloat, evenColumnMidRow: CGFloat, oddColumnMidRow: CGFloat, evenColumnBottomRow: CGFloat, oddColumnBottomRow: CGFloat) {
+            self.evenColumnTopRow = UIColor.init(white: evenColumnTopRow, alpha: 1)
+            self.evenColumnMidRow = UIColor.init(white: evenColumnMidRow, alpha: 1)
+            self.evenColumnBottomRow = UIColor.init(white: evenColumnBottomRow, alpha: 1)
+            self.oddColumnTopRow = UIColor.init(white: oddColumnTopRow, alpha: 1)
+            self.oddColumnMidRow = UIColor.init(white: oddColumnMidRow, alpha: 1)
+            self.oddColumnBottomRow = UIColor.init(white: oddColumnBottomRow, alpha: 1)
         }
     }
     
@@ -51,7 +55,8 @@ class KeyboardManager {
     
     // constants
     // first scheme in array is low contrast. second is high
-    let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnWhite: 0.6, oddColumnWhite: 0.7), LabelColorScheme(evenColumnWhite: 1.0, oddColumnWhite: 0.0)]
+    //let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnWhite: 0.6, oddColumnWhite: 0.7), LabelColorScheme(evenColumnWhite: 1.0, oddColumnWhite: 0.0)]
+    let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnTopRow: 0.6, oddColumnTopRow: 0.7, evenColumnMidRow: 0.6, oddColumnMidRow: 0.7, evenColumnBottomRow: 0.6, oddColumnBottomRow: 0.7), LabelColorScheme(evenColumnTopRow: 0.6, oddColumnTopRow: 0.7, evenColumnMidRow: 0.7, oddColumnMidRow: 0.4, evenColumnBottomRow: 1.0, oddColumnBottomRow: 0.0)]
     
     func loadStart() {
         changeLabelsText(letterPageChars)
@@ -91,9 +96,25 @@ class KeyboardManager {
                     // set even and odd text row columns
                     // to labelColorSchemes values at labelDisplayMode
                     if i % 9 % 2 == 0 {
-                        label.textColor = labelColorSchemes[lettersPageLabelsDisplayMode].evenColumn
+                        switch i / 9 {
+                            case 0:
+                                label.textColor = labelColorSchemes[lettersPageLabelsDisplayMode].evenColumnTopRow
+                            case 1:
+                                label.textColor = labelColorSchemes[lettersPageLabelsDisplayMode].evenColumnMidRow
+                            case 2:
+                                label.textColor = labelColorSchemes[lettersPageLabelsDisplayMode].evenColumnBottomRow
+                            default: break
+                        }
                     } else {
-                        label.textColor = labelColorSchemes[lettersPageLabelsDisplayMode].oddColumn
+                        switch i / 9 {
+                            case 0:
+                                label.textColor = labelColorSchemes[lettersPageLabelsDisplayMode].oddColumnTopRow
+                            case 1:
+                                label.textColor = labelColorSchemes[lettersPageLabelsDisplayMode].oddColumnMidRow
+                            case 2:
+                                label.textColor = labelColorSchemes[lettersPageLabelsDisplayMode].oddColumnBottomRow
+                            default: break
+                        }
                     }
                 } else {
                     // else hide label
@@ -108,9 +129,25 @@ class KeyboardManager {
                 // set even and odd text row columns
                 // to labelColorSchemes values at numbersPageLabelsDisplayMode
                 if i % 9 % 2 == 0 {
-                    label.textColor = labelColorSchemes[numbersPageLabelsDisplayMode].evenColumn
+                    switch (i / 9) {
+                        case 0:
+                            label.textColor = labelColorSchemes[numbersPageLabelsDisplayMode].evenColumnTopRow
+                        case 1:
+                            label.textColor = labelColorSchemes[numbersPageLabelsDisplayMode].evenColumnMidRow
+                        case 2:
+                            label.textColor = labelColorSchemes[numbersPageLabelsDisplayMode].evenColumnBottomRow
+                        default: break 
+                    }
                 } else {
-                    label.textColor = labelColorSchemes[numbersPageLabelsDisplayMode].oddColumn
+                    switch i / 9 {
+                        case 0:
+                            label.textColor = labelColorSchemes[numbersPageLabelsDisplayMode].oddColumnTopRow
+                        case 1:
+                            label.textColor = labelColorSchemes[numbersPageLabelsDisplayMode].oddColumnMidRow
+                        case 2:
+                            label.textColor = labelColorSchemes[numbersPageLabelsDisplayMode].oddColumnBottomRow
+                        default: break 
+                    }
                 }
             }
         }
