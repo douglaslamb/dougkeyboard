@@ -99,10 +99,15 @@ class ConstraintMaker {
         NSLayoutConstraint.activateConstraints(constraints)
     }
     
-    static func addTextRowViewConstraints(textRowView: UIView, label: UILabel, labelMask: UIView, tutMessageLabel: UILabel, showCharsButton: UIView, tutButton: UIView) {
+    static func addTextRowViewConstraints(textRowView: UIView, label: UILabel, cursor: UIView, labelMask: UIView, tutMessageLabel: UILabel, showCharsButton: UIView, tutButton: UIView) {
         let labelOffset: CGFloat = 7
         label.rightAnchor.constraintEqualToAnchor(textRowView.centerXAnchor, constant: labelOffset).active = true
         label.centerYAnchor.constraintEqualToAnchor(textRowView.centerYAnchor).active = true
+        
+        cursor.leftAnchor.constraintEqualToAnchor(label.rightAnchor, constant: 2).active = true
+        cursor.bottomAnchor.constraintEqualToAnchor(textRowView.bottomAnchor, constant: -19).active = true
+        cursor.widthAnchor.constraintEqualToConstant(1).active = true
+        cursor.heightAnchor.constraintEqualToConstant(21).active = true
         
         labelMask.leftAnchor.constraintEqualToAnchor(textRowView.leftAnchor).active = true
         labelMask.bottomAnchor.constraintEqualToAnchor(textRowView.bottomAnchor).active = true
@@ -113,6 +118,7 @@ class ConstraintMaker {
         tutMessageLabel.bottomAnchor.constraintEqualToAnchor(textRowView.bottomAnchor, constant: -5).active = true
         tutMessageLabel.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true
         tutMessageLabel.widthAnchor.constraintEqualToConstant(130).active = true
+        
         
         showCharsButton.rightAnchor.constraintEqualToAnchor(textRowView.rightAnchor).active = true
         showCharsButton.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true

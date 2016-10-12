@@ -68,6 +68,7 @@ class KeyboardViewController: UIInputViewController {
     let negativeIconsColor = UIColor.init(white: 0.9, alpha: 1)
     let defaultIconsColor = UIColor.init(white: 0.0, alpha: 1)
     
+    
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey, showCharsKey, tutKey
     }
@@ -84,6 +85,10 @@ class KeyboardViewController: UIInputViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // constants
+        // other colors
+        let cursorColor = UIColor.init(red: 249.0 / 255.0, green: 115.0 / 255.0, blue: 116.0 / 255.0, alpha: 1)
         
         // initial setup
         inputView?.backgroundColor = defaultBackgroundColor
@@ -182,6 +187,13 @@ class KeyboardViewController: UIInputViewController {
         tutMessageLabel.textAlignment = NSTextAlignment.Center
         tutMessageLabel.numberOfLines = 0
         textRowView.addSubview(tutMessageLabel)
+        
+        // add cursor to textRowView
+        let textRowCursor = UIView()
+        textRowCursor.translatesAutoresizingMaskIntoConstraints = false
+        textRowCursor.userInteractionEnabled = false
+        textRowCursor.backgroundColor = UIColor.init(white: CGFloat(topRowEvenWhiteVal), alpha: 1)
+        textRowView.addSubview(textRowCursor)
         
         // add showchars button to textRowView
         let showCharsTouchButton = createBlankTouchButton()
@@ -392,7 +404,7 @@ class KeyboardViewController: UIInputViewController {
         
         ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topTouchButtons: topRowTouchButtons, midTouchButtons: midRowTouchButtons, bottomTouchButtons: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
         
-        ConstraintMaker.addTextRowViewConstraints(textRowView, label: textAidLabel, labelMask: labelMask, tutMessageLabel: tutMessageLabel, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
+        ConstraintMaker.addTextRowViewConstraints(textRowView, label: textAidLabel, cursor: textRowCursor, labelMask: labelMask, tutMessageLabel: tutMessageLabel, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
         
         // init tut runner
         tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, tutMessageLabel: tutMessageLabel, keyboardManager: manager, showCharsDoubleTapRecognizer: showCharsDoubleTapRecognizer)
