@@ -56,7 +56,8 @@ class KeyboardManager {
     // constants
     // first scheme in array is low contrast. second is high
     //let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnWhite: 0.6, oddColumnWhite: 0.7), LabelColorScheme(evenColumnWhite: 1.0, oddColumnWhite: 0.0)]
-    let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnTopRow: 0.6, oddColumnTopRow: 0.7, evenColumnMidRow: 0.6, oddColumnMidRow: 0.7, evenColumnBottomRow: 0.6, oddColumnBottomRow: 0.7), LabelColorScheme(evenColumnTopRow: 0.6, oddColumnTopRow: 0.7, evenColumnMidRow: 0.7, oddColumnMidRow: 0.4, evenColumnBottomRow: 1.0, oddColumnBottomRow: 0.0)]
+    // old this is with a low contrast page let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnTopRow: 0.6, oddColumnTopRow: 0.7, evenColumnMidRow: 0.6, oddColumnMidRow: 0.7, evenColumnBottomRow: 0.6, oddColumnBottomRow: 0.7), LabelColorScheme(evenColumnTopRow: 0.6, oddColumnTopRow: 0.7, evenColumnMidRow: 0.7, oddColumnMidRow: 0.4, evenColumnBottomRow: 1.0, oddColumnBottomRow: 0.0)]
+    let labelColorSchemes: [LabelColorScheme] = [LabelColorScheme(evenColumnTopRow: 1.0, oddColumnTopRow: 0.0, evenColumnMidRow: 1.0, oddColumnMidRow: 0.0, evenColumnBottomRow: 1.0, oddColumnBottomRow: 0.0), LabelColorScheme(evenColumnTopRow: 0.6, oddColumnTopRow: 0.7, evenColumnMidRow: 0.7, oddColumnMidRow: 0.4, evenColumnBottomRow: 1.0, oddColumnBottomRow: 0.0)]
     
     func loadStart() {
         changeLabelsText(letterPageChars)
