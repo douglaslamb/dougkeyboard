@@ -20,6 +20,7 @@ class KeyboardViewController: UIInputViewController {
     // objects
     var textProxy: UIKeyInput!
     var manager: KeyboardManager = KeyboardManager()
+    var popupManager: PopupManager!
     var tutRunner: TutRunner!
     
     // global UI
@@ -134,12 +135,17 @@ class KeyboardViewController: UIInputViewController {
         // put touch buttons in manager for label switching
         manager.charTouchButtons = topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons 
         
-        // put touch button labels in manager for label hiding
+        // put touch button labels and popups in manager for label hiding
         var charTouchButtonLabels = [UILabel]()
+        var charTouchButtonPopups = [UILabel]()
         for view in manager.charTouchButtons[0..<manager.charTouchButtons.count - 1] {
             charTouchButtonLabels.append(view.subviews[0] as! UILabel)
+            charTouchButtonPopups.append(view.subviews[1] as! UILabel)
         }
-        manager.charTouchButtonLabels = charTouchButtonLabels 
+        manager.charTouchButtonLabels = charTouchButtonLabels
+        manager.charTouchButtonPopups = charTouchButtonPopups
+        
+        popupManager = PopupManager(charTouchButtonPopups: charTouchButtonPopups)
         
         // add touchButtons to rowViews
         addSubviews(topRowView, subviews: topRowTouchButtons)
@@ -468,19 +474,29 @@ class KeyboardViewController: UIInputViewController {
     
     func createBlankTouchButtonsWithLabels(numButtons: Int) -> [UIView] {
         // creates a bunch of UIView
-        // adds a label to each
-        // and adds each to an array which is returned
+        // adds a label to each and
+        // adds a popup to each 
+        // and adds button to an array which is returned
         
         var buttons = [UIView]()
         for i in 0..<numButtons {
             let touchButton = createBlankTouchButton()
             let label = UILabel()
+            let popup = UILabel()
             buttons.append(touchButton)
             touchButton.addSubview(label)
+            touchButton.addSubview(popup)
             
             // set default properties
+            setPopupDefaults(popup)
             setLabelDefaults(label)
             ConstraintMaker.centerViewInView(touchButton, subview: label)
+            
+            // set popup constraints
+            popup.bottomAnchor.constraintEqualToAnchor(touchButton.topAnchor).active = true
+            popup.heightAnchor.constraintEqualToAnchor(touchButton.heightAnchor).active = true
+            popup.centerXAnchor.constraintEqualToAnchor(touchButton.centerXAnchor).active = true
+            popup.widthAnchor.constraintEqualToAnchor(touchButton.widthAnchor, multiplier: 1.2).active = true
             
             // !!! TEMP
             // temporarily using this evenRowKey value for each key
@@ -496,6 +512,14 @@ class KeyboardViewController: UIInputViewController {
     func setLabelDefaults(label: UILabel) {
         label.userInteractionEnabled = false
         label.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    func setPopupDefaults(popup: UILabel) {
+        popup.userInteractionEnabled = false
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        popup.textAlignment = .Center
+        popup.backgroundColor = UIColor.init(white: 1.0, alpha: 1)
+        popup.font = popup.font.fontWithSize(24)
     }
     
     func setRowDefaults(row: UIView) {
@@ -602,6 +626,7 @@ class KeyboardViewController: UIInputViewController {
                 doKeyFunction(touchView!)
             } else {
                 let buttonLabel = touchView!.subviews[0] as! UILabel
+                let popup = touchView!.subviews[1] as! UILabel
                 let rawChar = buttonLabel.text!
                 let character = manager.isShift || isSpaceShift ? rawChar: rawChar.lowercaseString
                 if isSpaceShift {
@@ -613,6 +638,7 @@ class KeyboardViewController: UIInputViewController {
                     cancelDoubleTap()
                 }
                 textProxy.insertText(character)
+                popupManager.showPopup(popup)
                 self.prevButton = rawChar
                 if rawChar == " " {
                     isSpaceShift = true
@@ -655,6 +681,7 @@ class KeyboardViewController: UIInputViewController {
             } else {
                 if (prevButton != "") {
                     textProxy.deleteBackward()
+                    popupManager.hidePopup()
                     self.prevButton = ""
                 }
             }
@@ -663,6 +690,7 @@ class KeyboardViewController: UIInputViewController {
     
     func handleTouchMoveInButton(view: UIView) {
         let buttonLabel = view.subviews[0] as! UILabel
+        let popup = view.subviews[1] as! UILabel
         let rawChar = buttonLabel.text!
         // if touch is not in spacebar and
         // if touch is not in same button as last time
@@ -671,10 +699,13 @@ class KeyboardViewController: UIInputViewController {
             if (self.prevButton == "") {
                 // if the previous button was outside buttons
                 textProxy.insertText(character)
+                popupManager.showPopup(popup)
             } else {
                 // if user slides from one char to another
                 textProxy.deleteBackward()
                 textProxy.insertText(character)
+                popupManager.hidePopup()
+                popupManager.showPopup(popup)
             }
             self.prevButton = rawChar
         }
@@ -710,6 +741,9 @@ class KeyboardViewController: UIInputViewController {
         if !spacebarTouchButton.pointInside(touchPoint!, withEvent: nil) {
             doubleTapPuncModifier = nil
         }
+        
+        // hide popups
+        popupManager.hidePopup()
     }
     
     override func didReceiveMemoryWarning() {
