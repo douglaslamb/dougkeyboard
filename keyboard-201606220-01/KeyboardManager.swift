@@ -30,7 +30,6 @@ class KeyboardManager {
     
     var charTouchButtons: [UIView]!
     var charTouchButtonLabels: [UILabel]!
-    var charTouchButtonPopups: [UILabel]!
     
     var letterPageChars: [String]!
     var numberPageChars: [String]!
@@ -168,7 +167,6 @@ class KeyboardManager {
     func changeLabelsText(chars: [String]) {
         for (i, label) in charTouchButtonLabels.enumerate() {
             label.text = chars[i]
-            charTouchButtonPopups[i].text = chars[i]
         }
     }
     

@@ -11,10 +11,6 @@
 		BF06DD191D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */; };
 		BF06DD1A1D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */; };
 		BF06DD1B1D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */; };
-		BF522F711DB095850008338D /* PopupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF522F701DB095850008338D /* PopupManager.swift */; };
-		BF522F721DB095850008338D /* PopupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF522F701DB095850008338D /* PopupManager.swift */; };
-		BF522F731DB095850008338D /* PopupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF522F701DB095850008338D /* PopupManager.swift */; };
-		BF522F741DB095850008338D /* PopupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF522F701DB095850008338D /* PopupManager.swift */; };
 		BF5CEAC81D1B38C20078C2D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */; };
 		BF5CEACA1D1B38C20078C2D1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */; };
 		BF5CEACD1D1B38C20078C2D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF5CEACB1D1B38C20078C2D1 /* Main.storyboard */; };
@@ -89,7 +85,6 @@
 
 /* Begin PBXFileReference section */
 		BF06DD171D9153DF00360508 /* UIResponderKeyboardCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIResponderKeyboardCache.swift; sourceTree = SOURCE_ROOT; };
-		BF522F701DB095850008338D /* PopupManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupManager.swift; sourceTree = SOURCE_ROOT; };
 		BF5CEAC41D1B38C20078C2D1 /* doug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = doug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5CEAC71D1B38C20078C2D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -179,7 +174,6 @@
 				BF74C13A1D3D892D0088E585 /* ConstraintMaker.swift */,
 				BFAF45BA1D8ACA8D00A19EF1 /* TutRunner.swift */,
 				BFCDD7FD1D4B246E00809A7B /* KeyboardManager.swift */,
-				BF522F701DB095850008338D /* PopupManager.swift */,
 				BF5CEAC91D1B38C20078C2D1 /* ViewController.swift */,
 				BF5CEACB1D1B38C20078C2D1 /* Main.storyboard */,
 				BF5CEACE1D1B38C20078C2D1 /* Assets.xcassets */,
@@ -394,7 +388,6 @@
 			files = (
 				BFAF45BB1D8ACA8D00A19EF1 /* TutRunner.swift in Sources */,
 				BFD23A5B1D6422B1003B1376 /* Appearance.swift in Sources */,
-				BF522F711DB095850008338D /* PopupManager.swift in Sources */,
 				BF06DD181D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */,
 				BF5CEACA1D1B38C20078C2D1 /* ViewController.swift in Sources */,
 				BFF371EB1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
@@ -412,7 +405,6 @@
 				BFAF45BC1D8ACA8D00A19EF1 /* TutRunner.swift in Sources */,
 				BF74C13C1D3D892D0088E585 /* ConstraintMaker.swift in Sources */,
 				BFCDD7FF1D4B246E00809A7B /* KeyboardManager.swift in Sources */,
-				BF522F721DB095850008338D /* PopupManager.swift in Sources */,
 				BFD23A5C1D6422B1003B1376 /* Appearance.swift in Sources */,
 				BFF371EC1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
 				BF06DD191D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */,
@@ -427,7 +419,6 @@
 				BFAF45BD1D8ACA8D00A19EF1 /* TutRunner.swift in Sources */,
 				BF74C13D1D3D892D0088E585 /* ConstraintMaker.swift in Sources */,
 				BFCDD8001D4B246E00809A7B /* KeyboardManager.swift in Sources */,
-				BF522F731DB095850008338D /* PopupManager.swift in Sources */,
 				BFD23A5D1D6422B1003B1376 /* Appearance.swift in Sources */,
 				BFF371ED1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
 				BF06DD1A1D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */,
@@ -442,7 +433,6 @@
 				BFAF45BE1D8ACA8D00A19EF1 /* TutRunner.swift in Sources */,
 				BF74C13E1D3D892D0088E585 /* ConstraintMaker.swift in Sources */,
 				BFCDD8011D4B246E00809A7B /* KeyboardManager.swift in Sources */,
-				BF522F741DB095850008338D /* PopupManager.swift in Sources */,
 				BFD23A5E1D6422B1003B1376 /* Appearance.swift in Sources */,
 				BFF371EE1D7A974A00B68BDB /* TextAidProxy.swift in Sources */,
 				BF06DD1B1D9153DF00360508 /* UIResponderKeyboardCache.swift in Sources */,
