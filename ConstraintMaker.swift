@@ -105,7 +105,7 @@ class ConstraintMaker {
         label.centerYAnchor.constraintEqualToAnchor(textRowView.centerYAnchor).active = true
         
         cursor.leftAnchor.constraintEqualToAnchor(label.rightAnchor, constant: 2).active = true
-        cursor.bottomAnchor.constraintEqualToAnchor(textRowView.bottomAnchor, constant: -19).active = true
+        cursor.bottomAnchor.constraintEqualToAnchor(textRowView.bottomAnchor, constant: -17).active = true
         cursor.widthAnchor.constraintEqualToConstant(1).active = true
         cursor.heightAnchor.constraintEqualToConstant(21).active = true
         
@@ -114,11 +114,10 @@ class ConstraintMaker {
         labelMask.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true
         labelMask.widthAnchor.constraintEqualToConstant(30).active = true
         
-        tutMessageLabel.leftAnchor.constraintEqualToAnchor(textRowView.leftAnchor, constant: 5).active = true
+        tutMessageLabel.leftAnchor.constraintEqualToAnchor(textRowView.leftAnchor, constant: 6).active = true
         tutMessageLabel.bottomAnchor.constraintEqualToAnchor(textRowView.bottomAnchor, constant: -5).active = true
         tutMessageLabel.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true
         tutMessageLabel.widthAnchor.constraintEqualToConstant(130).active = true
-        
         
         showCharsButton.rightAnchor.constraintEqualToAnchor(textRowView.rightAnchor).active = true
         showCharsButton.topAnchor.constraintEqualToAnchor(textRowView.topAnchor).active = true

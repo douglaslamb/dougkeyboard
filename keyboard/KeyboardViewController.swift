@@ -42,6 +42,7 @@ class KeyboardViewController: UIInputViewController {
     
     // appearance
     let defaultFontSize = 18
+    let puncRowLabelsFontSize = CGFloat(14)
     
     // colors
     let defaultBackgroundColor = UIColor.init(white: 1.0, alpha: 1)
@@ -68,7 +69,6 @@ class KeyboardViewController: UIInputViewController {
     let negativeIconsColor = UIColor.init(white: 0.9, alpha: 1)
     let defaultIconsColor = UIColor.init(white: 0.0, alpha: 1)
     
-    
     enum UtilKey: Int {
         case nextKeyboardKey = 1, returnKey, shiftKey, backspaceKey, numbersLettersKey, numbersPuncKey, showCharsKey, tutKey
     }
@@ -88,7 +88,7 @@ class KeyboardViewController: UIInputViewController {
         
         // constants
         // other colors
-        let cursorColor = UIColor.init(red: 249.0 / 255.0, green: 115.0 / 255.0, blue: 116.0 / 255.0, alpha: 1)
+        let cursorColor = UIColor.init(white: 0.7, alpha: 1)
         
         // initial setup
         inputView?.backgroundColor = defaultBackgroundColor
@@ -192,7 +192,7 @@ class KeyboardViewController: UIInputViewController {
         let textRowCursor = UIView()
         textRowCursor.translatesAutoresizingMaskIntoConstraints = false
         textRowCursor.userInteractionEnabled = false
-        textRowCursor.backgroundColor = UIColor.init(white: CGFloat(topRowEvenWhiteVal), alpha: 1)
+        textRowCursor.backgroundColor = cursorColor
         textRowView.addSubview(textRowCursor)
         
         // add showchars button to textRowView
@@ -379,6 +379,30 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         
+        // PUNCTUATION ROW LABELS
+        
+        let puncRowChars = [",", "'", "?", "!"]
+        var puncRowLabels = [UILabel]()
+        let tempRowViews = [bottomRowView, midRowView, topRowView, textRowView]
+        
+        for character in puncRowChars {
+            let label = UILabel()
+            label.text = character
+            setLabelDefaults(label)
+            label.font = label.font.fontWithSize(14)
+            puncRowLabels.append(label)
+        }
+        
+        for (i, label) in puncRowLabels.enumerate() {
+            let rowView = tempRowViews[i]
+            view.addSubview(label)
+            label.bottomAnchor.constraintEqualToAnchor(rowView.bottomAnchor, constant: -1).active = true
+            label.leftAnchor.constraintEqualToAnchor(rowView.leftAnchor, constant: 2).active = true
+        }
+        
+        // put row labels in manager for color stuff
+        manager.puncRowLabels = puncRowLabels
+        
         // set manager label display modes from user defaults
         let defaults = NSUserDefaults.standardUserDefaults()
         manager.lettersPageLabelsDisplayMode = defaults.integerForKey("lettersPageLabelsDisplayMode")
@@ -557,7 +581,6 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func handleBackspaceLongPress(sender: UILongPressGestureRecognizer) {
-        //print("handleBackspaceLongPress")
         if sender.state == UIGestureRecognizerState.Began {
             startLongDelete()
         } else if sender.state == UIGestureRecognizerState.Ended {
@@ -572,7 +595,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print(arc4random())
+        //print(arc4random())
         super.touchesBegan(touches, withEvent: event)
         
         // get view touch is in
@@ -700,7 +723,6 @@ class KeyboardViewController: UIInputViewController {
             isSpaceShift = false
             let touchPoint = touches.first!.locationInView(spacebarTouchButton)
             if prevButton != " " && prevButton != "" && spacebarTouchButton.pointInside(touchPoint, withEvent: nil) {
-                print("spaceshift correction")
                 textProxy.deleteBackward()
                 textProxy.insertText(prevButton.lowercaseString)
             }

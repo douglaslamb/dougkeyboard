@@ -35,9 +35,9 @@ class KeyboardManager {
     var numberPageChars: [String]!
     var puncPageChars: [String]!
     
-    
     var numbersKeyLabel: UILabel!
     var numbersPuncKeyLabel: UILabel!
+    var puncRowLabels: [UILabel]!
     var shiftKeyImageView: UIImageView!
     
     var shiftOrNumbersPuncTouchButton: UIView!
@@ -68,6 +68,9 @@ class KeyboardManager {
         
         // change tag
         shiftOrNumbersPuncTouchButton.tag = shiftKeyTag
+        
+        // set color on exclamation label
+        puncRowLabels[3].textColor = UIColor.blackColor()
         
         setLabelsColor()
     }
@@ -152,6 +155,35 @@ class KeyboardManager {
                 }
             }
         }
+        
+        // set color of each puncRowLabel to match the leftmost button in its row
+        if !isLabelsHidden() {
+            for i in 0..<3 {
+                let label = puncRowLabels[i]
+                switch i {
+                    case 0:
+                        label.textColor = charTouchButtonLabels[18].textColor
+                    case 1:
+                        label.textColor = charTouchButtonLabels[9].textColor
+                    case 2:
+                        label.textColor = charTouchButtonLabels[0].textColor
+                    default: break
+                }
+            }
+        } else {
+            for i in 0..<3 {
+                let label = puncRowLabels[i]
+                switch i {
+                    case 0:
+                        label.textColor = labelColorSchemes[1].evenColumnBottomRow
+                    case 1:
+                        label.textColor = labelColorSchemes[1].evenColumnMidRow
+                    case 2:
+                        label.textColor = labelColorSchemes[1].evenColumnTopRow
+                    default: break
+                }
+            }
+        }
     }
     
     func isNumbersPage() -> Bool {
@@ -197,7 +229,6 @@ class KeyboardManager {
         shiftOff()
         loadStart()
     }
-   
     
     func shiftOn() {
         isShift = true
