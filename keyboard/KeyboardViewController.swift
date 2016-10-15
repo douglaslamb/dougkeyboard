@@ -626,7 +626,7 @@ class KeyboardViewController: UIInputViewController {
                 doKeyFunction(touchView!)
             } else {
                 let buttonLabel = touchView!.subviews[0] as! UILabel
-                let popup = touchView!.subviews[1] as? UILabel
+                let popup = touchView!.subviews[1] as! UILabel
                 let rawChar = buttonLabel.text!
                 let character = manager.isShift || isSpaceShift ? rawChar: rawChar.lowercaseString
                 if isSpaceShift {
@@ -638,9 +638,7 @@ class KeyboardViewController: UIInputViewController {
                     cancelDoubleTap()
                 }
                 textProxy.insertText(character)
-                if popup != nil {
-                    popupManager.showPopup(popup!)
-                }
+                popupManager.showPopup(popup)
                 self.prevButton = rawChar
                 if rawChar == " " {
                     isSpaceShift = true
@@ -692,7 +690,7 @@ class KeyboardViewController: UIInputViewController {
     
     func handleTouchMoveInButton(view: UIView) {
         let buttonLabel = view.subviews[0] as! UILabel
-        let popup = view.subviews[1] as? UILabel
+        let popup = view.subviews[1] as! UILabel
         let rawChar = buttonLabel.text!
         // if touch is not in spacebar and
         // if touch is not in same button as last time
@@ -701,17 +699,13 @@ class KeyboardViewController: UIInputViewController {
             if (self.prevButton == "") {
                 // if the previous button was outside buttons
                 textProxy.insertText(character)
-                if popup != nil {
-                    popupManager.showPopup(popup!)
-                }
+                popupManager.showPopup(popup)
             } else {
                 // if user slides from one char to another
                 textProxy.deleteBackward()
                 textProxy.insertText(character)
                 popupManager.slideHidePopup()
-                if popup != nil {
-                    popupManager.showPopup(popup!)
-                }
+                popupManager.showPopup(popup)
             }
             self.prevButton = rawChar
         }
@@ -723,11 +717,8 @@ class KeyboardViewController: UIInputViewController {
    
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesEnded(touches, withEvent: event)
-        
-        let touchPoint = touches.first!.locationInView(view)
-        let touchView = view.hitTest(touchPoint, withEvent: nil)
-        
-        self.disableTouch = false
+        self.disableTouch = false;
+        //if prevButton != "" && event?.allTouches()?.count < 2 {
         if prevButton != "" {
             if manager.isShift {
                 manager.shiftOff()
@@ -746,19 +737,13 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         // set doubleTapPuncModifier to nil if touch ends outside spacebar
-        let spaceTouchPoint = touches.first?.locationInView(spacebarTouchButton)
-        if !spacebarTouchButton.pointInside(spaceTouchPoint!, withEvent: nil) {
+        let touchPoint = touches.first?.locationInView(spacebarTouchButton)
+        if !spacebarTouchButton.pointInside(touchPoint!, withEvent: nil) {
             doubleTapPuncModifier = nil
         }
         
-        // hide popup
-        print(touches.count)
-        if touchView?.tag > 9 {
-            let popup = touchView?.subviews[1] as? UILabel
-            if popup != nil {
-                popupManager.hidePopup(popup!)
-            }
-        }
+        // hide popups
+        popupManager.hidePopup()
     }
     
     override func didReceiveMemoryWarning() {
