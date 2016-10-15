@@ -42,6 +42,7 @@ class KeyboardViewController: UIInputViewController {
     
     // appearance
     let defaultFontSize = 18
+    let puncRowLabelsFontSize = CGFloat(14)
     
     // colors
     let defaultBackgroundColor = UIColor.init(white: 1.0, alpha: 1)
@@ -84,6 +85,10 @@ class KeyboardViewController: UIInputViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // constants
+        // other colors
+        let cursorColor = UIColor.init(white: 0.7, alpha: 1)
         
         // initial setup
         inputView?.backgroundColor = defaultBackgroundColor
@@ -182,6 +187,13 @@ class KeyboardViewController: UIInputViewController {
         tutMessageLabel.textAlignment = NSTextAlignment.Center
         tutMessageLabel.numberOfLines = 0
         textRowView.addSubview(tutMessageLabel)
+        
+        // add cursor to textRowView
+        let textRowCursor = UIView()
+        textRowCursor.translatesAutoresizingMaskIntoConstraints = false
+        textRowCursor.userInteractionEnabled = false
+        textRowCursor.backgroundColor = cursorColor
+        textRowView.addSubview(textRowCursor)
         
         // add showchars button to textRowView
         let showCharsTouchButton = createBlankTouchButton()
@@ -367,6 +379,30 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         
+        // PUNCTUATION ROW LABELS
+        
+        let puncRowChars = [",", "'", "?", "!"]
+        var puncRowLabels = [UILabel]()
+        let tempRowViews = [bottomRowView, midRowView, topRowView, textRowView]
+        
+        for character in puncRowChars {
+            let label = UILabel()
+            label.text = character
+            setLabelDefaults(label)
+            label.font = label.font.fontWithSize(14)
+            puncRowLabels.append(label)
+        }
+        
+        for (i, label) in puncRowLabels.enumerate() {
+            let rowView = tempRowViews[i]
+            view.addSubview(label)
+            label.bottomAnchor.constraintEqualToAnchor(rowView.bottomAnchor, constant: -1).active = true
+            label.leftAnchor.constraintEqualToAnchor(rowView.leftAnchor, constant: 2).active = true
+        }
+        
+        // put row labels in manager for color stuff
+        manager.puncRowLabels = puncRowLabels
+        
         // set manager label display modes from user defaults
         let defaults = NSUserDefaults.standardUserDefaults()
         manager.lettersPageLabelsDisplayMode = defaults.integerForKey("lettersPageLabelsDisplayMode")
@@ -392,7 +428,7 @@ class KeyboardViewController: UIInputViewController {
         
         ConstraintMaker.addAllButtonConstraints(topRowView, midRowView: midRowView, bottomRowView: bottomRowView, utilRowView: utilRowView, topTouchButtons: topRowTouchButtons, midTouchButtons: midRowTouchButtons, bottomTouchButtons: bottomRowTouchButtons, utilTouchKeys: utilRowTouchButtons, shiftWidth: 0.05, nextKeyboardWidth: 0.12, spaceKeyWidth: 0.45, charVerticalConstant: 0)
         
-        ConstraintMaker.addTextRowViewConstraints(textRowView, label: textAidLabel, labelMask: labelMask, tutMessageLabel: tutMessageLabel, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
+        ConstraintMaker.addTextRowViewConstraints(textRowView, label: textAidLabel, cursor: textRowCursor, labelMask: labelMask, tutMessageLabel: tutMessageLabel, showCharsButton: showCharsTouchButton, tutButton: tutTouchButton)
         
         // init tut runner
         tutRunner = TutRunner(buttons: topRowTouchButtons + midRowTouchButtons + bottomRowTouchButtons, label: rawTextProxy.label, tutMessageLabel: tutMessageLabel, keyboardManager: manager, showCharsDoubleTapRecognizer: showCharsDoubleTapRecognizer)
@@ -545,7 +581,6 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func handleBackspaceLongPress(sender: UILongPressGestureRecognizer) {
-        //print("handleBackspaceLongPress")
         if sender.state == UIGestureRecognizerState.Began {
             startLongDelete()
         } else if sender.state == UIGestureRecognizerState.Ended {
@@ -560,7 +595,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print(arc4random())
+        //print(arc4random())
         super.touchesBegan(touches, withEvent: event)
         
         // get view touch is in
@@ -688,7 +723,6 @@ class KeyboardViewController: UIInputViewController {
             isSpaceShift = false
             let touchPoint = touches.first!.locationInView(spacebarTouchButton)
             if prevButton != " " && prevButton != "" && spacebarTouchButton.pointInside(touchPoint, withEvent: nil) {
-                print("spaceshift correction")
                 textProxy.deleteBackward()
                 textProxy.insertText(prevButton.lowercaseString)
             }
