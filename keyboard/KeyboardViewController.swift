@@ -681,7 +681,7 @@ class KeyboardViewController: UIInputViewController {
             } else {
                 if (prevButton != "") {
                     textProxy.deleteBackward()
-                    popupManager.slideHidePopup()
+                    popupManager.hidePopup()
                     self.prevButton = ""
                 }
             }
@@ -704,7 +704,7 @@ class KeyboardViewController: UIInputViewController {
                 // if user slides from one char to another
                 textProxy.deleteBackward()
                 textProxy.insertText(character)
-                popupManager.slideHidePopup()
+                popupManager.hidePopup()
                 popupManager.showPopup(popup)
             }
             self.prevButton = rawChar

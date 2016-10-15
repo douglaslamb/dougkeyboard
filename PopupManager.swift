@@ -24,15 +24,6 @@ class PopupManager {
     }
     
     func hidePopup() {
-        let popup = currPopup
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
-            if popup != nil {
-                popup!.hidden = true
-            }
-        });
-    }
-    
-    func slideHidePopup() {
         if currPopup != nil {
             currPopup!.hidden = true
         }
